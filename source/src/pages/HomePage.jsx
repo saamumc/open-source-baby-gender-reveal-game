@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaVoteYea, FaChartBar, FaShare, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
@@ -72,16 +72,21 @@ const HomePage = () => {
           )}
         </CountdownSection>
 
-        {/* SECCIÓN DE FOTO Y DETALLES */}
+        {/* SECCIÓN DE VIDEO Y DETALLES */}
         <MainContent>
           <PhotoWrapper
             whileHover={{ scale: 1.02 }}
           >
-            {/* REEMPLAZA ESTE LINK CON TU FOTO REAL */}
-            <img 
-              src="https://via.placeholder.com/400x500?text=Valentina+Y+Janppier" 
-              alt="Valentina y Janppier" 
-            />
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            >
+              <source src="/screenshots/revelacion.mp4" type="video/mp4" />
+              Tu navegador no soporta videos.
+            </video>
           </PhotoWrapper>
 
           <DetailsBox>
@@ -94,6 +99,15 @@ const HomePage = () => {
               </div>
             </DetailItem>
           </DetailsBox>
+
+          <LocationButton
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => window.open("https://maps.app.goo.gl/tu-link-aqui", "_blank")}
+          >
+            <FaMapMarkerAlt size={16} />
+            CÓMO LLEGAR (WAZE / MAPS)
+          </LocationButton>
         </MainContent>
 
         {/* BOTONES DE ACCIÓN */}
@@ -136,7 +150,7 @@ const HomeContainer = styled(motion.div)`
   align-items: center;
   min-height: 100vh;
   padding: 2rem 1rem;
-  background: #0f0f0f; /* Fondo oscuro para que resalten los colores */
+  background: #0f0f0f;
 `;
 
 const ContentCard = styled.div`
@@ -210,7 +224,7 @@ const PhotoWrapper = styled(motion.div)`
   overflow: hidden;
   border: 3px solid rgba(255, 255, 255, 0.1);
 
-  img {
+  video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -222,6 +236,7 @@ const DetailsBox = styled.div`
   padding: 1rem;
   border-radius: 15px;
   color: white;
+  margin-bottom: 10px;
 `;
 
 const DetailItem = styled.div`
@@ -233,6 +248,28 @@ const DetailItem = styled.div`
   svg { color: #4682B4; font-size: 1.3rem; }
   strong { display: block; font-size: 0.9rem; }
   p { margin: 0; color: #888; font-size: 0.85rem; }
+`;
+
+const LocationButton = styled(motion.button)`
+  background: rgba(255, 255, 255, 0.1);
+  color: #4682B4;
+  border: 1px solid #4682B4;
+  padding: 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #4682B4;
+    color: white;
+  }
 `;
 
 const ActionsGrid = styled.div`
