@@ -60,82 +60,7 @@ const VotePage = () => {
           />
         </OptionsContainer>
 
-        <SubmitButtonWrapper
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          {selectedGender && (
-            <>
-              <GlowEffect
-                animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [0.95, 1.05, 0.95],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              <SubmitButtonHighlight
-                animate={{
-                  scale: [1, 1.02, 1],
-                  opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              <ShineEffect
-                animate={{
-                  x: ["-100%", "100%"],
-                  opacity: [0, 1, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  repeatDelay: 0.5,
-                }}
-              />
-            </>
-          )}
-          <SubmitButton
-            onClick={handleSubmit}
-            whileHover={
-              selectedGender
-                ? {
-                    scale: 1.05,
-                    boxShadow: "0 0 25px rgba(46, 213, 115, 0.6)",
-                  }
-                : {}
-            }
-            whileTap={selectedGender ? { scale: 0.95 } : {}}
-            disabled={!selectedGender}
-          >
-            {selectedGender
-              ? t("submitButton.ready")
-              : t("submitButton.default")}
-          </SubmitButton>
-        </SubmitButtonWrapper>
-        {selectedGender && (
-          <WarningText
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            {t("vote.warning")}
-          </WarningText>
-        )}
-      </OptionsSection>
-      {hasVoted && <VoteConfirmation selected={selectedGender} />}
-    </ContentCard>
-  );
-};
-
+    c
 const ContentCard = styled.div`
   background: rgba(255, 255, 255, 0.1);
   overflow: hidden;
@@ -187,7 +112,7 @@ const SubmitButton = styled(motion.button)`
   background: ${(props) =>
     props.disabled
       ? "linear-gradient(135deg, #cccccc, #999999)"
-      : "linear-gradient(135deg, #2ed573, #009432)"};
+      : "linear-gradient(135deg, #4682B4, #2c5272)"}; /* <--- AZUL ACERO */
   color: white;
   border: none;
   padding: min(1.2rem, 3vw) min(2.5rem, 6vw);
