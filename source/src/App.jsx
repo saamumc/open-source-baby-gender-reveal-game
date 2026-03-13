@@ -164,7 +164,8 @@ const AppContainer = styled.div`
   padding: 1rem;
   position: relative;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
+  background: #121212; /* <--- Cambia esto a gris muy oscuro */
+  color: white; /* <--- Asegura que todo el texto sea blanco */
 
   @media (max-width: 768px) {
     padding: 0.5rem;
