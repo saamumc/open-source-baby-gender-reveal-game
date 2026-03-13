@@ -40,6 +40,10 @@ const VotePage = () => {
     return null;
   }
 
+  if (hasVoted) {
+    return <VoteConfirmation />;
+  }
+
   return (
     <ContentCard>
       <HeaderSection>
@@ -60,7 +64,25 @@ const VotePage = () => {
           />
         </OptionsContainer>
 
-    c
+        <SubmitButtonWrapper
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <SubmitButton
+            disabled={!selectedGender}
+            onClick={handleSubmit}
+            whileHover={selectedGender ? { scale: 1.05 } : {}}
+            whileTap={selectedGender ? { scale: 0.95 } : {}}
+          >
+            {t("votePage.submitButton")}
+          </SubmitButton>
+        </SubmitButtonWrapper>
+      </OptionsSection>
+    </ContentCard>
+  );
+};
+
 const ContentCard = styled.div`
   background: rgba(255, 255, 255, 0.1);
   overflow: hidden;
@@ -112,7 +134,7 @@ const SubmitButton = styled(motion.button)`
   background: ${(props) =>
     props.disabled
       ? "linear-gradient(135deg, #cccccc, #999999)"
-      : "linear-gradient(135deg, #4682B4, #2c5272)"}; /* <--- AZUL ACERO */
+      : "linear-gradient(135deg, #4682B4, #2c5272)"};
   color: white;
   border: none;
   padding: min(1.2rem, 3vw) min(2.5rem, 6vw);
@@ -126,7 +148,7 @@ const SubmitButton = styled(motion.button)`
   box-shadow: ${(props) =>
     props.disabled
       ? "0 4px 15px rgba(0, 0, 0, 0.2)"
-      : "0 4px 25px rgba(46, 213, 115, 0.4)"};
+      : "0 4px 25px rgba(70, 130, 180, 0.4)"};
   width: min(300px, 90%);
   margin: 0 auto;
   opacity: ${(props) => (props.disabled ? 0.7 : 1)};
@@ -134,79 +156,6 @@ const SubmitButton = styled(motion.button)`
   @media (max-width: 480px) {
     padding: 0.8rem 1.5rem;
     font-size: 1.1rem;
-  }
-`;
-
-const SubmitButtonHighlight = styled(motion.div)`
-  position: absolute;
-  inset: -4px;
-  border-radius: 50px;
-  background: linear-gradient(
-    135deg,
-    rgba(46, 213, 115, 0.5),
-    rgba(0, 148, 50, 0.5)
-  );
-  z-index: 1;
-`;
-
-const GlowEffect = styled(motion.div)`
-  position: absolute;
-  inset: -8px;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #2ed573, #009432);
-  opacity: 0;
-  z-index: 1;
-  filter: blur(15px);
-`;
-
-const ShineEffect = styled(motion.div)`
-  position: absolute;
-  inset: 0;
-  border-radius: 50px;
-  background: linear-gradient(
-    45deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.8) 50%,
-    transparent 100%
-  );
-  z-index: 3;
-`;
-
-const WarningText = styled(motion.p)`
-  color: #e74c3c;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: bold;
-  margin: 1rem auto;
-  padding: 0.8rem 1.5rem;
-  background: #fdecea;
-  border-radius: 50px;
-  width: fit-content;
-  position: relative;
-  border: 1px solid rgba(231, 76, 60, 0.3);
-  z-index: 1;
-  box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
-
-  /* Outer glow */
-  &::after {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: 50px;
-    background: rgba(231, 76, 60, 0.2);
-    filter: blur(8px);
-    z-index: -1;
-    animation: warningPulse 2s ease-in-out infinite;
-  }
-
-  @keyframes warningPulse {
-    0%,
-    100% {
-      opacity: 0.6;
-    }
-    50% {
-      opacity: 1;
-    }
   }
 `;
 
