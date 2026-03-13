@@ -1,33 +1,38 @@
-<div style={{ textAlign: 'center', color: 'white', padding: '20px' }}>
-  <h1 style={{ fontFamily: 'serif', fontSize: '3rem' }}>Valentina & Janppier </h1>
-  <p style={{ color: '#4682B4' }}>Azul Acero</p> o <p style={{ color: '#C08081' }}>Rosa Viejo</p>
-  <p>Te esperamos para descubrir el gran secreto.</p>
-  <hr style={{ borderColor: '#333', margin: '20px 0' }} />
-</div>
-  import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  FaVoteYea,
-  FaChartBar,
-  FaQuestionCircle,
-  FaRedo,
-  FaShare,
-} from "react-icons/fa";
+import { FaVoteYea, FaChartBar, FaShare, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
-import { useTranslation } from "../hooks/useTranslation";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const [timeLeft, setTimeLeft] = useState({});
 
-  const handleShowInstructions = () => {
-    window.dispatchEvent(new Event("show-instructions"));
-  };
+  // Configuración de la fecha del evento: 18 de Abril
+  useEffect(() => {
+    const eventDate = new Date("April 18, 2026 15:00:00").getTime();
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+      if (distance < 0) {
+        clearInterval(timer);
+        setTimeLeft({ expired: true });
+      } else {
+        setTimeLeft({ days, hours });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleReset = (skipNavigation = false) => {
     localStorage.clear();
@@ -39,268 +44,217 @@ const HomePage = () => {
     }
   };
 
-  const handleShare = async () => {
-    const shareData = {
-      title: "Voting App",
-      text: t("share.message"),
-      url: window.location.origin,
-    };
-
-    try {
-      if (navigator.share) {
-        // For mobile devices
-        await navigator.share(shareData);
-      } else {
-        // Fallback for desktop - copy to clipboard
-        await navigator.clipboard.writeText(window.location.origin);
-        alert(t("share.copied"));
-      }
-    } catch (err) {
-      console.error("Error sharing:", err);
-    }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-      },
-    },
-  };
-
-  const buttons = [
-    {
-      icon: <FaVoteYea size={80} />,
-      text: t("home.startButton"),
-      onClick: () => {
-        handleReset(true);
-        navigate("/vote");
-      },
-      gradient:
-        "linear-gradient(135deg, rgba(76, 175, 80, 0.8), rgba(129, 199, 132, 0.8))",
-    },
-    {
-      icon: <FaChartBar size={80} />,
-      text: t("home.viewResults"),
-      onClick: () => navigate("/results"),
-      gradient:
-        "linear-gradient(135deg, rgba(78, 101, 255, 0.7), rgba(146, 239, 253, 0.8))",
-    },
-    {
-      icon: <FaShare size={80} />,
-      text: t("share.button"),
-      onClick: handleShare,
-      gradient:
-        "linear-gradient(135deg, rgba(156, 39, 176, 0.8), rgba(233, 30, 99, 0.8))",
-    },
-    {
-      icon: <FaQuestionCircle size={80} />,
-      text: t("instructions.show"),
-      onClick: handleShowInstructions,
-      gradient:
-        "linear-gradient(135deg, rgba(255, 193, 7, 0.8), rgba(255, 167, 38, 0.7))",
-    },
-    {
-      icon: <FaRedo size={80} />,
-      text: t("confirmation.resetForNext"),
-      onClick: handleReset,
-      gradient:
-        "linear-gradient(135deg, rgba(255, 217, 61, 0.7), rgba(255, 107, 107, 0.7))",
-    },
-  ];
-
   return (
-    <HomeContainer>
-      <ContentCard
-        as={motion.div}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <GridContainer>
-          {buttons.map((button, index) => (
-            <IconButton
-              key={index}
-              as={motion.button}
-              variants={itemVariants}
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              gradient={button.gradient}
-              onClick={button.onClick}
-            >
-              <IconWrapper>{button.icon}</IconWrapper>
-              <ButtonText>{button.text}</ButtonText>
-              <GlowEffect />
-            </IconButton>
-          ))}
-        </GridContainer>
+    <HomeContainer
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
+      <ContentCard>
+        {/* ENCABEZADO PERSONALIZADO */}
+        <HeaderSection>
+          <NamesTitle>Valentina & Janppier</NamesTitle>
+          <ColorsSubtitle>
+            <ColorSpan color="#4682B4">Azul Acero</ColorSpan> o <ColorSpan color="#C08081">Rosa Viejo</ColorSpan>
+          </ColorsSubtitle>
+          <Divider />
+        </HeaderSection>
+
+        {/* CONTADOR DE DÍAS (CUENTA REGRESIVA) */}
+        <CountdownSection>
+          <FaClock style={{ marginBottom: '10px', color: '#ccc' }} />
+          {timeLeft.expired ? (
+            <CountdownText>¡Llegó el gran día!</CountdownText>
+          ) : (
+            <CountdownText>
+              Faltan <span>{timeLeft.days}</span> días y <span>{timeLeft.hours}</span> horas
+            </CountdownText>
+          )}
+        </CountdownSection>
+
+        {/* SECCIÓN DE FOTO Y DETALLES */}
+        <MainContent>
+          <PhotoWrapper
+            whileHover={{ scale: 1.02 }}
+          >
+            {/* REEMPLAZA ESTE LINK CON TU FOTO REAL */}
+            <img 
+              src="https://via.placeholder.com/400x500?text=Valentina+Y+Janppier" 
+              alt="Valentina y Janppier" 
+            />
+          </PhotoWrapper>
+
+          <DetailsBox>
+            <DetailItem>
+              <FaMapMarkerAlt />
+              <div>
+                <strong>Lugar del Evento:</strong>
+                <p>La Calera, Cundinamarca</p>
+                <p>18 de Abril - 3:00 PM</p>
+              </div>
+            </DetailItem>
+          </DetailsBox>
+        </MainContent>
+
+        {/* BOTONES DE ACCIÓN */}
+        <ActionsGrid>
+          <ActionButton
+            as={motion.button}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            gradient="linear-gradient(135deg, #4682B4, #2c5272)"
+            onClick={() => {
+              handleReset(true);
+              navigate("/vote");
+            }}
+          >
+            <FaVoteYea size={24} />
+            <span>VOTAR AHORA</span>
+          </ActionButton>
+
+          <ActionButton
+            as={motion.button}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            gradient="linear-gradient(135deg, #C08081, #8a5a5b)"
+            onClick={() => navigate("/results")}
+          >
+            <FaChartBar size={24} />
+            <span>RESULTADOS</span>
+          </ActionButton>
+        </ActionsGrid>
       </ContentCard>
     </HomeContainer>
   );
 };
 
-const HomeContainer = styled.div`
+// --- ESTILOS ---
+
+const HomeContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
-  padding: 2rem;
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-    min-height: 85vh;
-  }
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: #0f0f0f; /* Fondo oscuro para que resalten los colores */
 `;
 
 const ContentCard = styled.div`
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: 2.5rem 1.5rem;
   width: 100%;
-  max-width: 900px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-    border-radius: 16px;
-  }
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 `;
 
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+const HeaderSection = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
+const NamesTitle = styled.h1`
+  font-family: 'serif';
+  font-size: clamp(1.8rem, 7vw, 2.8rem);
+  color: white;
+  margin-bottom: 0.5rem;
+`;
+
+const ColorsSubtitle = styled.p`
+  font-size: 1.1rem;
+  color: #aaa;
+`;
+
+const ColorSpan = styled.span`
+  color: ${props => props.color};
+  font-weight: bold;
+`;
+
+const CountdownSection = styled.div`
+  background: rgba(255, 255, 255, 0.03);
   padding: 1rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+`;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 0.5rem;
+const CountdownText = styled.p`
+  color: white;
+  font-size: 1.1rem;
+  span {
+    color: #4682B4;
+    font-size: 1.4rem;
+    font-weight: bold;
   }
 `;
 
-const IconButton = styled(motion.button)`
-  position: relative;
+const Divider = styled.hr`
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #444, transparent);
+  margin: 15px 0;
+`;
+
+const MainContent = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const PhotoWrapper = styled(motion.div)`
+  width: 100%;
+  max-width: 280px;
+  height: 350px;
+  margin: 0 auto 1.5rem;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const DetailsBox = styled.div`
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: 15px;
+  color: white;
+`;
+
+const DetailItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: left;
+  svg { color: #4682B4; font-size: 1.3rem; }
+  strong { display: block; font-size: 0.9rem; }
+  p { margin: 0; color: #888; font-size: 0.85rem; }
+`;
+
+const ActionsGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+`;
+
+const ActionButton = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 2rem;
-  background: ${(props) => props.gradient};
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
+  gap: 8px;
+  padding: 1rem;
+  background: ${props => props.gradient};
   color: white;
-  overflow: hidden;
-  min-height: 250px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-
-  &:first-child {
-    animation: glowing 2s infinite;
-  }
-
-  @keyframes glowing {
-    0% {
-      box-shadow: 0 0 5px rgba(76, 175, 80, 0.8),
-        0 0 10px rgba(76, 175, 80, 0.8), 0 0 15px rgba(76, 175, 80, 0.8);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(76, 175, 80, 0.8),
-        0 0 35px rgba(76, 175, 80, 0.8), 0 0 50px rgba(76, 175, 80, 0.8);
-    }
-    100% {
-      box-shadow: 0 0 5px rgba(76, 175, 80, 0.8),
-        0 0 10px rgba(76, 175, 80, 0.8), 0 0 15px rgba(76, 175, 80, 0.8);
-    }
-  }
-
-  @media (max-width: 768px) {
-    min-height: 200px;
-    padding: 2rem 1.5rem;
-    border-radius: 16px;
-  }
-
-  @media (max-width: 480px) {
-    min-height: 180px;
-  }
-`;
-
-const IconWrapper = styled.div`
-  margin-bottom: 1.5rem;
-  z-index: 1;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-  opacity: 1;
-
-  @media (max-width: 768px) {
-    margin-bottom: 1rem;
-
-    svg {
-      width: 60px;
-      height: 60px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    svg {
-      width: 50px;
-      height: 50px;
-    }
-  }
-
-  svg {
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
-    color: #ffffff;
-  }
-`;
-
-const ButtonText = styled.span`
-  font-size: 1.6rem;
-  font-weight: 600;
-  text-align: center;
-  z-index: 1;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(0, 0, 0, 0.2);
-  opacity: 1;
-  color: #ffffff;
-
-  @media (max-width: 768px) {
-    font-size: 1.4rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.2rem;
-  }
-`;
-
-const GlowEffect = styled.div`
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0) 70%
-  );
-  pointer-events: none;
+  border: none;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
 `;
 
 export default HomePage;
