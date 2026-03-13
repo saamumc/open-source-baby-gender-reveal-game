@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaClock, FaHeart, FaWhatsapp } from "react-icons/fa";
+import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaClock, FaHeart, FaWhatsapp, FaBabyCarriage } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
@@ -104,6 +104,16 @@ const HomePage = () => {
             </DetailItem>
           </DetailsBox>
 
+          {/* BOTÓN DE QUÉ TRAER */}
+          <GiftButton
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/traer")}
+          >
+            <FaBabyCarriage size={20} />
+            ¿QUÉ TRAER?
+          </GiftButton>
+
           {/* BOTÓN DE WHATSAPP PARA CONFIRMAR */}
           <ConfirmButton
             whileHover={{ scale: 1.03 }}
@@ -168,6 +178,10 @@ const DressCodeBox = styled.div` background: rgba(255,255,255,0.03); padding: 1r
 
 const DetailsBox = styled.div` background: #1a1a1a; padding: 1rem; border-radius: 15px; color: white; margin-bottom: 10px; border: 1px solid #333; `;
 const DetailItem = styled.div` display: flex; align-items: center; justify-content: center; gap: 10px; text-align: left; svg { color: #4682B4; } p { margin: 0; color: #888; font-size: 0.8rem; } `;
+
+const GiftButton = styled(motion.button)`
+  background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); padding: 1.1rem; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
+`;
 
 const ConfirmButton = styled(motion.button)`
   background: #25D366; color: white; border: none; padding: 1.1rem; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
