@@ -1,7 +1,39 @@
-// ... (tus importaciones se mantienen igual)
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import AnimatedBackground from "./components/AnimatedBackground";
+import FloatingIcons from "./components/FloatingIcons";
+import { storage, STORAGE_KEYS } from "./utils/storage";
+import VotePage from "./pages/VotePage";
+import ResultsPage from "./pages/ResultsPage";
+import HomePage from "./pages/HomePage";
+import WhatToBring from "./pages/WhatToBring";
+import ControlPanel from "./pages/ControlPanel";
+import { useSelector } from "react-redux";
+import { ref, onValue } from "firebase/database";
+import { database } from "./firebase/config";
 
 const AppContent = () => {
-  // ... (tus estados y useEffects se mantienen igual)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const showResultPage = useSelector((state) => state.results.showResultPage);
+
+  useEffect(() => {
+    // Evitar redirecciones automáticas en páginas informativas
+    if (location.pathname === "/control-panel" || location.pathname === "/traer") {
+      return;
+    }
+
+    const resultsRef = ref(database, "results");
+    const unsubscribe = onValue(resultsRef, (snapshot) => {
+      const data = snapshot.val();
+      // Si el juego no ha empezado y no estamos en la home, manda a la home
+      if (data && data.showGameStarted === false && location.pathname === "/vote") {
+          navigate("/");
+      }
+    });
+    return () => unsubscribe();
+  }, [location.pathname, navigate]);
 
   return (
     <AppContainer>
@@ -9,11 +41,6 @@ const AppContent = () => {
       <FloatingIconsWrapper>
         <FloatingIcons />
       </FloatingIconsWrapper>
-
-      {/* 1. SE QUITA EL BOTÓN DE INSTRUCCIONES DE AQUÍ */}
-      {/* {showFloatingInstruction && (
-        <FloatingInstructionButton onClick={handleShowInstructions} />
-      )} */}
 
       <MainContent>
         <Routes>
@@ -24,16 +51,22 @@ const AppContent = () => {
           <Route path="/traer" element={<WhatToBring />} />
         </Routes>
       </MainContent>
-
-      {/* 2. SE QUITA EL SELECTOR DE IDIOMA DE AQUÍ */}
-      {/* {showLanguageSelector && <BottomLanguageSelector />} */}
-
-      {/* 3. OPCIONAL: Si tampoco quieres que salga la tarjeta de bienvenida al cargar */}
-      {/* {showWelcome && (
-        <WelcomeCard onClose={handleCloseWelcome} onGoHome={handleGoHome} />
-      )} */}
     </AppContainer>
   );
 };
 
-// ... (el resto del archivo se mantiene igual)
+const App = () => (
+  <Router>
+    <AppContent />
+  </Router>
+);
+
+const AppContainer = styled.div`
+  min-height: 100vh; display: flex; justify-content: center; align-items: center;
+  padding: 1rem; position: relative; overflow: hidden; background: #121212; color: white;
+`;
+
+const MainContent = styled.div` width: 100%; max-width: 800px; z-index: 10; position: relative; margin: 0 auto; `;
+const FloatingIconsWrapper = styled.div` position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 5; pointer-events: none; `;
+
+export default App;
