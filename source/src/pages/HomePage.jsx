@@ -6,13 +6,14 @@ import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
+import { setShowVotingScreen } from "../store/resultsSlice"; // Importación clave para evitar el rebote
 
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [timeLeft, setTimeLeft] = useState({});
 
-  // Configuración de la fecha del evento: 18 de Abril
+  // Configuración de la fecha del evento: 18 de Abril de 2026
   useEffect(() => {
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
 
@@ -34,14 +35,17 @@ const HomePage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleReset = (skipNavigation = false) => {
+  const handleVoteClick = () => {
+    // 1. Limpiamos cualquier rastro de votos previos
     localStorage.clear();
     dispatch(resetVote());
     dispatch(resetUi());
-    if (!skipNavigation) {
-      navigate("/vote");
-      window.location.reload();
-    }
+    
+    // 2. Abrimos el "permiso" para que la página de votos no nos expulse
+    dispatch(setShowVotingScreen(true));
+    
+    // 3. Vamos a la votación
+    navigate("/vote");
   };
 
   return (
@@ -51,7 +55,7 @@ const HomePage = () => {
       transition={{ duration: 1 }}
     >
       <ContentCard>
-        {/* ENCABEZADO PERSONALIZADO */}
+        {/* ENCABEZADO */}
         <HeaderSection>
           <NamesTitle>Valentina & Janppier</NamesTitle>
           <ColorsSubtitle>
@@ -60,7 +64,7 @@ const HomePage = () => {
           <Divider />
         </HeaderSection>
 
-        {/* CONTADOR DE DÍAS (CUENTA REGRESIVA) */}
+        {/* CONTADOR DE DÍAS */}
         <CountdownSection>
           <FaClock style={{ marginBottom: '10px', color: '#ccc' }} />
           {timeLeft.expired ? (
@@ -72,7 +76,7 @@ const HomePage = () => {
           )}
         </CountdownSection>
 
-        {/* SECCIÓN DE VIDEO Y DETALLES */}
+        {/* VIDEO Y DETALLES */}
         <MainContent>
           <PhotoWrapper
             whileHover={{ scale: 1.02 }}
@@ -103,24 +107,21 @@ const HomePage = () => {
           <LocationButton
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => window.open("https://maps.app.goo.gl/tu-link-aqui", "_blank")}
+            onClick={() => window.open("https://www.google.com/maps?q=La+Calera", "_blank")}
           >
             <FaMapMarkerAlt size={16} />
             CÓMO LLEGAR (WAZE / MAPS)
           </LocationButton>
         </MainContent>
 
-        {/* BOTONES DE ACCIÓN */}
+        {/* BOTONES */}
         <ActionsGrid>
           <ActionButton
             as={motion.button}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             gradient="linear-gradient(135deg, #4682B4, #2c5272)"
-            onClick={() => {
-              handleReset(true);
-              navigate("/vote");
-            }}
+            onClick={handleVoteClick}
           >
             <FaVoteYea size={24} />
             <span>VOTAR AHORA</span>
@@ -264,12 +265,6 @@ const LocationButton = styled(motion.button)`
   justify-content: center;
   gap: 8px;
   width: 100%;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #4682B4;
-    color: white;
-  }
 `;
 
 const ActionsGrid = styled.div`
