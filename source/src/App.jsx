@@ -16,6 +16,7 @@ import { storage, STORAGE_KEYS } from "./utils/storage";
 import VotePage from "./pages/VotePage";
 import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
+import WhatToBring from "./pages/WhatToBring"; // <--- 1. IMPORTAMOS LA NUEVA PÁGINA
 import ControlPanel from "./pages/ControlPanel";
 import { useSelector } from "react-redux";
 import { ref, onValue } from "firebase/database";
@@ -30,12 +31,14 @@ const AppContent = () => {
   const location = useLocation();
 
   const showResultPage = useSelector((state) => state.results.showResultPage);
+  
   // Add Firebase listener for voting screen state
   useEffect(() => {
-    // Don't redirect if on control panel or event invitation
+    // Don't redirect if on control panel, event invitation or what to bring
     if (
       location.pathname === "/control-panel" ||
-      location.pathname === "/event-invitation"
+      location.pathname === "/event-invitation" ||
+      location.pathname === "/traer" // <--- Evitamos redirección en la nueva página
     ) {
       return;
     }
@@ -44,14 +47,12 @@ const AppContent = () => {
     const unsubscribe = onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
       if (data && data.showGameStarted === false) {
-        // Only redirect if VITE_REDIRECT_URL is defined
         if (import.meta.env.VITE_REDIRECT_URL) {
           window.location.href = import.meta.env.VITE_REDIRECT_URL;
         }
       }
     });
 
-    // Cleanup listener on unmount
     return () => unsubscribe();
   }, [location.pathname]);
 
@@ -74,7 +75,6 @@ const AppContent = () => {
     const hasSeenWelcome = storage.get(STORAGE_KEYS.WELCOME_SHOWN);
     const currentPath = location.pathname;
 
-    // Only show welcome card on homepage and vote page if not previously shown
     if (!hasSeenWelcome && (currentPath === "/" || currentPath === "/vote")) {
       setShowWelcome(true);
     } else {
@@ -87,18 +87,16 @@ const AppContent = () => {
   }, []);
 
   useEffect(() => {
-    // Control floating instruction visibility
     setShowFloatingInstruction(
       location.pathname !== "/control-panel" &&
-        location.pathname !== "/event-invitation"
+      location.pathname !== "/event-invitation" &&
+      location.pathname !== "/traer"
     );
 
-    // Only show language selector on home page and hide on event-invitation
     setShowLanguageSelector(
       location.pathname === "/" && location.pathname !== "/event-invitation"
     );
 
-    // Update welcome card visibility when route changes
     const hasSeenWelcome = storage.get(STORAGE_KEYS.WELCOME_SHOWN);
     if (
       !hasSeenWelcome &&
@@ -136,6 +134,8 @@ const AppContent = () => {
           <Route path="/vote" element={<VotePage />} />
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/control-panel" element={<ControlPanel />} />
+          {/* 2. REGISTRAMOS LA NUEVA RUTA AQUÍ */}
+          <Route path="/traer" element={<WhatToBring />} />
         </Routes>
       </MainContent>
 
@@ -164,8 +164,8 @@ const AppContainer = styled.div`
   padding: 1rem;
   position: relative;
   overflow: hidden;
-  background: #121212; /* <--- Cambia esto a gris muy oscuro */
-  color: white; /* <--- Asegura que todo el texto sea blanco */
+  background: #121212;
+  color: white;
 
   @media (max-width: 768px) {
     padding: 0.5rem;
