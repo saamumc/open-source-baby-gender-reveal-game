@@ -1,4 +1,10 @@
-import React from "react";
+<div style={{ textAlign: 'center', color: 'white', padding: '20px' }}>
+  <h1 style={{ fontFamily: 'serif', fontSize: '3rem' }}>Valentina & Janppier </h1>
+  <p style={{ color: '#4682B4' }}>Azul Acero</p> o <p style={{ color: '#C08081' }}>Rosa Viejo</p>
+  <p>Te esperamos para descubrir el gran secreto.</p>
+  <hr style={{ borderColor: '#333', margin: '20px 0' }} />
+</div>
+  import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
