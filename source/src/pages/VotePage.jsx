@@ -160,3 +160,4 @@ const SubmitButton = styled(motion.button)`
 `;
 
 export default VotePage;
+export default VotePage;
