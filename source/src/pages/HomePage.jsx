@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaClock, FaHeart } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
-import { setShowVotingScreen } from "../store/resultsSlice"; // Importación clave para evitar el rebote
+// Importación clave para evitar el rebote al votar. 
+// Si da error de compilación, revisa que este archivo exista en tu proyecto.
+import { setShowVotingScreen } from "../store/resultsSlice"; 
 
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [timeLeft, setTimeLeft] = useState({});
 
-  // Configuración de la fecha del evento: 18 de Abril de 2026
+  // Configuración de la fecha del evento: 18 de Abril de 2026, 3:00 PM
   useEffect(() => {
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
 
@@ -36,15 +38,18 @@ const HomePage = () => {
   }, []);
 
   const handleVoteClick = () => {
-    // 1. Limpiamos cualquier rastro de votos previos
+    // 1. Limpiamos cualquier rastro de votos previos en el navegador
     localStorage.clear();
     dispatch(resetVote());
     dispatch(resetUi());
     
-    // 2. Abrimos el "permiso" para que la página de votos no nos expulse
-    dispatch(setShowVotingScreen(true));
+    // 2. IMPORTANTE: Activamos el permiso para ver la pantalla de votos
+    // Esto evita el "rebote" que te expulsaba de la página de votación.
+    if (typeof setShowVotingScreen === 'function') {
+      dispatch(setShowVotingScreen(true));
+    }
     
-    // 3. Vamos a la votación
+    // 3. Navegamos a la votación
     navigate("/vote");
   };
 
@@ -55,7 +60,7 @@ const HomePage = () => {
       transition={{ duration: 1 }}
     >
       <ContentCard>
-        {/* ENCABEZADO */}
+        {/* ENCABEZADO PERSONALIZADO */}
         <HeaderSection>
           <NamesTitle>Valentina & Janppier</NamesTitle>
           <ColorsSubtitle>
@@ -64,7 +69,7 @@ const HomePage = () => {
           <Divider />
         </HeaderSection>
 
-        {/* CONTADOR DE DÍAS */}
+        {/* CONTADOR DE DÍAS (CUENTA REGRESIVA) */}
         <CountdownSection>
           <FaClock style={{ marginBottom: '10px', color: '#ccc' }} />
           {timeLeft.expired ? (
@@ -76,22 +81,41 @@ const HomePage = () => {
           )}
         </CountdownSection>
 
-        {/* VIDEO Y DETALLES */}
+        {/* SECCIÓN DE VIDEO Y DETALLES */}
         <MainContent>
           <PhotoWrapper
             whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
           >
+            {/* VIDEO: autoPlay, loop, muted para reproducción automática en móviles */}
             <video 
               autoPlay 
               loop 
               muted 
               playsInline 
+              poster="https://via.placeholder.com/400x500?text=Cargando+Video..."
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             >
-              <source src="/screenshots/revelacion.mp4" type="video/mp4" />
+              {/* Ruta directa a la carpeta public */}
+              <source src="/revelacion.mp4" type="video/mp4" />
               Tu navegador no soporta videos.
             </video>
           </PhotoWrapper>
+
+          {/* NUEVOS TEXTOS DE INVITACIÓN */}
+          <InvitationText>
+            <FaHeart style={{ color: '#ff6b6b', marginRight: '8px' }} />
+            Esta es una invitación de parte de los tíos <strong>Samuel y Sara</strong> para conocer el sexo del bebé de...
+          </InvitationText>
+
+          <DressCodeBox>
+            <p>
+              <strong style={{ color: '#4682B4' }}>Si crees que es niño:</strong> lleva una prenda azul.
+            </p>
+            <p style={{ marginTop: '8px' }}>
+              <strong style={{ color: '#C08081' }}>Si crees que es niña:</strong> lleva una prenda rosada.
+            </p>
+          </DressCodeBox>
 
           <DetailsBox>
             <DetailItem>
@@ -104,17 +128,18 @@ const HomePage = () => {
             </DetailItem>
           </DetailsBox>
 
+          {/* BOTÓN CÓMO LLEGAR (Link genérico, cámbialo por el real) */}
           <LocationButton
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => window.open("https://www.google.com/maps?q=La+Calera", "_blank")}
+            onClick={() => window.open("https://maps.app.goo.gl/ZbW4X6uM6uM6uM6u6", "_blank")}
           >
             <FaMapMarkerAlt size={16} />
             CÓMO LLEGAR (WAZE / MAPS)
           </LocationButton>
         </MainContent>
 
-        {/* BOTONES */}
+        {/* BOTONES DE ACCIÓN */}
         <ActionsGrid>
           <ActionButton
             as={motion.button}
@@ -143,7 +168,7 @@ const HomePage = () => {
   );
 };
 
-// --- ESTILOS ---
+// --- ESTILOS (Añádelos abajo del componente) ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
@@ -151,7 +176,7 @@ const HomeContainer = styled(motion.div)`
   align-items: center;
   min-height: 100vh;
   padding: 2rem 1rem;
-  background: #0f0f0f;
+  background: #0f0f0f; /* Fondo oscuro */
 `;
 
 const ContentCard = styled.div`
@@ -224,6 +249,7 @@ const PhotoWrapper = styled(motion.div)`
   border-radius: 20px;
   overflow: hidden;
   border: 3px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 
   video {
     width: 100%;
@@ -232,12 +258,40 @@ const PhotoWrapper = styled(motion.div)`
   }
 `;
 
+const InvitationText = styled.p`
+  color: #ccc;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+  padding: 0 10px;
+  
+  strong {
+    color: white;
+    font-weight: 600;
+  }
+`;
+
+const DressCodeBox = styled.div`
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem;
+  border-radius: 15px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.95rem;
+  color: #eee;
+  text-align: left;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
 const DetailsBox = styled.div`
   background: rgba(0, 0, 0, 0.3);
   padding: 1rem;
   border-radius: 15px;
   color: white;
   margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 `;
 
 const DetailItem = styled.div`
@@ -265,12 +319,19 @@ const LocationButton = styled(motion.button)`
   justify-content: center;
   gap: 8px;
   width: 100%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #4682B4;
+    color: white;
+  }
 `;
 
 const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  margin-top: 2rem;
 `;
 
 const ActionButton = styled.button`
@@ -287,6 +348,7 @@ const ActionButton = styled.button`
   font-weight: bold;
   font-size: 0.9rem;
   cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 `;
 
 export default HomePage;
