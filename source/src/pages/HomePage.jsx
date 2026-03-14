@@ -10,7 +10,7 @@ import { setShowVotingScreen } from "../store/resultsSlice";
 import fotoRevelacion from "../public/Revelacion.jpg";
 
 const HomePage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate():
   const dispatch = useDispatch();
   const [timeLeft, setTimeLeft] = useState({});
 
