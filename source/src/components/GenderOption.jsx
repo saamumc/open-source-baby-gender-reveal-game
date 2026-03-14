@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-// --- ICONO NIÑA (Exportado para usarlo en otras páginas) ---
+// --- ICONO NIÑA (EXPORTADO PARA OTROS COMPONENTES) ---
 export const BabyGirlIcon = () => (
   <svg width="100%" height="100%" viewBox="0 0 120 120">
     <circle cx="28" cy="38" r="22" fill="#B08968" />
@@ -32,7 +32,7 @@ export const BabyGirlIcon = () => (
   </svg>
 );
 
-// --- ICONO NIÑO (Exportado para usarlo en otras páginas) ---
+// --- ICONO NIÑO (EXPORTADO PARA OTROS COMPONENTES) ---
 export const BabyBoyIcon = () => (
   <svg width="100%" height="100%" viewBox="0 0 120 120">
     <circle cx="28" cy="38" r="22" fill="#8E6A4B" />
@@ -61,7 +61,6 @@ export const BabyBoyIcon = () => (
   </svg>
 );
 
-// --- COMPONENTE GENDER OPTION ---
 const GenderOption = ({ type, selected, onSelect }) => {
   const label = type === "girl" ? "NIÑA" : "NIÑO";
 
@@ -90,7 +89,6 @@ const GenderOption = ({ type, selected, onSelect }) => {
   );
 };
 
-// --- ESTILOS ---
 const OptionContainer = styled(motion.div)`
   background: white;
   padding: 2rem 1rem;
@@ -102,7 +100,7 @@ const OptionContainer = styled(motion.div)`
   cursor: pointer;
   position: relative;
   width: 100%;
-  max-width: 180px; 
+  max-width: 180px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
   border: 4px solid ${props => 
     props.$isSelected 
@@ -111,35 +109,13 @@ const OptionContainer = styled(motion.div)`
   transition: all 0.3s ease;
 `;
 
-const IconWrapper = styled.div`
-  width: 100px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LabelText = styled.span`
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: #5D4037;
-`;
-
+const IconWrapper = styled.div` width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; `;
+const LabelText = styled.span` font-size: 1.2rem; font-weight: 800; color: #5D4037; `;
 const CheckBadge = styled(motion.div)`
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 35px;
-  height: 35px;
+  position: absolute; top: -10px; right: -10px; width: 35px; height: 35px;
   background: ${props => props.$type === "girl" ? "#FF69B4" : "#4169E1"};
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  border: 2px solid white;
+  color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid white;
 `;
 
 export default GenderOption;
