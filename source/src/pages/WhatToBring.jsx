@@ -35,7 +35,6 @@ const WhatToBring = () => {
             <FaBabyCarriage size={30} />
             <h3>Si crees que es NIÑA</h3>
             <ul>
-              <li><FaCheckCircle /> Pañales Huggies Dermacare</li>
               <li><FaCheckCircle /> Pañitos Huggies Dermacare</li>
             </ul>
           </GiftCard>
@@ -45,7 +44,6 @@ const WhatToBring = () => {
             <h3>Si crees que es NIÑO</h3>
             <ul>
               <li><FaCheckCircle /> Pañales Huggies Dermacare</li>
-              <li><FaCheckCircle /> Pañitos Huggies Dermacare</li>
             </ul>
           </GiftCard>
         </Grid>
