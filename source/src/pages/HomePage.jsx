@@ -34,15 +34,17 @@ const HomePage = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Función corregida para asegurar la redirección
   const handleVoteClick = () => {
     localStorage.clear();
     dispatch(resetVote());
     dispatch(resetUi());
     dispatch(setShowVotingScreen(true)); 
     
+    // Aumentamos ligeramente el tiempo para asegurar que el estado se limpie
     setTimeout(() => {
       navigate("/vote");
-    }, 100);
+    }, 200);
   };
 
   return (
@@ -56,11 +58,10 @@ const HomePage = () => {
         </CountdownSection>
 
         <MainContent>
-          {/* REEMPLAZO DE VIDEO POR IMAGEN */}
           <PhotoWrapper>
             <img 
               src="/revelacion.jpg" 
-              alt="Revelación de género" 
+              alt="Valentina y Janppier" 
               style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
             />
           </PhotoWrapper>
@@ -70,11 +71,11 @@ const HomePage = () => {
           </InvitationText>
 
           <DressCodeBox>
-            <p><strong>Niño:</strong> Prenda Azul 💙 | <strong>Niña:</strong> Prenda Rosada 💗</p>
+            <p><strong>Vestimenta:</strong> Blanco / Beige / Denim</p>
           </DressCodeBox>
 
           <DetailsBox>
-            <FaMapMarkerAlt /> La Calera, Cundinamarca - 3:00 PM
+            <FaMapMarkerAlt color="#8c6a53" /> La Serena, Parcela #14 sitio 2 - 5:00 PM
           </DetailsBox>
 
           <GiftButton onClick={() => navigate("/traer")}>
@@ -87,10 +88,10 @@ const HomePage = () => {
         </MainContent>
 
         <ActionsGrid>
-          <ActionButton onClick={handleVoteClick} gradient="linear-gradient(135deg, #4682B4, #2c5272)">
+          <ActionButton onClick={handleVoteClick} color="#4682B4">
             <FaVoteYea /> VOTAR
           </ActionButton>
-          <ActionButton onClick={() => navigate("/results")} gradient="linear-gradient(135deg, #C08081, #8a5a5b)">
+          <ActionButton onClick={() => navigate("/results")} color="#C08081">
             <FaChartBar /> RESULTADOS
           </ActionButton>
         </ActionsGrid>
@@ -99,56 +100,65 @@ const HomePage = () => {
   );
 };
 
-// --- STYLED COMPONENTS ---
+// --- STYLED COMPONENTS (Paleta de la invitación: Crema, Café, Neutro) ---
 
 const HomeContainer = styled(motion.div)` 
-  display: flex; justify-content: center; padding: 2rem 1rem; background: #0f0f0f; min-height: 100vh; 
+  display: flex; justify-content: center; align-items: center; 
+  padding: 2rem 1rem; background: #f2e8df; min-height: 100vh; 
 `;
 
 const ContentCard = styled.div` 
-  background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 30px; 
-  padding: 2rem; width: 100%; max-width: 500px; color: white; text-align: center;
+  background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); 
+  border-radius: 30px; padding: 2rem; width: 100%; max-width: 500px; 
+  color: #8c6a53; text-align: center; border: 1px solid #d9c7b8;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 `;
 
-const NamesTitle = styled.h1` font-family: serif; font-size: 2.2rem; margin: 0; `;
+const NamesTitle = styled.h1` font-family: 'Pacifico', cursive, serif; font-size: 2.2rem; margin: 0; `;
 
-const Divider = styled.hr` border: 0; height: 1px; background: #333; margin: 1rem 0; `;
+const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1rem 0; `;
 
-const CountdownSection = styled.div` background: #1a1a1a; padding: 1rem; border-radius: 15px; margin-bottom: 1rem; font-weight: bold; `;
+const CountdownSection = styled.div` 
+  background: #a68974; color: white; padding: 0.8rem; 
+  border-radius: 15px; margin-bottom: 1rem; font-weight: bold; 
+`;
 
 const MainContent = styled.div` margin-bottom: 1.5rem; `;
 
 const PhotoWrapper = styled.div` 
-  width: 100%; height: 300px; border-radius: 20px; overflow: hidden; margin-bottom: 1rem; 
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%; height: 320px; border-radius: 20px; overflow: hidden; 
+  margin-bottom: 1rem; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 `;
 
-const InvitationText = styled.p` font-size: 0.9rem; color: #ccc; margin-bottom: 1rem; `;
+const InvitationText = styled.p` font-size: 1rem; color: #8c6a53; margin-bottom: 1rem; `;
 
-const DressCodeBox = styled.div` background: #222; padding: 0.8rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.85rem; `;
+const DressCodeBox = styled.div` 
+  background: #fdfaf7; padding: 0.8rem; border-radius: 12px; 
+  margin-bottom: 1rem; font-size: 0.85rem; border: 1px solid #d9c7b8;
+`;
 
 const DetailsBox = styled.div` font-size: 0.9rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; `;
 
 const GiftButton = styled.button`
-  background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid #444;
+  background: white; color: #8c6a53; border: 1px solid #d9c7b8;
   padding: 1rem; border-radius: 15px; width: 100%; margin-top: 10px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  transition: background 0.3s;
-  &:hover { background: rgba(255, 255, 255, 0.2); }
+  display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold;
+  &:hover { background: #f2e8df; }
 `;
 
 const ConfirmButton = styled.button` 
-  background: #25D366; color: white; border: none; padding: 1rem; border-radius: 15px; 
-  width: 100%; margin-top: 10px; font-weight: bold; display: flex; align-items: center; 
-  justify-content: center; gap: 10px; cursor: pointer; 
+  background: #25D366; color: white; border: none; padding: 1rem; 
+  border-radius: 15px; width: 100%; margin-top: 10px; font-weight: bold; 
+  display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; 
 `;
 
 const ActionsGrid = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; `;
 
 const ActionButton = styled.button` 
-  background: ${props => props.gradient}; color: white; border: none; padding: 1rem; 
+  background: ${props => props.color}; color: white; border: none; padding: 1rem; 
   border-radius: 15px; cursor: pointer; display: flex; flex-direction: column; 
-  align-items: center; gap: 5px; font-weight: bold; 
+  align-items: center; gap: 5px; font-weight: bold; transition: transform 0.2s;
+  &:hover { transform: scale(1.05); }
 `;
 
 export default HomePage;
