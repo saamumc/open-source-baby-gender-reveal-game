@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-// --- ICONO NIÑA ULTRA DETALLADO ---
-const BabyGirlIcon = () => (
-  <svg width="120" height="120" viewBox="0 0 120 120">
+// --- ICONO NIÑA (Exportado para usarlo en otras páginas) ---
+export const BabyGirlIcon = () => (
+  <svg width="100%" height="100%" viewBox="0 0 120 120">
     <circle cx="28" cy="38" r="22" fill="#B08968" />
     <circle cx="92" cy="38" r="22" fill="#B08968" />
     <circle cx="28" cy="38" r="14" fill="#E8D0B3" />
@@ -32,9 +32,9 @@ const BabyGirlIcon = () => (
   </svg>
 );
 
-// --- ICONO NIÑO ULTRA DETALLADO ---
-const BabyBoyIcon = () => (
-  <svg width="120" height="120" viewBox="0 0 120 120">
+// --- ICONO NIÑO (Exportado para usarlo en otras páginas) ---
+export const BabyBoyIcon = () => (
+  <svg width="100%" height="100%" viewBox="0 0 120 120">
     <circle cx="28" cy="38" r="22" fill="#8E6A4B" />
     <circle cx="92" cy="38" r="22" fill="#8E6A4B" />
     <circle cx="28" cy="38" r="14" fill="#D2B48C" />
@@ -62,13 +62,12 @@ const BabyBoyIcon = () => (
 );
 
 // --- COMPONENTE GENDER OPTION ---
-// --- COMPONENTE GENDER OPTION ---
-const GenderOption = ({ type, selected, onSelect }) => { // <--- CAMBIADO onClick por onSelect
+const GenderOption = ({ type, selected, onSelect }) => {
   const label = type === "girl" ? "NIÑA" : "NIÑO";
 
   return (
     <OptionContainer
-      onClick={onSelect} // <--- CAMBIADO onClick por onSelect
+      onClick={onSelect}
       $isSelected={selected}
       $type={type}
       whileHover={{ scale: 1.05 }}
@@ -102,7 +101,8 @@ const OptionContainer = styled(motion.div)`
   gap: 1rem;
   cursor: pointer;
   position: relative;
-  width: 150px; /* Tamaño fijo para evitar saltos */
+  width: 100%;
+  max-width: 180px; 
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
   border: 4px solid ${props => 
     props.$isSelected 
