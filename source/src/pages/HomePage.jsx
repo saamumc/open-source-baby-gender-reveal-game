@@ -16,6 +16,9 @@ const HomePage = () => {
   const whatsappNumber = "573196911965"; 
   const message = encodeURIComponent("¡Hola Samuel y Sara! Confirmo mi asistencia a la revelación de sexo de Valentina y Janppier.");
 
+  // Usamos una URL absoluta basada en el origen para evitar fallos de ruta en subpáginas
+  const imageUrl = `${window.location.origin}/Revelacion.jpg`;
+
   useEffect(() => {
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
     const timer = setInterval(() => {
@@ -57,11 +60,12 @@ const HomePage = () => {
 
         <MainContent>
           <PhotoWrapper>
-            {/* CORRECCIÓN DE RUTA: Ruta directa al archivo en /public */}
             <img 
-              src="/Revelacion.jpg" 
+              src={imageUrl} 
               alt="Valentina y Janppier" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              // Si la imagen falla, esto intentará cargarla sin la barra inicial como último recurso
+              onError={(e) => { e.target.src = "Revelacion.jpg"; }} 
             />
           </PhotoWrapper>
 
@@ -69,9 +73,8 @@ const HomePage = () => {
             Invitación de los tíos <strong>Samuel y Sara</strong> para conocer el sexo del bebé.
           </InvitationText>
 
-          {/* CORRECCIÓN DE TEXTO: Vestimenta solicitada */}
           <DressCodeBox>
-            <p><strong>Vestimenta:</strong> Trae una prenda <strong>azul</strong> si crees que es niño, <strong>rosada</strong> si crees que es niña 💙💗</p>
+            <p><strong>Vestimenta:</strong> Trae una prenda <strong>azul</strong> si crees que es niño, <strong>rosada</strong> si niña 💙💗</p>
           </DressCodeBox>
 
           <DetailsBox>
@@ -100,7 +103,7 @@ const HomePage = () => {
   );
 };
 
-// --- STYLED COMPONENTS ---
+// --- STYLED COMPONENTS (Aesthetic Neutro) ---
 
 const HomeContainer = styled(motion.div)` 
   display: flex; justify-content: center; align-items: center; 
