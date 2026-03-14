@@ -49,7 +49,7 @@ const VotePage = () => {
   };
 
   if (!showVotingScreen) return null;
-  if (hasVoted) return <VoteConfirmation />;
+  if (hasVoted) return <VoteConfirmation selected={selectedGender} />;
 
   return (
     <PageWrapper>
