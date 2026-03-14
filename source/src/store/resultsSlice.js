@@ -13,7 +13,7 @@ const initialState = {
 };
 
 const resultsSlice = createSlice({
-  name: "Votacion",
+  name: "Resultado Votacion",
   initialState,
   reducers: {
     updateVoteCounts: (state, action) => {
