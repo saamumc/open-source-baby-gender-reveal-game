@@ -5,62 +5,54 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 const AnimatedBackground = () => {
-  const { selectedGender, isVoteSubmitted } = useSelector(
-    (state) => state.vote
-  );
-  const { theme } = useSelector((state) => state.ui);
+  // Obtenemos los estados de Redux
+  const { selectedGender, isVoteSubmitted } = useSelector((state) => state.vote);
 
+  // Inicialización de partículas
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
   }, []);
 
-  // Lógica de colores para las partículas (tonos tierra y neutros)
+  // Colores (Estética basada en tonos tierra y neutros)
   const getParticleColor = () => {
-    if (isVoteSubmitted) return "#D4AF37"; // Dorado para la celebración
-    if (!selectedGender) return "#C2B280"; // Arena/Beige oscuro para el estado inicial
-    return selectedGender === "girl" ? "#E195AB" : "#90ADC6"; // Rosa/Azul sutiles
+    if (isVoteSubmitted) return "#D4AF37"; // Dorado festivo
+    if (!selectedGender) return "#C2B280"; // Arena inicial
+    return selectedGender === "girl" ? "#E195AB" : "#90ADC6";
   };
 
-  // Lógica para el fondo (Beige cálido)
   const getBackgroundColor = () => {
-    if (isVoteSubmitted) return "#FFFDF0"; // Crema muy claro al ganar
-    if (!selectedGender) return "#F5F5DC"; // Beige clásico (como en la foto)
-    return selectedGender === "girl" ? "#FDF2F5" : "#F0F7FA"; // Tintes suaves al seleccionar
+    if (isVoteSubmitted) return "#FFFDF0";
+    if (!selectedGender) return "#F5F5DC";
+    return selectedGender === "girl" ? "#FDF2F5" : "#F0F7FA";
   };
 
-  const getParticleConfig = () => ({
+  const options = {
+    fullScreen: { enable: true, zIndex: 0 },
     particles: {
-      color: {
-        value: getParticleColor(),
-      },
+      color: { value: getParticleColor() },
       number: {
-        value: isVoteSubmitted ? 120 : 40, // Más partículas al celebrar
-        density: {
-          enable: true,
-          value_area: 800,
-        },
+        value: isVoteSubmitted ? 100 : 35,
+        density: { enable: true, area: 800 },
       },
       shape: {
         type: isVoteSubmitted ? ["circle", "star"] : "circle",
       },
       opacity: {
-        value: 0.4,
+        value: 0.5,
         random: true,
       },
       size: {
-        value: isVoteSubmitted ? { min: 2, max: 5 } : { min: 1, max: 3 },
+        value: isVoteSubmitted ? { min: 2, max: 4 } : { min: 1, max: 3 },
         random: true,
       },
       move: {
         enable: true,
-        speed: isVoteSubmitted ? 5 : 1.5, // Más rápido al enviar el voto
+        speed: isVoteSubmitted ? 4 : 1.2,
         direction: isVoteSubmitted ? "top" : "none",
-        random: true,
-        straight: false,
-        outModes: "out",
+        outModes: { default: "out" },
       },
       links: {
-        enable: !isVoteSubmitted, // Desactivar líneas en la celebración para que parezca confeti
+        enable: !isVoteSubmitted,
         distance: 150,
         color: getParticleColor(),
         opacity: 0.2,
@@ -72,53 +64,42 @@ const AnimatedBackground = () => {
     },
     interactivity: {
       events: {
-        onHover: {
-          enable: true,
-          mode: "bubble",
-        },
+        onHover: { enable: true, mode: "bubble" },
       },
       modes: {
-        bubble: {
-          size: 6,
-          distance: 200,
-          duration: 2,
-          opacity: 0.8,
-        },
+        bubble: { size: 6, distance: 200, duration: 2, opacity: 0.8 },
       },
     },
-  });
+    detectRetina: true,
+  };
 
   return (
     <ParticlesContainer $isSubmitted={isVoteSubmitted}>
-      <Particles init={particlesInit} options={getParticleConfig()} />
+      <Particles 
+        id="tsparticles" // ID único obligatorio para evitar bugs de duplicación
+        init={particlesInit} 
+        options={options} 
+      />
     </ParticlesContainer>
   );
 };
 
-// Estilos del contenedor
 const ParticlesContainer = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
-  transition: background-color 0.8s ease-in-out;
+  z-index: -1; /* Aseguramos que siempre esté detrás de las cards */
+  transition: all 0.8s ease-in-out;
   
-  /* Animación sutil de brillo si ya se envió el voto */
   animation: ${(props) =>
-    props.$isSubmitted ? "celebrate 2s ease-in-out infinite" : "none"};
+    props.$isSubmitted ? "celebrate 3s ease-in-out infinite" : "none"};
 
   @keyframes celebrate {
     0% { filter: brightness(1); }
-    50% { filter: brightness(1.05); }
+    50% { filter: brightness(1.03); }
     100% { filter: brightness(1); }
-  }
-
-  /* Para asegurar que los canvas de tsparticles ocupen todo el espacio */
-  & > div {
-    height: 100%;
-    width: 100%;
   }
 `;
 
