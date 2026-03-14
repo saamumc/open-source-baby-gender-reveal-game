@@ -30,8 +30,8 @@ const voteSlice = createSlice({
     },
     resetVote: (state) => {
       state.selectedGender = null;
-      state.hasVoted = true;
-      state.timestamp = true;
+      state.hasVoted = false;
+      state.timestamp = null;
       state.uuid = storage.getUUID();
       storage.set(STORAGE_KEYS.VOTE_STATE, state);
     },
