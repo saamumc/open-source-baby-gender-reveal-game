@@ -2,26 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactConfetti from "react-confetti";
-import { useTranslation } from "../hooks/useTranslation";
 import { useWindowSize } from "react-use";
-import { useDispatch } from "react-redux";
-import { resetVote } from "../store/voteSlice";
-import { resetResults } from "../store/resultsSlice";
-import { resetUi } from "../store/uiSlice";
 import { Link } from "react-router-dom";
 
 const VoteConfirmation = ({ selected }) => {
-  const { t } = useTranslation();
   const { width, height } = useWindowSize();
-  const dispatch = useDispatch();
 
-  const handleResetForNext = () => {
-    localStorage.clear();
-    dispatch(resetVote());
-    dispatch(resetResults());
-    dispatch(resetUi());
-    window.location.reload();
-  };
+  // Paleta de colores elegante para el confeti (Dorados, beiges, cafés claros y un toque de rosa/azul)
+  const elegantConfettiColors = [
+    '#D4AF37', '#F5F5DC', '#D2B48C', '#8D6E63', '#FFFDD0', '#E195AB', '#90ADC6'
+  ];
 
   return (
     <AnimatePresence>
@@ -33,76 +23,74 @@ const VoteConfirmation = ({ selected }) => {
         <ReactConfetti
           width={width}
           height={height}
-          numberOfPieces={200}
+          numberOfPieces={250}
           recycle={false}
           run={true}
+          colors={elegantConfettiColors}
         />
         <ConfirmationCard
-          initial={{ scale: 0.5, opacity: 0 }}
+          initial={{ scale: 0.8, opacity: 0, y: 20 }}
           animate={{
             scale: 1,
             opacity: 1,
+            y: 0,
             transition: {
               type: "spring",
               stiffness: 300,
-              damping: 20,
+              damping: 25,
             },
           }}
-          exit={{ scale: 0.5, opacity: 0 }}
+          exit={{ scale: 0.8, opacity: 0, y: 20 }}
         >
           <IconWrapper
-            initial={{ scale: 0 }}
+            initial={{ scale: 0, rotate: -180 }}
             animate={{
               scale: 1,
+              rotate: 0,
               transition: {
                 delay: 0.2,
                 type: "spring",
-                stiffness: 300,
+                stiffness: 200,
                 damping: 15,
               },
             }}
+            $type={selected}
           >
-            {selected === "boy" ? "👶" : "👧"}
+            {/* Si eligió niña sale un moño, si eligió niño un osito */}
+            {selected === "girl" ? "🎀" : "🧸"}
           </IconWrapper>
-          <MessageText
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: { delay: 0.4 },
-            }}
-          >
-            {t("confirmation.thanks")}
-          </MessageText>
-          <SubText
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: { delay: 0.6 },
-            }}
-          >
-            {t("confirmation.registered")}
-          </SubText>
-          <StyledLink to="/results">{t("results.showResults")}</StyledLink>
-          <ResetButton
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: { delay: 1 },
-            }}
+          
+          <TextContainer>
+            <MessageText
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 0.4 } }}
+            >
+              ¡Gracias por tu voto!
+            </MessageText>
+            <SubText
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 0.5 } }}
+            >
+              Tu predicción ha sido guardada con éxito. <br/> ¡Qué emoción!
+            </SubText>
+          </TextContainer>
+
+          <StyledLink 
+            to="/results"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 0.7 } }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleResetForNext}
           >
-            {t("confirmation.resetForNext")}
-          </ResetButton>
+            Ver Resultados
+          </StyledLink>
         </ConfirmationCard>
       </Overlay>
     </AnimatePresence>
   );
 };
+
+// --- ESTILOS ELEGANTES ---
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -110,8 +98,9 @@ const Overlay = styled(motion.div)`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(5px);
+  /* Un fondo oscuro pero en tono cálido (café muy oscuro) en lugar de negro puro */
+  background: rgba(62, 49, 43, 0.75);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -119,73 +108,74 @@ const Overlay = styled(motion.div)`
 `;
 
 const ConfirmationCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.95);
-  padding: 2rem;
-  border-radius: 20px;
+  background: #FFFAF0; /* Un blanco floral/crema muy elegante */
+  padding: 3rem 2rem;
+  border-radius: 32px;
   text-align: center;
   max-width: 90%;
-  width: 400px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
+  border: 1px solid rgba(210, 180, 140, 0.3); /* Borde sutil color canela */
 `;
 
 const IconWrapper = styled(motion.div)`
-  font-size: 4rem;
-  background: linear-gradient(135deg, #ff69b4, #4169e1);
+  font-size: 4.5rem;
+  /* Fondo circular suave que cambia ligeramente según la elección, pero se mantiene pastel */
+  background: ${(props) => 
+    props.$type === "girl" 
+      ? "linear-gradient(135deg, #FDF2F5, #F5D0E1)" 
+      : "linear-gradient(135deg, #F0F7FA, #D0E4F5)"};
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 4px solid #FFFFFF;
+`;
+
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `;
 
 const MessageText = styled(motion.h2)`
-  font-size: 1.8rem;
-  color: #333;
+  font-size: 2rem;
+  color: #5D4037; /* Café oscuro elegante */
   margin: 0;
+  font-weight: 700;
 `;
 
 const SubText = styled(motion.p)`
   font-size: 1.1rem;
-  color: #666;
+  color: #8D6E63; /* Café medio */
   margin: 0;
+  line-height: 1.5;
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(motion(Link))`
   display: inline-block;
-  background: linear-gradient(135deg, #ff69b4, #4169e1);
+  /* Botón color café/canela para mantener la paleta neutra */
+  background: linear-gradient(135deg, #A1887F, #8D6E63);
   color: white;
   text-decoration: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 25px;
-  margin-top: 1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 30px;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  transition: transform 0.2s;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 20px rgba(141, 110, 99, 0.3);
+  transition: box-shadow 0.3s ease;
 
   &:hover {
-    transform: scale(1.05);
-  }
-`;
-
-const ResetButton = styled(motion.button)`
-  background: #28a745;
-  border: none;
-  color: white;
-  padding: 0.8rem 1.5rem;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #218838;
+    box-shadow: 0 12px 25px rgba(141, 110, 99, 0.4);
   }
 `;
 
