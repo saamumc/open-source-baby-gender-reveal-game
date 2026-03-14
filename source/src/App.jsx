@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
-// Estas rutas ahora deben ser relativas a la carpeta source/src
 import AnimatedBackground from "./components/AnimatedBackground";
 import FloatingIcons from "./components/FloatingIcons";
 import { storage, STORAGE_KEYS } from "./utils/storage";
@@ -17,9 +16,9 @@ import { database } from "./firebase/config";
 const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // Eliminamos showResultPage si no se usa para evitar errores de compilación
   
   useEffect(() => {
+    // Si estamos en el panel de control o en la lista de qué traer, no aplicamos restricciones
     if (location.pathname === "/control-panel" || location.pathname === "/traer") {
       return;
     }
@@ -27,7 +26,11 @@ const AppContent = () => {
     const resultsRef = ref(database, "results");
     const unsubscribe = onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
+      
+      // CORRECCIÓN: Solo redirigir si explícitamente el juego está marcado como NO EMPEZADO
+      // Si data es null, permitimos que la navegación continúe para evitar bloqueos
       if (data && data.showGameStarted === false && location.pathname === "/vote") {
+          console.log("Votación bloqueada por Firebase");
           navigate("/");
       }
     });
