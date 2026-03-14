@@ -62,13 +62,13 @@ const BabyBoyIcon = () => (
 );
 
 // --- COMPONENTE GENDER OPTION ---
-const GenderOption = ({ type, selected, onClick }) => {
-  // Determinamos el texto según el tipo manualmente para evitar errores de traducción
+// --- COMPONENTE GENDER OPTION ---
+const GenderOption = ({ type, selected, onSelect }) => { // <--- CAMBIADO onClick por onSelect
   const label = type === "girl" ? "NIÑA" : "NIÑO";
 
   return (
     <OptionContainer
-      onClick={onClick}
+      onClick={onSelect} // <--- CAMBIADO onClick por onSelect
       $isSelected={selected}
       $type={type}
       whileHover={{ scale: 1.05 }}
