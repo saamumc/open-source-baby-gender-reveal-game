@@ -5,506 +5,134 @@ import { useTranslation } from "../hooks/useTranslation";
 
 const BabyGirlIcon = () => (
   <svg width="120" height="120" viewBox="0 0 120 120">
-    {/* Hair Back Layer */}
-    <path
-      d="M 25 65 
-         C 25 45, 40 25, 60 25 
-         C 80 25, 95 45, 95 65
-         C 95 65, 90 55, 60 55
-         C 30 55, 25 65, 25 65"
-      fill="#FF9EBF"
-    />
+    {/* Orejas Traseras (Sombra) */}
+    <circle cx="28" cy="38" r="22" fill="#B08968" />
+    <circle cx="92" cy="38" r="22" fill="#B08968" />
+    
+    {/* Interior de las Orejas (Capas de profundidad) */}
+    <circle cx="28" cy="38" r="14" fill="#E8D0B3" />
+    <path d="M 20 38 Q 28 28 36 38" stroke="#9A7B5E" strokeWidth="2" fill="none" />
+    <circle cx="92" cy="38" r="14" fill="#E8D0B3" />
+    <path d="M 84 38 Q 92 28 100 38" stroke="#9A7B5E" strokeWidth="2" fill="none" />
 
-    {/* Hair Middle Layer */}
-    <path
-      d="M 30 60 
-         C 30 40, 60 30, 90 60
-         C 90 60, 85 50, 60 50
-         C 35 50, 30 60, 30 60"
-      fill="#FFB6C1"
-    />
+    {/* Cabeza Principal */}
+    <circle cx="60" cy="65" r="42" fill="#C29A74" />
 
-    {/* Curly Hair Details */}
-    <path
-      d="M 35 55 C 40 50, 45 55, 40 60"
-      stroke="#FF89A3"
-      strokeWidth="3"
-      fill="none"
-    />
-    <path
-      d="M 85 55 C 80 50, 75 55, 80 60"
-      stroke="#FF89A3"
-      strokeWidth="3"
-      fill="none"
-    />
-    <path
-      d="M 45 45 C 50 40, 55 45, 50 50"
-      stroke="#FF89A3"
-      strokeWidth="3"
-      fill="none"
-    />
-    <path
-      d="M 75 45 C 70 40, 65 45, 70 50"
-      stroke="#FF89A3"
-      strokeWidth="3"
-      fill="none"
-    />
+    {/* Textura de Pelaje (Mejillas y Copete) */}
+    <path d="M 18 65 Q 10 70 18 78 Q 12 83 22 86" fill="#C29A74" stroke="none" />
+    <path d="M 102 65 Q 110 70 102 78 Q 108 83 98 86" fill="#C29A74" stroke="none" />
+    <path d="M 50 25 Q 60 15 70 25 Q 65 20 60 25 Z" fill="#B08968" />
 
-    {/* Face */}
-    <circle cx="60" cy="65" r="35" fill="#FFE4E1" />
+    {/* Moño Detallado en la Cabeza (Niña) */}
+    <g transform="translate(60 22) scale(1.1)">
+      {/* Capa trasera del moño */}
+      <path d="M -30 -15 C -15 -25, -5 -15, 0 -5 C 5 -25, 15 -25, 30 -15 C 25 5, 5 15, 0 5 C -5 15, -25 5, -30 -15 Z" fill="#FF9EBF" />
+      {/* Capa frontal del moño (Pliegues) */}
+      <path d="M -25 -10 C -15 -18, -5 -10, 0 0 C 5 -10, 15 -18, 25 -10 C 20 5, 5 10, 0 0 C -5 10, -20 5, -25 -10 Z" fill="#FF1493" />
+      {/* Detalles de arrugas de tela */}
+      <path d="M -15 -5 L -5 0 M -18 0 L -8 2" stroke="#FF9EBF" strokeWidth="1.5" fill="none" />
+      <path d="M 15 -5 L 5 0 M 18 0 L 8 2" stroke="#FF9EBF" strokeWidth="1.5" fill="none" />
+      {/* Centro del moño */}
+      <circle cx="0" cy="0" r="7" fill="#FF69B4" />
+      <circle cx="-2" cy="-2" r="2" fill="white" opacity="0.6" />
+    </g>
 
-    {/* Eyes */}
+    {/* Hocico 3D */}
+    <ellipse cx="60" cy="80" rx="22" ry="16" fill="#FFF0D4" />
+    <ellipse cx="60" cy="82" rx="18" ry="12" fill="#FFE6C2" />
+
+    {/* Nariz con Brillo */}
+    <path d="M 52 72 Q 60 68 68 72 L 64 76 Q 60 80 56 76 Z" fill="#5C4033" />
+    <circle cx="56" cy="72" r="2" fill="white" opacity="0.8" />
+
+    {/* Boca detallada */}
+    <path d="M 60 77 L 60 84 M 50 82 Q 60 92 70 82" stroke="#5C4033" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+    <path d="M 57 88 Q 60 90 63 88" stroke="#FF9EBF" strokeWidth="2" fill="none" strokeLinecap="round" /> {/* Lengüita */}
+
+    {/* Ojos expresivos con pestañas gruesas */}
     <g className="eyes">
-      <path
-        d="M 45 60 C 45 57, 47 55, 50 55 C 53 55, 55 57, 55 60 C 55 63, 53 65, 50 65 C 47 65, 45 63, 45 60 Z"
-        fill="#333"
-      />
-      <path
-        d="M 65 60 C 65 57, 67 55, 70 55 C 73 55, 75 57, 75 60 C 75 63, 73 65, 70 65 C 67 65, 65 63, 65 60 Z"
-        fill="#333"
-      />
-      {/* Eyelashes */}
-      <path
-        d="M 47 54 L 45 51 M 50 53 L 50 50 M 53 54 L 55 51"
-        stroke="#333"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M 67 54 L 65 51 M 70 53 L 70 50 M 73 54 L 75 51"
-        stroke="#333"
-        strokeWidth="1.5"
-      />
+      <circle cx="44" cy="58" r="6" fill="#333" />
+      <circle cx="76" cy="58" r="6" fill="#333" />
+      {/* Brillos (Catchlights) */}
+      <circle cx="42" cy="56" r="2" fill="white" />
+      <circle cx="45" cy="59" r="1" fill="white" />
+      <circle cx="74" cy="56" r="2" fill="white" />
+      <circle cx="77" cy="59" r="1" fill="white" />
+      {/* Pestañas detalladas */}
+      <path d="M 40 54 L 35 50 M 43 52 L 40 47 M 46 53 L 45 48" stroke="#333" strokeWidth="2" strokeLinecap="round" />
+      <path d="M 80 54 L 85 50 M 77 52 L 80 47 M 74 53 L 75 48" stroke="#333" strokeWidth="2" strokeLinecap="round" />
     </g>
 
-    {/* Blush */}
-    <circle cx="40" cy="70" r="7" fill="#FFB6C1" opacity="0.5" />
-    <circle cx="80" cy="70" r="7" fill="#FFB6C1" opacity="0.5" />
-
-    {/* Mouth */}
-    <path
-      d="M 50 75 Q 60 85 70 75"
-      stroke="#FF69B4"
-      strokeWidth="3"
-      fill="none"
-      strokeLinecap="round"
-    />
-
-    {/* Hair Front Layer with Bangs */}
-    <path
-      d="M 35 45 
-         C 45 35, 75 35, 85 45
-         C 75 40, 45 40, 35 45"
-      fill="#FF89A3"
-    />
-
-    {/* Side Hair Strands */}
-    <path
-      d="M 30 50 C 25 60, 25 70, 30 80"
-      stroke="#FF89A3"
-      strokeWidth="4"
-      fill="none"
-    />
-    <path
-      d="M 90 50 C 95 60, 95 70, 90 80"
-      stroke="#FF89A3"
-      strokeWidth="4"
-      fill="none"
-    />
-
-    {/* Bow - made bigger and more detailed */}
-    <g transform="translate(60 30) rotate(-5)">
-      <path
-        d="M -25 0 
-           C -20 -15, -5 -15, 0 -5 
-           C 5 -15, 20 -15, 25 0
-           C 20 15, 5 15, 0 5
-           C -5 15, -20 15, -25 0"
-        fill="#FF1493"
-      />
-      <circle cx="0" cy="0" r="6" fill="#FF69B4" />
-      <path d="M -3 0 L 3 0 M 0 -3 L 0 3" stroke="#FFF" strokeWidth="1" />
-    </g>
+    {/* Rubor pronunciado */}
+    <ellipse cx="38" cy="70" rx="8" ry="5" fill="#FFB6C1" opacity="0.6" />
+    <ellipse cx="82" cy="70" rx="8" ry="5" fill="#FFB6C1" opacity="0.6" />
   </svg>
 );
 
 const BabyBoyIcon = () => (
   <svg width="120" height="120" viewBox="0 0 120 120">
-    {/* Hair Back Layer */}
-    <path
-      d="M 25 45 
-         C 25 35, 40 25, 60 25 
-         C 80 25, 95 35, 95 45
-         C 95 45, 90 40, 60 40
-         C 30 40, 25 45, 25 45"
-      fill="#2C3E50"
-    />
+    {/* Orejas Traseras */}
+    <circle cx="28" cy="38" r="22" fill="#8E6A4B" />
+    <circle cx="92" cy="38" r="22" fill="#8E6A4B" />
+    
+    {/* Interior de las Orejas */}
+    <circle cx="28" cy="38" r="14" fill="#D2B48C" />
+    <path d="M 20 38 Q 28 28 36 38" stroke="#7A5A3D" strokeWidth="2" fill="none" />
+    <circle cx="92" cy="38" r="14" fill="#D2B48C" />
+    <path d="M 84 38 Q 92 28 100 38" stroke="#7A5A3D" strokeWidth="2" fill="none" />
 
-    {/* Hair Middle Layer */}
-    <path
-      d="M 30 42 
-         C 30 32, 60 27, 90 42
-         C 90 42, 85 37, 60 37
-         C 35 37, 30 42, 30 42"
-      fill="#34495E"
-    />
+    {/* Cabeza Principal */}
+    <circle cx="60" cy="65" r="42" fill="#A67B5B" />
 
-    {/* Spiky Hair Details */}
-    <path
-      d="M 35 40 L 40 35 L 45 40"
-      stroke="#2C3E50"
-      strokeWidth="2"
-      fill="none"
-    />
-    <path
-      d="M 50 38 L 55 33 L 60 38"
-      stroke="#2C3E50"
-      strokeWidth="2"
-      fill="none"
-    />
-    <path
-      d="M 65 38 L 70 33 L 75 38"
-      stroke="#2C3E50"
-      strokeWidth="2"
-      fill="none"
-    />
-    <path
-      d="M 80 40 L 85 35 L 90 40"
-      stroke="#2C3E50"
-      strokeWidth="2"
-      fill="none"
-    />
+    {/* Textura de Pelaje (Copete desordenado) */}
+    <path d="M 18 65 Q 10 70 18 78 Q 12 83 22 86" fill="#A67B5B" stroke="none" />
+    <path d="M 102 65 Q 110 70 102 78 Q 108 83 98 86" fill="#A67B5B" stroke="none" />
+    {/* Copete puntiagudo de niño */}
+    <path d="M 45 28 L 50 18 L 55 25 L 60 15 L 65 25 L 70 18 L 75 28 Z" fill="#8E6A4B" />
 
-    {/* Cap with better design */}
-    <path
-      d="M 20 45 
-         C 20 35, 60 25, 100 45
-         L 95 50 
-         C 75 40, 45 40, 25 50 Z"
-      fill="#4169E1"
-    />
+    {/* Hocico 3D */}
+    <ellipse cx="60" cy="80" rx="22" ry="16" fill="#FFF0D4" />
+    <ellipse cx="60" cy="82" rx="18" ry="12" fill="#FFE6C2" />
 
-    {/* Cap Details */}
-    <path
-      d="M 20 45 C 40 35, 80 35, 100 45"
-      stroke="#5F9EA0"
-      strokeWidth="4"
-      fill="none"
-    />
+    {/* Nariz con Brillo */}
+    <path d="M 52 72 Q 60 68 68 72 L 64 76 Q 60 80 56 76 Z" fill="#4A3320" />
+    <circle cx="56" cy="72" r="2" fill="white" opacity="0.8" />
 
-    {/* Cap Visor with better curve */}
-    <path
-      d="M 20 45 
-         C 40 45, 80 45, 100 45 
-         L 95 52 
-         C 75 52, 45 52, 25 52 
-         Z"
-      fill="#2E4B9A"
-    />
+    {/* Boca detallada (Sonrisa más amplia) */}
+    <path d="M 60 77 L 60 84 M 48 80 Q 60 90 72 80" stroke="#4A3320" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+    {/* Hoyuelos */}
+    <path d="M 45 78 C 45 80, 48 82, 48 82" stroke="#8E6A4B" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+    <path d="M 75 78 C 75 80, 72 82, 72 82" stroke="#8E6A4B" strokeWidth="1.5" fill="none" strokeLinecap="round" />
 
-    {/* Face */}
-    <circle cx="60" cy="65" r="35" fill="#FFE4E1" />
-
-    {/* Eyes */}
+    {/* Ojos y Cejas de niño */}
     <g className="eyes">
-      {/* Left Eye */}
-      <path
-        d="M 45 60 C 45 57, 47 55, 50 55 C 53 55, 55 57, 55 60 C 55 63, 53 65, 50 65 C 47 65, 45 63, 45 60 Z"
-        fill="#333"
-      />
-      {/* Right Eye */}
-      <path
-        d="M 65 60 C 65 57, 67 55, 70 55 C 73 55, 75 57, 75 60 C 75 63, 73 65, 70 65 C 67 65, 65 63, 65 60 Z"
-        fill="#333"
-      />
-      {/* Eye Highlights */}
-      <circle cx="48" cy="58" r="2" fill="white" />
-      <circle cx="68" cy="58" r="2" fill="white" />
+      <circle cx="44" cy="58" r="6" fill="#333" />
+      <circle cx="76" cy="58" r="6" fill="#333" />
+      {/* Brillos */}
+      <circle cx="42" cy="56" r="2" fill="white" />
+      <circle cx="45" cy="59" r="1" fill="white" />
+      <circle cx="74" cy="56" r="2" fill="white" />
+      <circle cx="77" cy="59" r="1" fill="white" />
+      {/* Cejas expresivas */}
+      <path d="M 38 48 Q 44 45 50 48" stroke="#4A3320" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M 82 48 Q 76 45 70 48" stroke="#4A3320" strokeWidth="3" fill="none" strokeLinecap="round" />
     </g>
 
-    {/* Eyebrows */}
-    <path
-      d="M 43 52 C 45 50, 50 50, 52 52"
-      stroke="#333"
-      strokeWidth="2"
-      fill="none"
-    />
-    <path
-      d="M 68 52 C 70 50, 75 50, 77 52"
-      stroke="#333"
-      strokeWidth="2"
-      fill="none"
-    />
-
-    {/* Blush */}
-    <circle cx="40" cy="70" r="7" fill="#FFB6C1" opacity="0.3" />
-    <circle cx="80" cy="70" r="7" fill="#FFB6C1" opacity="0.3" />
-
-    {/* Mouth */}
-    <path
-      d="M 50 75 Q 60 82 70 75"
-      stroke="#333"
-      strokeWidth="3"
-      fill="none"
-      strokeLinecap="round"
-    />
-
-    {/* Dimples */}
-    <circle cx="45" cy="75" r="2" fill="#FFB6C1" opacity="0.3" />
-    <circle cx="75" cy="75" r="2" fill="#FFB6C1" opacity="0.3" />
-
-    {/* Hair Front Peek */}
-    <path
-      d="M 30 45 C 35 40, 45 38, 50 42"
-      stroke="#34495E"
-      strokeWidth="3"
-      fill="none"
-    />
-    <path
-      d="M 90 45 C 85 40, 75 38, 70 42"
-      stroke="#34495E"
-      strokeWidth="3"
-      fill="none"
-    />
-
-    {/* Cool Logo on Cap */}
-    <g transform="translate(60 40) scale(0.8)">
-      <path
-        d="M -10 0 L 0 -10 L 10 0 L 0 10 Z"
-        fill="#FFD700"
-        stroke="#FFA500"
-        strokeWidth="2"
-      />
-      <circle cx="0" cy="0" r="3" fill="#FFA500" />
+    {/* Moño Elegante en el Cuello (Corbatín) */}
+    <g transform="translate(60 105) scale(1.2)">
+      {/* Capa trasera oscura */}
+      <path d="M -22 -10 L 0 0 L 22 -10 L 22 10 L 0 0 L -22 10 Z" fill="#2E4B9A" />
+      {/* Capa frontal clara */}
+      <path d="M -18 -6 L 0 0 L 18 -6 L 18 6 L 0 0 L -18 6 Z" fill="#4169E1" />
+      {/* Pliegues del corbatín */}
+      <path d="M -10 -2 L -5 0 M -10 2 L -5 0" stroke="#2E4B9A" strokeWidth="1" fill="none" />
+      <path d="M 10 -2 L 5 0 M 10 2 L 5 0" stroke="#2E4B9A" strokeWidth="1" fill="none" />
+      {/* Nudo central */}
+      <rect x="-4" y="-5" width="8" height="10" rx="3" fill="#1E449A" />
+      <line x1="-2" y1="-5" x2="-2" y2="5" stroke="#4169E1" strokeWidth="1" />
     </g>
   </svg>
 );
 
-const GenderOption = ({ type, selected, onSelect }) => {
-  const { t } = useTranslation();
-
-  return (
-    <OptionContainer onClick={onSelect} selected={selected} type={type}>
-      <GlowingBackground selected={selected} type={type} />
-      <IconWrapper selected={selected}>
-        {type === "girl" ? <BabyGirlIcon /> : <BabyBoyIcon />}
-      </IconWrapper>
-      <OptionText selected={selected} type={type}>
-        {t(`genderOptions.${type}.text`)}
-      </OptionText>
-      <Sparkles selected={selected} type={type} />
-      <HeartBubbles selected={selected} type={type} />
-    </OptionContainer>
-  );
-};
-
-const GlowingBackground = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
-  background: ${(props) =>
-    props.selected
-      ? props.type === "girl"
-        ? "radial-gradient(circle, rgba(255,105,180,0.2) 0%, rgba(255,105,180,0) 70%)"
-        : "radial-gradient(circle, rgba(65,105,225,0.2) 0%, rgba(65,105,225,0) 70%)"
-      : "none"};
-  filter: blur(20px);
-  pointer-events: none;
-`;
-
-const OptionContainer = styled(motion.div)`
-  background: rgba(
-    255,
-    255,
-    255,
-    ${(props) => (props.selected ? "0.25" : "0.1")}
-  );
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  padding: 3rem;
-  cursor: pointer;
-  position: relative;
-  width: min(280px, 90vw);
-  height: min(280px, 90vw);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 4px solid
-    ${(props) =>
-      props.selected
-        ? props.type === "girl"
-          ? "#FF69B4"
-          : "#4169E1"
-        : "rgba(255, 255, 255, 0.2)"};
-  box-shadow: ${(props) =>
-    props.selected
-      ? `0 0 30px ${
-          props.type === "girl"
-            ? "rgba(255,105,180,0.4)"
-            : "rgba(65,105,225,0.4)"
-        }`
-      : "0 8px 16px rgba(0,0,0,0.1)"};
-  transition: all 0.4s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: ${(props) =>
-      props.selected
-        ? `0 10px 40px ${
-            props.type === "girl"
-              ? "rgba(255,105,180,0.5)"
-              : "rgba(65,105,225,0.5)"
-          }`
-        : "0 12px 24px rgba(0,0,0,0.15)"};
-  }
-
-  @media (max-width: 768px) {
-    padding: 2.5rem;
-    width: min(240px, 90vw);
-    height: min(240px, 90vw);
-  }
-
-  @media (max-width: 480px) {
-    padding: 2rem;
-    width: min(200px, 90vw);
-    height: min(200px, 90vw);
-  }
-`;
-
-const IconWrapper = styled.div`
-  margin-bottom: 1.5rem;
-  transition: all 0.4s ease;
-  transform: ${(props) => (props.selected ? "scale(1.15)" : "scale(1)")};
-  z-index: 2;
-
-  svg {
-    width: 150px;
-    height: 150px;
-    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: scale(1.05);
-      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
-    }
-  }
-
-  /* Tablet */
-  @media (max-width: 768px) {
-    svg {
-      width: 120px;
-      height: 120px;
-    }
-  }
-
-  /* Mobile Large */
-  @media (max-width: 480px) {
-    svg {
-      width: 100px;
-      height: 100px;
-    }
-  }
-
-  /* Mobile Small */
-  @media (max-width: 360px) {
-    svg {
-      width: 80px;
-      height: 80px;
-    }
-  }
-`;
-
-const OptionText = styled.h3`
-  color: ${(props) => (props.type === "girl" ? "#FF69B4" : "#4169E1")};
-  font-size: 1.8rem;
-  margin: 0;
-  font-weight: ${(props) => (props.selected ? "700" : "600")};
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  z-index: 2;
-  text-align: center;
-
-  @media (max-width: 768px) {
-    font-size: 1.5rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.3rem;
-  }
-`;
-
-const Sparkles = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 24px;
-  pointer-events: none;
-  background: ${(props) =>
-    props.selected
-      ? `radial-gradient(circle at 30% 30%, 
-      ${
-        props.type === "girl"
-          ? "rgba(255,105,180,0.15)"
-          : "rgba(65,105,225,0.15)"
-      }, 
-      transparent),
-      radial-gradient(circle at 70% 70%, 
-      ${
-        props.type === "girl"
-          ? "rgba(255,105,180,0.15)"
-          : "rgba(65,105,225,0.15)"
-      },
-      transparent)`
-      : "none"};
-`;
-
-const HeartBubbles = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  overflow: hidden;
-
-  &::before,
-  &::after {
-    content: "${(props) => (props.type === "girl" ? "💗" : "💙")}";
-    position: absolute;
-    font-size: 2rem;
-    opacity: ${(props) => (props.selected ? 1 : 0)};
-    transition: all 0.3s ease;
-    animation: ${(props) => (props.selected ? "float 3s infinite" : "none")};
-  }
-
-  &::before {
-    left: 20%;
-    animation-delay: 0.5s;
-  }
-
-  &::after {
-    right: 20%;
-    animation-delay: 1s;
-  }
-
-  @keyframes float {
-    0% {
-      transform: translateY(100%) scale(0);
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(-100%) scale(1);
-      opacity: 0;
-    }
-  }
-`;
-
-export default GenderOption;
+// El resto de tu componente GenderOption, GlowingBackground, etc., 
+// se mantiene EXACTAMENTE IGUAL. Sólo reemplaza las funciones de arriba.
