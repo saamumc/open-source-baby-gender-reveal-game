@@ -57,7 +57,7 @@ const HomePage = () => {
 
         <MainContent>
           <PhotoWrapper>
-            {/* CORRECCIÓN: Revelacion con R mayúscula para coincidir con el archivo */}
+            {/* CORRECCIÓN DE RUTA: Ruta directa al archivo en /public */}
             <img 
               src="/Revelacion.jpg" 
               alt="Valentina y Janppier" 
@@ -69,8 +69,9 @@ const HomePage = () => {
             Invitación de los tíos <strong>Samuel y Sara</strong> para conocer el sexo del bebé.
           </InvitationText>
 
+          {/* CORRECCIÓN DE TEXTO: Vestimenta solicitada */}
           <DressCodeBox>
-            <p><strong>Vestimenta:</strong> Blanco / Beige / Denim</p>
+            <p><strong>Vestimenta:</strong> Trae una prenda <strong>azul</strong> si crees que es niño, <strong>rosada</strong> si crees que es niña 💙💗</p>
           </DressCodeBox>
 
           <DetailsBox>
@@ -99,7 +100,7 @@ const HomePage = () => {
   );
 };
 
-// --- ESTILOS ---
+// --- STYLED COMPONENTS ---
 
 const HomeContainer = styled(motion.div)` 
   display: flex; justify-content: center; align-items: center; 
@@ -115,7 +116,7 @@ const ContentCard = styled.div`
 
 const NamesTitle = styled.h1` font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; `;
 
-const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1.5rem 0; `;
+const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1rem 0; `;
 
 const CountdownSection = styled.div` 
   background: #a68974; color: white; padding: 0.8rem; 
