@@ -13,8 +13,8 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const [timeLeft, setTimeLeft] = useState({});
 
-  // CONFIGURACIÓN DE IMAGEN
-  // Al mover la imagen a la carpeta 'public', la llamamos con '/' directamente.
+  // CONFIGURACIÓN DE IMAGEN CORREGIDA:
+  // Al estar en la carpeta 'public' de la raíz, se accede directamente con '/'
   const fotoRevelacion = "/Revelacion.jpg"; 
 
   const whatsappNumber = "573196911965"; 
@@ -40,7 +40,6 @@ const HomePage = () => {
   }, []);
 
   const handleVoteClick = () => {
-    // Limpiamos rastro de votos previos para que el dispositivo pueda votar de nuevo
     localStorage.clear();
     dispatch(resetVote());
     dispatch(resetUi());
@@ -68,7 +67,7 @@ const HomePage = () => {
               alt="Valentina y Janppier" 
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               onError={(e) => { 
-                console.error("Imagen no encontrada en /public/");
+                console.error("Error cargando imagen. Verifica que esté en la raíz de la carpeta public.");
                 e.target.src = "https://via.placeholder.com/400?text=Cargando+Invitación..."; 
               }} 
             />
