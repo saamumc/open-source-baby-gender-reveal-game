@@ -8,6 +8,9 @@ import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
 
+// 1. IMPORTACIÓN COMO MÓDULO (Asegúrate de que la foto esté en src/assets/)
+import fotoRevelacion from "../assets/Revelacion.jpg"; 
+
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -15,9 +18,6 @@ const HomePage = () => {
 
   const whatsappNumber = "573196911965"; 
   const message = encodeURIComponent("¡Hola Samuel y Sara! Confirmo mi asistencia a la revelación de sexo de Valentina y Janppier.");
-
-  // Usamos una URL absoluta basada en el origen para evitar fallos de ruta en subpáginas
-  const imageUrl = `${window.location.origin}/Revelacion.jpg`;
 
   useEffect(() => {
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
@@ -60,12 +60,15 @@ const HomePage = () => {
 
         <MainContent>
           <PhotoWrapper>
+            {/* 2. USAMOS LA VARIABLE IMPORTADA EN LUGAR DE UNA CADENA DE TEXTO */}
             <img 
-              src={imageUrl} 
+              src={fotoRevelacion} 
               alt="Valentina y Janppier" 
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              // Si la imagen falla, esto intentará cargarla sin la barra inicial como último recurso
-              onError={(e) => { e.target.src = "Revelacion.jpg"; }} 
+              onError={(e) => { 
+                console.error("Error cargando la imagen");
+                e.target.src = "https://via.placeholder.com/400?text=Error+Foto"; 
+              }} 
             />
           </PhotoWrapper>
 
@@ -103,7 +106,7 @@ const HomePage = () => {
   );
 };
 
-// --- STYLED COMPONENTS (Aesthetic Neutro) ---
+// --- STYLED COMPONENTS ---
 
 const HomeContainer = styled(motion.div)` 
   display: flex; justify-content: center; align-items: center; 
@@ -118,28 +121,12 @@ const ContentCard = styled.div`
 `;
 
 const NamesTitle = styled.h1` font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; `;
-
 const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1rem 0; `;
-
-const CountdownSection = styled.div` 
-  background: #a68974; color: white; padding: 0.8rem; 
-  border-radius: 15px; margin-bottom: 1.5rem; font-weight: bold; 
-`;
-
+const CountdownSection = styled.div` background: #a68974; color: white; padding: 0.8rem; border-radius: 15px; margin-bottom: 1.5rem; font-weight: bold; `;
 const MainContent = styled.div` margin-bottom: 1.5rem; `;
-
-const PhotoWrapper = styled.div` 
-  width: 100%; height: 320px; border-radius: 20px; overflow: hidden; 
-  margin-bottom: 1.5rem; border: 6px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-`;
-
+const PhotoWrapper = styled.div` width: 100%; height: 320px; border-radius: 20px; overflow: hidden; margin-bottom: 1.5rem; border: 6px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); `;
 const InvitationText = styled.p` font-size: 1.1rem; color: #8c6a53; margin-bottom: 1.5rem; line-height: 1.4; `;
-
-const DressCodeBox = styled.div` 
-  background: white; padding: 1rem; border-radius: 12px; 
-  margin-bottom: 1rem; font-size: 0.95rem; border: 1px solid #d9c7b8; color: #a68974;
-`;
-
+const DressCodeBox = styled.div` background: white; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.95rem; border: 1px solid #d9c7b8; color: #a68974; `;
 const DetailsBox = styled.div` font-size: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; `;
 
 const GiftButton = styled.button`
