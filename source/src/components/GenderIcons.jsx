@@ -57,4 +57,6 @@ export const BabyGirlIcon = () => (
     <path d="M45 72 Q50 76 55 72" fill="none" stroke="#333" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
+export default GenderIcons;
+
 
