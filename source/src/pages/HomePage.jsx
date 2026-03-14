@@ -8,8 +8,8 @@ import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
 
-// IMPORTANTE: Asegúrate que el nombre del archivo en la carpeta sea idéntico (mayúsculas/minúsculas)
-import videoRevelacion from "../../../screenshots/Revelacion.mp4";
+// En lugar de usar un import, usa la ruta directa desde la raíz
+<video src="/Revelacion.mp4" autoPlay loop muted />
 
 const HomePage = () => {
   const navigate = useNavigate();
