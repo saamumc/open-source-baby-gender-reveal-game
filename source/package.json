@@ -11,6 +11,7 @@
     "clean:cache": "npm cache clean --force"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.3",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.6",
