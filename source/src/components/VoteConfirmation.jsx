@@ -5,15 +5,15 @@ import ReactConfetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { Link } from "react-router-dom";
 
+// IMPORTANTE: Traemos los iconos reales para mantener la estética y evitar errores
+import { BabyBoyIcon, BabyGirlIcon } from "./GenderOption";
+
 const VoteConfirmation = ({ selected }) => {
   const { width, height } = useWindowSize();
 
   const elegantConfettiColors = [
     '#D4AF37', '#F5F5DC', '#D2B48C', '#8D6E63', '#FFFDD0', '#E195AB', '#90ADC6'
   ];
-
-  // Seguridad: Si selected no llega, evitamos que explote
-  const icon = selected === "girl" ? "🎀" : "🧸";
 
   return (
     <AnimatePresence>
@@ -58,7 +58,8 @@ const VoteConfirmation = ({ selected }) => {
             }}
             $type={selected}
           >
-            {icon}
+            {/* REEMPLAZO: Emojis por Componentes SVG */}
+            {selected === "girl" ? <BabyGirlIcon /> : <BabyBoyIcon />}
           </IconWrapper>
           
           <TextContainer>
@@ -78,7 +79,7 @@ const VoteConfirmation = ({ selected }) => {
 
           <StyledLink 
             to="/results"
-            as={motion.button} // Forzamos a que Link se comporte como motion
+            as={motion.button}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0, transition: { delay: 0.7 } }}
             whileHover={{ scale: 1.05 }}
@@ -93,6 +94,7 @@ const VoteConfirmation = ({ selected }) => {
 };
 
 // --- ESTILOS ---
+// (Mantenemos tus estilos, solo ajusté IconWrapper para que el SVG encaje bien)
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -120,16 +122,21 @@ const ConfirmationCard = styled(motion.div)`
 `;
 
 const IconWrapper = styled(motion.div)`
-  font-size: 4rem;
   background: ${props => props.$type === "girl" ? "#FDF2F5" : "#F0F7FA"};
   border-radius: 50%;
-  width: 110px;
-  height: 110px;
+  width: 120px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 4px solid white;
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  padding: 15px; /* Espacio para que el SVG no toque los bordes */
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const TextContainer = styled.div` gap: 10px; `;
@@ -143,6 +150,8 @@ const StyledLink = styled(Link)`
   padding: 12px 30px;
   border-radius: 25px;
   font-weight: 600;
+  border: none;
+  cursor: pointer;
 `;
 
 export default VoteConfirmation;
