@@ -2,40 +2,39 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import confetti from "canvas-confetti"; // Importamos el confetti
+import confetti from "canvas-confetti";
 import GenderOption from "../components/GenderOption";
 import VoteConfirmation from "../components/VoteConfirmation";
 import { selectGender, submitVote, resetVote } from "../store/voteSlice";
-import { useTranslation } from "../hooks/useTranslation";
 import { useNavigate } from "react-router-dom";
 
 const VotePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [message, setMessage] = useState(""); // Estado para el mensaje (Punto 3)
+  const [message, setMessage] = useState("");
   const { selectedGender, hasVoted } = useSelector((state) => state.vote);
   const { showVotingScreen } = useSelector((state) => state.results);
 
-  // Efecto de sonido (Punto 5)
-  // Nota: Asegúrate de tener un archivo 'pop.mp3' en tu carpeta public/sounds
+  // Efecto de sonido
   const playPop = () => {
     const audio = new Audio("/sounds/pop.mp3"); 
-    audio.play().catch(e => console.log("Audio play blocked"));
+    audio.play().catch(e => console.log("Audio play blocked o archivo no encontrado"));
   };
 
   useEffect(() => {
-    if (!showVotingScreen) navigate("/");
+    if (!showVotingScreen) {
+      navigate("/");
+    }
     dispatch(resetVote());
   }, [showVotingScreen, navigate, dispatch]);
 
   const handleSelect = (gender) => {
-    playPop(); // Suena al seleccionar
+    playPop(); 
     dispatch(selectGender(gender));
   };
 
   const handleSubmit = () => {
     if (selectedGender) {
-      // Lanzar Confetti Temático (Punto 1)
       const color = selectedGender === "girl" ? "#FFB6C1" : "#89CFF0";
       confetti({
         particleCount: 150,
@@ -44,9 +43,7 @@ const VotePage = () => {
         colors: [color, "#FFFFFF", "#F9F6F1"]
       });
 
-      // Aquí podrías enviar el mensaje a tu backend/store si lo necesitas
       console.log("Mensaje del invitado:", message);
-      
       dispatch(submitVote());
     }
   };
@@ -78,7 +75,6 @@ const VotePage = () => {
           />
         </OptionsContainer>
 
-        {/* Input de Mensaje Personalizado (Punto 3) */}
         <AnimatePresence>
           {selectedGender && (
             <MessageSection
@@ -100,7 +96,7 @@ const VotePage = () => {
           disabled={!selectedGender}
           onClick={handleSubmit}
           whileTap={selectedGender ? { scale: 0.98 } : {}}
-          active={selectedGender}
+          $active={!!selectedGender}
         >
           {selectedGender ? "¡Confirmar mi apuesta!" : "Elige una opción"}
         </SubmitButton>
@@ -188,7 +184,7 @@ const StyledTextArea = styled.textarea`
 `;
 
 const SubmitButton = styled(motion.button)`
-  background: ${(props) => (props.active ? "#8D775F" : "#D1C7BD")};
+  background: ${(props) => (props.$active ? "#8D775F" : "#D1C7BD")};
   color: #fff;
   border: none;
   padding: 16px;
