@@ -34,14 +34,12 @@ const HomePage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Función corregida para asegurar la redirección
   const handleVoteClick = () => {
     localStorage.clear();
     dispatch(resetVote());
     dispatch(resetUi());
     dispatch(setShowVotingScreen(true)); 
     
-    // Aumentamos ligeramente el tiempo para asegurar que el estado se limpie
     setTimeout(() => {
       navigate("/vote");
     }, 200);
@@ -75,7 +73,7 @@ const HomePage = () => {
           </DressCodeBox>
 
           <DetailsBox>
-            <FaMapMarkerAlt color="#8c6a53" /> La Serena, Parcela #14 sitio 2 - 5:00 PM
+            <FaMapMarkerAlt color="#8c6a53" /> La Calera, Cundinamarca - 3:00 PM
           </DetailsBox>
 
           <GiftButton onClick={() => navigate("/traer")}>
@@ -100,7 +98,7 @@ const HomePage = () => {
   );
 };
 
-// --- STYLED COMPONENTS (Paleta de la invitación: Crema, Café, Neutro) ---
+// --- ESTILOS INSPIRADOS EN LA INVITACIÓN DE OSITOS ---
 
 const HomeContainer = styled(motion.div)` 
   display: flex; justify-content: center; align-items: center; 
@@ -109,56 +107,59 @@ const HomeContainer = styled(motion.div)`
 
 const ContentCard = styled.div` 
   background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); 
-  border-radius: 30px; padding: 2rem; width: 100%; max-width: 500px; 
+  border-radius: 30px; padding: 2.5rem; width: 100%; max-width: 500px; 
   color: #8c6a53; text-align: center; border: 1px solid #d9c7b8;
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 `;
 
-const NamesTitle = styled.h1` font-family: 'Pacifico', cursive, serif; font-size: 2.2rem; margin: 0; `;
+const NamesTitle = styled.h1` 
+  font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; 
+`;
 
-const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1rem 0; `;
+const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1.5rem 0; `;
 
 const CountdownSection = styled.div` 
   background: #a68974; color: white; padding: 0.8rem; 
-  border-radius: 15px; margin-bottom: 1rem; font-weight: bold; 
+  border-radius: 15px; margin-bottom: 1.5rem; font-weight: bold; 
 `;
 
 const MainContent = styled.div` margin-bottom: 1.5rem; `;
 
 const PhotoWrapper = styled.div` 
   width: 100%; height: 320px; border-radius: 20px; overflow: hidden; 
-  margin-bottom: 1rem; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem; border: 6px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 `;
 
-const InvitationText = styled.p` font-size: 1rem; color: #8c6a53; margin-bottom: 1rem; `;
+const InvitationText = styled.p` font-size: 1.1rem; color: #8c6a53; margin-bottom: 1.5rem; line-height: 1.4; `;
 
 const DressCodeBox = styled.div` 
-  background: #fdfaf7; padding: 0.8rem; border-radius: 12px; 
-  margin-bottom: 1rem; font-size: 0.85rem; border: 1px solid #d9c7b8;
+  background: white; padding: 1rem; border-radius: 12px; 
+  margin-bottom: 1rem; font-size: 0.95rem; border: 1px solid #d9c7b8; color: #a68974;
 `;
 
-const DetailsBox = styled.div` font-size: 0.9rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; `;
+const DetailsBox = styled.div` font-size: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; `;
 
 const GiftButton = styled.button`
   background: white; color: #8c6a53; border: 1px solid #d9c7b8;
-  padding: 1rem; border-radius: 15px; width: 100%; margin-top: 10px; cursor: pointer;
+  padding: 1.2rem; border-radius: 15px; width: 100%; margin-top: 10px; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold;
-  &:hover { background: #f2e8df; }
+  transition: all 0.3s;
+  &:hover { background: #fdfaf7; transform: translateY(-2px); }
 `;
 
 const ConfirmButton = styled.button` 
-  background: #25D366; color: white; border: none; padding: 1rem; 
-  border-radius: 15px; width: 100%; margin-top: 10px; font-weight: bold; 
+  background: #25D366; color: white; border: none; padding: 1.2rem; 
+  border-radius: 15px; width: 100%; margin-top: 12px; font-weight: bold; 
   display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; 
 `;
 
-const ActionsGrid = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; `;
+const ActionsGrid = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 2rem; `;
 
 const ActionButton = styled.button` 
-  background: ${props => props.color}; color: white; border: none; padding: 1rem; 
+  background: ${props => props.color}; color: white; border: none; padding: 1.2rem; 
   border-radius: 15px; cursor: pointer; display: flex; flex-direction: column; 
-  align-items: center; gap: 5px; font-weight: bold; transition: transform 0.2s;
-  &:hover { transform: scale(1.05); }
+  align-items: center; gap: 8px; font-weight: bold; transition: all 0.2s;
+  &:hover { opacity: 0.9; transform: scale(1.02); }
 `;
 
 export default HomePage;
