@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
+import fotoRevelacion from "../public/Revelacion.jpg";
 
 const HomePage = () => {
   const navigate = useNavigate();
