@@ -8,10 +8,12 @@ import { Link } from "react-router-dom";
 const VoteConfirmation = ({ selected }) => {
   const { width, height } = useWindowSize();
 
-  // Paleta de colores elegante para el confeti (Dorados, beiges, cafés claros y un toque de rosa/azul)
   const elegantConfettiColors = [
     '#D4AF37', '#F5F5DC', '#D2B48C', '#8D6E63', '#FFFDD0', '#E195AB', '#90ADC6'
   ];
+
+  // Seguridad: Si selected no llega, evitamos que explote
+  const icon = selected === "girl" ? "🎀" : "🧸";
 
   return (
     <AnimatePresence>
@@ -56,8 +58,7 @@ const VoteConfirmation = ({ selected }) => {
             }}
             $type={selected}
           >
-            {/* Si eligió niña sale un moño, si eligió niño un osito */}
-            {selected === "girl" ? "🎀" : "🧸"}
+            {icon}
           </IconWrapper>
           
           <TextContainer>
@@ -77,6 +78,7 @@ const VoteConfirmation = ({ selected }) => {
 
           <StyledLink 
             to="/results"
+            as={motion.button} // Forzamos a que Link se comporte como motion
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0, transition: { delay: 0.7 } }}
             whileHover={{ scale: 1.05 }}
@@ -90,93 +92,57 @@ const VoteConfirmation = ({ selected }) => {
   );
 };
 
-// --- ESTILOS ELEGANTES ---
+// --- ESTILOS ---
 
 const Overlay = styled(motion.div)`
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* Un fondo oscuro pero en tono cálido (café muy oscuro) en lugar de negro puro */
-  background: rgba(62, 49, 43, 0.75);
-  backdrop-filter: blur(8px);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(62, 49, 43, 0.85);
+  backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
 `;
 
 const ConfirmationCard = styled(motion.div)`
-  background: #FFFAF0; /* Un blanco floral/crema muy elegante */
+  background: #FFFAF0;
   padding: 3rem 2rem;
   border-radius: 32px;
   text-align: center;
   max-width: 90%;
-  width: 420px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  width: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  border: 1px solid rgba(210, 180, 140, 0.3); /* Borde sutil color canela */
+  gap: 1.5rem;
+  border: 1px solid rgba(210, 180, 140, 0.3);
 `;
 
 const IconWrapper = styled(motion.div)`
-  font-size: 4.5rem;
-  /* Fondo circular suave que cambia ligeramente según la elección, pero se mantiene pastel */
-  background: ${(props) => 
-    props.$type === "girl" 
-      ? "linear-gradient(135deg, #FDF2F5, #F5D0E1)" 
-      : "linear-gradient(135deg, #F0F7FA, #D0E4F5)"};
+  font-size: 4rem;
+  background: ${props => props.$type === "girl" ? "#FDF2F5" : "#F0F7FA"};
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  border: 4px solid #FFFFFF;
+  border: 4px solid white;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 `;
 
-const TextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
+const TextContainer = styled.div` gap: 10px; `;
+const MessageText = styled(motion.h2)` color: #5D4037; font-weight: 800; `;
+const SubText = styled(motion.p)` color: #8D6E63; `;
 
-const MessageText = styled(motion.h2)`
-  font-size: 2rem;
-  color: #5D4037; /* Café oscuro elegante */
-  margin: 0;
-  font-weight: 700;
-`;
-
-const SubText = styled(motion.p)`
-  font-size: 1.1rem;
-  color: #8D6E63; /* Café medio */
-  margin: 0;
-  line-height: 1.5;
-`;
-
-const StyledLink = styled(motion(Link))`
-  display: inline-block;
-  /* Botón color café/canela para mantener la paleta neutra */
-  background: linear-gradient(135deg, #A1887F, #8D6E63);
+const StyledLink = styled(Link)`
+  background: #8D6E63;
   color: white;
   text-decoration: none;
-  padding: 1rem 2.5rem;
-  border-radius: 30px;
-  margin-top: 0.5rem;
-  font-size: 1.1rem;
+  padding: 12px 30px;
+  border-radius: 25px;
   font-weight: 600;
-  letter-spacing: 0.5px;
-  box-shadow: 0 8px 20px rgba(141, 110, 99, 0.3);
-  transition: box-shadow 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 12px 25px rgba(141, 110, 99, 0.4);
-  }
 `;
 
 export default VoteConfirmation;
