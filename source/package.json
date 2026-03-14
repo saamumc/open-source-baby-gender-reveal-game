@@ -4,11 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "bunx --bun vite",
-    "build": "bunx --bun vite build",
-    "preview": "bunx --bun vite preview",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "clean": "rm -rf node_modules",
-    "clean:cache": "bun cache rm"
+    "clean:cache": "npm cache clean --force"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
