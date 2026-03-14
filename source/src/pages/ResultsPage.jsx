@@ -16,7 +16,7 @@ import {
   Legend,
 } from "chart.js";
 
-// IMPORTANTE: Ahora los traemos desde GenderOption
+// IMPORTANTE: Asegúrate de que el archivo se llame GenderOption.jsx exactamente
 import { BabyBoyIcon, BabyGirlIcon } from "../components/GenderOption";
 import WaitingForResultPage from "./WaitingForResultPage";
 
@@ -30,8 +30,7 @@ ChartJS.register(
 );
 
 const ResultsPage = () => {
-  const { voteCounts } = useSelector((state) => state.results);
-  const { showResultPage } = useSelector((state) => state.results);
+  const { voteCounts, showResultPage } = useSelector((state) => state.results);
   const [manualAdjustments, setManualAdjustments] = useState({ boy: 0, girl: 0 });
 
   useEffect(() => {
@@ -42,6 +41,7 @@ const ResultsPage = () => {
     return () => unsubscribe();
   }, []);
 
+  // Si la página de resultados no está activa en Firebase, mostramos la de espera
   if (!showResultPage) return <WaitingForResultPage />;
 
   const boyVotes = (voteCounts.boy || 0) + (manualAdjustments.boy || 0);
@@ -79,11 +79,11 @@ const ResultsPage = () => {
     <ResultsContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <ContentWrapper>
         <StatsGrid>
-          <StatCard highlight>
-            <StatIconWrapper winner>🏆</StatIconWrapper>
+          <StatCard>
+            <StatIconWrapper>🏆</StatIconWrapper>
             <StatInfo>
               <StatLabel>Tendencia</StatLabel>
-              <StatValue highlight>
+              <StatValue $highlight>
                 {boyVotes === girlVotes ? "¡Empate!" : (boyVotes > girlVotes ? "Niño 👶" : "Niña 👧")}
               </StatValue>
             </StatInfo>
@@ -104,16 +104,16 @@ const ResultsPage = () => {
           </ChartWrapper>
 
           <DetailedStats>
-            <GenderStatCard boy>
-              <GenderIcon boy><BabyBoyIcon /></GenderIcon>
+            <GenderStatCard>
+              <GenderIcon $boy><BabyBoyIcon /></GenderIcon>
               <StatDetails>
                 <StatTitle>{boyVotes} Votos</StatTitle>
-                <Percentage boy>{calculatePercentage(boyVotes)}%</Percentage>
+                <Percentage $boy>{calculatePercentage(boyVotes)}%</Percentage>
               </StatDetails>
             </GenderStatCard>
 
-            <GenderStatCard girl>
-              <GenderIcon girl><BabyGirlIcon /></GenderIcon>
+            <GenderStatCard>
+              <GenderIcon><BabyGirlIcon /></GenderIcon>
               <StatDetails>
                 <StatTitle>{girlVotes} Votos</StatTitle>
                 <Percentage>{calculatePercentage(girlVotes)}%</Percentage>
@@ -128,7 +128,8 @@ const ResultsPage = () => {
   );
 };
 
-// --- ESTILOS ---
+// --- ESTILOS (Ajustados para evitar conflictos de props) ---
+
 const ResultsContainer = styled(motion.div)` 
   background: rgba(255, 255, 255, 0.2); 
   border-radius: 30px; 
@@ -168,7 +169,7 @@ const StatIconWrapper = styled.div`
 
 const StatInfo = styled.div` display: flex; flex-direction: column; `;
 const StatLabel = styled.div` font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; `;
-const StatValue = styled.div` font-size: 1.1rem; font-weight: bold; color: ${props => props.highlight ? "#8d775f" : "#333"}; `;
+const StatValue = styled.div` font-size: 1.1rem; font-weight: bold; color: ${props => props.$highlight ? "#8d775f" : "#333"}; `;
 
 const ChartSection = styled.div` display: flex; flex-direction: column; gap: 1.2rem; `;
 
@@ -191,7 +192,7 @@ const StatDetails = styled.div` display: flex; flex-direction: column; `;
 const StatTitle = styled.div` font-size: 0.85rem; color: #666; font-weight: 600; `;
 const Percentage = styled.div` 
   font-size: 1.8rem; font-weight: 900; 
-  color: ${props => props.boy ? "#40A9FF" : "#FF8FCB"}; 
+  color: ${props => props.$boy ? "#40A9FF" : "#FF8FCB"}; 
 `;
 
 const NavigationButton = styled(Link)` 
