@@ -13,9 +13,9 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const [timeLeft, setTimeLeft] = useState({});
 
-  // CONFIGURACIÓN DE IMAGEN CORREGIDA:
-  // Al estar en la carpeta 'public' de la raíz, se accede directamente con '/'
-  const fotoRevelacion = "/Revelacion.jpg"; 
+// CORRECCIÓN DEFINITIVA: 
+// El navegador buscará directamente en la raíz del sitio web.
+const fotoRevelacion = "/Revelacion.jpg";; 
 
   const whatsappNumber = "573196911965"; 
   const message = encodeURIComponent("¡Hola Samuel y Sara! Confirmo mi asistencia a la revelación de sexo de Valentina y Janppier.");
