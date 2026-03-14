@@ -9,7 +9,7 @@ import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
 
 // En lugar de usar un import, usa la ruta directa desde la raíz
-<video src="/Revelacion.mp4" autoPlay loop muted />
+<video src="/Revelacion.jpg" autoPlay loop muted />
 
 const HomePage = () => {
   const navigate = useNavigate();
