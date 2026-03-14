@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useTranslation } from "../hooks/useTranslation";
 // CORRECCIÓN: Importación desde el archivo correcto
-import { BabyGirlIcon, BabyBoyIcon } from "./GenderOption"; 
+// Agrega "../components/" para que suba un nivel de carpeta y entre a components
+import { BabyGirlIcon, BabyBoyIcon } from "../components/GenderOption";
 
 const WaitingForResultPage = () => {
   const { t } = useTranslation();
