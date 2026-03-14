@@ -6,23 +6,27 @@ import App from "./App";
 import "./index.css";
 import { initializeFirebaseListeners } from "./firebase/firebaseMiddleware";
 
-// Initialize Firebase listeners
+// Inicializamos los listeners y guardamos la función de limpieza
 const cleanup = initializeFirebaseListeners(store);
 
-// Create root element
 const container = document.getElementById("root");
-const root = createRoot(container);
 
-// Render app
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
-);
+if (container) {
+  const root = createRoot(container);
+  root.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </React.StrictMode>
+  );
+} else {
+  console.error("No se encontró el elemento root. Verifica tu index.html");
+}
 
-// Cleanup Firebase listeners when the app unmounts
+// Limpieza para desarrollo (Vite/HMR)
 if (import.meta.hot) {
-  import.meta.hot.dispose(cleanup);
+  import.meta.hot.dispose(() => {
+    if (cleanup) cleanup();
+  });
 }
