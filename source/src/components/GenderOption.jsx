@@ -133,6 +133,7 @@ const BabyBoyIcon = () => (
     </g>
   </svg>
 );
+export default GenderOption;
 
 // El resto de tu componente GenderOption, GlowingBackground, etc., 
 // se mantiene EXACTAMENTE IGUAL. Sólo reemplaza las funciones de arriba.
