@@ -24,7 +24,7 @@ const voteSlice = createSlice({
       storage.set(STORAGE_KEYS.VOTE_STATE, state);
     },
     submitVote: (state) => {
-      state.hasVoted = true;
+      state.hasVoted = false;
       state.timestamp = Date.now();
       storage.set(STORAGE_KEYS.VOTE_STATE, state);
     },
