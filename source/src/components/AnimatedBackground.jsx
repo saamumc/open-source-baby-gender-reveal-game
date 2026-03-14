@@ -8,22 +8,24 @@ const AnimatedBackground = () => {
   const { selectedGender, isVoteSubmitted } = useSelector(
     (state) => state.vote
   );
-  const { theme, animations } = useSelector((state) => state.ui);
+  const { theme } = useSelector((state) => state.ui);
 
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
   }, []);
 
+  // Lógica de colores para las partículas (tonos tierra y neutros)
   const getParticleColor = () => {
-    if (isVoteSubmitted) return theme.colors.success;
-    if (!selectedGender) return theme.colors.neutral;
-    return selectedGender === "girl" ? theme.colors.girl : theme.colors.boy;
+    if (isVoteSubmitted) return "#D4AF37"; // Dorado para la celebración
+    if (!selectedGender) return "#C2B280"; // Arena/Beige oscuro para el estado inicial
+    return selectedGender === "girl" ? "#E195AB" : "#90ADC6"; // Rosa/Azul sutiles
   };
 
+  // Lógica para el fondo (Beige cálido)
   const getBackgroundColor = () => {
-    if (isVoteSubmitted) return "#f0fff0"; // Light celebration green
-    if (!selectedGender) return "#f3e5f5"; // Light purple
-    return selectedGender === "girl" ? "#fce4ec" : "#e3f2fd";
+    if (isVoteSubmitted) return "#FFFDF0"; // Crema muy claro al ganar
+    if (!selectedGender) return "#F5F5DC"; // Beige clásico (como en la foto)
+    return selectedGender === "girl" ? "#FDF2F5" : "#F0F7FA"; // Tintes suaves al seleccionar
   };
 
   const getParticleConfig = () => ({
@@ -32,41 +34,57 @@ const AnimatedBackground = () => {
         value: getParticleColor(),
       },
       number: {
-        value: isVoteSubmitted ? 100 : 50,
+        value: isVoteSubmitted ? 120 : 40, // Más partículas al celebrar
         density: {
           enable: true,
           value_area: 800,
         },
       },
       shape: {
-        type: isVoteSubmitted ? ["circle", "star", "triangle"] : "circle",
+        type: isVoteSubmitted ? ["circle", "star"] : "circle",
       },
       opacity: {
-        value: 0.5,
+        value: 0.4,
         random: true,
       },
       size: {
-        value: isVoteSubmitted ? 5 : 3,
+        value: isVoteSubmitted ? { min: 2, max: 5 } : { min: 1, max: 3 },
         random: true,
       },
       move: {
         enable: true,
-        speed: isVoteSubmitted ? 4 : 2,
+        speed: isVoteSubmitted ? 5 : 1.5, // Más rápido al enviar el voto
         direction: isVoteSubmitted ? "top" : "none",
         random: true,
         straight: false,
         outModes: "out",
       },
       links: {
-        enable: true,
+        enable: !isVoteSubmitted, // Desactivar líneas en la celebración para que parezca confeti
         distance: 150,
         color: getParticleColor(),
-        opacity: 0.4,
+        opacity: 0.2,
         width: 1,
       },
     },
     background: {
       color: getBackgroundColor(),
+    },
+    interactivity: {
+      events: {
+        onHover: {
+          enable: true,
+          mode: "bubble",
+        },
+      },
+      modes: {
+        bubble: {
+          size: 6,
+          distance: 200,
+          duration: 2,
+          opacity: 0.8,
+        },
+      },
     },
   });
 
@@ -77,6 +95,7 @@ const AnimatedBackground = () => {
   );
 };
 
+// Estilos del contenedor
 const ParticlesContainer = styled.div`
   position: fixed;
   top: 0;
@@ -84,21 +103,22 @@ const ParticlesContainer = styled.div`
   width: 100%;
   height: 100%;
   z-index: 0;
-  transition: all 0.5s ease-in-out;
-  filter: blur(${(props) => props.$intensity * 0.5}px);
+  transition: background-color 0.8s ease-in-out;
+  
+  /* Animación sutil de brillo si ya se envió el voto */
   animation: ${(props) =>
-    props.$isSubmitted ? "celebrate 1s ease-in-out infinite" : "none"};
+    props.$isSubmitted ? "celebrate 2s ease-in-out infinite" : "none"};
 
   @keyframes celebrate {
-    0% {
-      filter: brightness(1);
-    }
-    50% {
-      filter: brightness(1.2);
-    }
-    100% {
-      filter: brightness(1);
-    }
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.05); }
+    100% { filter: brightness(1); }
+  }
+
+  /* Para asegurar que los canvas de tsparticles ocupen todo el espacio */
+  & > div {
+    height: 100%;
+    width: 100%;
   }
 `;
 
