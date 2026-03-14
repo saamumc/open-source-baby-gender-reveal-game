@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
+import confetti from "canvas-confetti"; // Importamos el confetti
 import GenderOption from "../components/GenderOption";
 import VoteConfirmation from "../components/VoteConfirmation";
 import { selectGender, submitVote, resetVote } from "../store/voteSlice";
@@ -11,26 +12,41 @@ import { useNavigate } from "react-router-dom";
 const VotePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [message, setMessage] = useState(""); // Estado para el mensaje (Punto 3)
   const { selectedGender, hasVoted } = useSelector((state) => state.vote);
   const { showVotingScreen } = useSelector((state) => state.results);
-  const { t } = useTranslation();
+
+  // Efecto de sonido (Punto 5)
+  // Nota: Asegúrate de tener un archivo 'pop.mp3' en tu carpeta public/sounds
+  const playPop = () => {
+    const audio = new Audio("/sounds/pop.mp3"); 
+    audio.play().catch(e => console.log("Audio play blocked"));
+  };
 
   useEffect(() => {
-    if (!showVotingScreen) {
-      navigate("/");
-    }
-  }, [showVotingScreen, navigate]);
-
-  useEffect(() => {
+    if (!showVotingScreen) navigate("/");
     dispatch(resetVote());
-  }, [dispatch]);
+  }, [showVotingScreen, navigate, dispatch]);
 
   const handleSelect = (gender) => {
+    playPop(); // Suena al seleccionar
     dispatch(selectGender(gender));
   };
 
   const handleSubmit = () => {
     if (selectedGender) {
+      // Lanzar Confetti Temático (Punto 1)
+      const color = selectedGender === "girl" ? "#FFB6C1" : "#89CFF0";
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: [color, "#FFFFFF", "#F9F6F1"]
+      });
+
+      // Aquí podrías enviar el mensaje a tu backend/store si lo necesitas
+      console.log("Mensaje del invitado:", message);
+      
       dispatch(submitVote());
     }
   };
@@ -40,13 +56,13 @@ const VotePage = () => {
 
   return (
     <PageWrapper>
-      {/* Elementos decorativos de fondo (opcional, si no los tienes en el layout global) */}
-      <FloatingIcons /> 
-      
-      <GlassCard>
+      <GlassCard
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+      >
         <TitleSection>
-          <MainTitle>Baby Gender Vote</MainTitle>
-          <SubTitle>Please select a gender prediction</SubTitle>
+          <MainTitle>Valentina & Janppier</MainTitle>
+          <SubTitle>¿Qué crees que será el bebé?</SubTitle>
         </TitleSection>
 
         <OptionsContainer>
@@ -58,16 +74,35 @@ const VotePage = () => {
           <GenderOption
             type="boy"
             selected={selectedGender === "boy"}
-          onSelect={() => handleSelect("boy")}
+            onSelect={() => handleSelect("boy")}
           />
         </OptionsContainer>
+
+        {/* Input de Mensaje Personalizado (Punto 3) */}
+        <AnimatePresence>
+          {selectedGender && (
+            <MessageSection
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+            >
+              <MessageLabel>Déjales un mensaje a los papás:</MessageLabel>
+              <StyledTextArea
+                placeholder="Ej: ¡Muero por conocerte! Presiento que serás una princesa..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+            </MessageSection>
+          )}
+        </AnimatePresence>
 
         <SubmitButton
           disabled={!selectedGender}
           onClick={handleSubmit}
-          whileTap={selectedGender ? { scale: 0.95 } : {}}
+          whileTap={selectedGender ? { scale: 0.98 } : {}}
+          active={selectedGender}
         >
-          {t("votePage.submitButton")}
+          {selectedGender ? "¡Confirmar mi apuesta!" : "Elige una opción"}
         </SubmitButton>
       </GlassCard>
     </PageWrapper>
@@ -82,26 +117,22 @@ const PageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #E6D5F7; /* Color lila de fondo */
+  background-color: #F9F6F1;
   padding: 20px;
-  position: relative;
-  overflow: hidden;
 `;
 
-const GlassCard = styled.div`
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-radius: 30px;
-  padding: 40px 20px;
+const GlassCard = styled(motion.div)`
+  background: #FFFFFF;
+  border-radius: 35px;
+  padding: 40px 25px;
   width: 100%;
-  max-width: 400px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 25px;
-  box-shadow: 0 8px 32px 0 rgba(142, 106, 181, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 15px 35px rgba(141, 119, 95, 0.1);
+  border: 1px solid rgba(141, 119, 95, 0.05);
 `;
 
 const TitleSection = styled.div`
@@ -109,58 +140,64 @@ const TitleSection = styled.div`
 `;
 
 const MainTitle = styled.h1`
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin: 0;
-  background: linear-gradient(to right, #e91e63, #9c27b0, #3f51b5);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  opacity: 0.7;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #8D775F;
+  margin-bottom: 5px;
 `;
 
 const SubTitle = styled.p`
-  background: rgba(255, 255, 255, 0.6);
-  padding: 8px 20px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  color: #666;
-  margin-top: 10px;
-  display: inline-block;
+  font-size: 0.95rem;
+  color: #A69076;
 `;
 
 const OptionsContainer = styled.div`
   display: flex;
-  flex-direction: column; /* Apilados verticalmente como en la foto */
-  gap: 20px;
+  flex-direction: column;
+  gap: 12px;
   width: 100%;
-  align-items: center;
 `;
 
-const SubmitButton = styled(motion.button)`
-  background: rgba(180, 180, 180, 0.5);
-  color: #fff;
-  border: none;
-  padding: 12px 40px;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  width: 80%;
-  transition: all 0.3s ease;
-  
-  /* Esto emula el texto grisáceo "votePage.submitButton" de la imagen */
-  &:disabled {
-    opacity: 0.6;
+const MessageSection = styled(motion.div)`
+  width: 100%;
+  overflow: hidden;
+`;
+
+const MessageLabel = styled.label`
+  display: block;
+  font-size: 0.85rem;
+  color: #8D775F;
+  margin-bottom: 8px;
+  font-weight: 600;
+`;
+
+const StyledTextArea = styled.textarea`
+  width: 100%;
+  border: 1.5px solid #EAE2D8;
+  border-radius: 12px;
+  padding: 12px;
+  font-family: inherit;
+  resize: none;
+  height: 80px;
+  background: #FDFBFA;
+  color: #5D4D3D;
+  &:focus {
+    outline: none;
+    border-color: #8D775F;
   }
 `;
 
-const FloatingIcons = styled.div`
-  /* Estilo para los iconos morados que flotan de fondo */
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.3;
-  /* Aquí podrías añadir un SVG de fondo o iconos dispersos */
+const SubmitButton = styled(motion.button)`
+  background: ${(props) => (props.active ? "#8D775F" : "#D1C7BD")};
+  color: #fff;
+  border: none;
+  padding: 16px;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  width: 100%;
+  transition: background 0.3s ease;
 `;
 
 export default VotePage;
