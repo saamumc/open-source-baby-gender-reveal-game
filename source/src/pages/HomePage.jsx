@@ -8,8 +8,10 @@ import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
 
-// 1. IMPORTACIÓN COMO MÓDULO (Asegúrate de que la foto esté en src/assets/)
-import fotoRevelacion from "../assets/Revelacion.jpg"; 
+// CORRECCIÓN DE RUTA: 
+// Desde 'source/src/pages/HomePage.jsx', subimos dos niveles (..) para llegar a 'source/'
+// y luego entramos a la carpeta 'screenshots'.
+import fotoRevelacion from "../../screenshots/Revelacion.jpg";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const HomePage = () => {
   const message = encodeURIComponent("¡Hola Samuel y Sara! Confirmo mi asistencia a la revelación de sexo de Valentina y Janppier.");
 
   useEffect(() => {
+    // Fecha del evento actualizada según tu invitación
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -60,14 +63,13 @@ const HomePage = () => {
 
         <MainContent>
           <PhotoWrapper>
-            {/* 2. USAMOS LA VARIABLE IMPORTADA EN LUGAR DE UNA CADENA DE TEXTO */}
             <img 
               src={fotoRevelacion} 
               alt="Valentina y Janppier" 
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               onError={(e) => { 
-                console.error("Error cargando la imagen");
-                e.target.src = "https://via.placeholder.com/400?text=Error+Foto"; 
+                console.error("No se encontró la imagen en source/screenshots/");
+                e.target.src = "https://via.placeholder.com/400?text=Cargando+Invitación..."; 
               }} 
             />
           </PhotoWrapper>
@@ -106,20 +108,9 @@ const HomePage = () => {
   );
 };
 
-// --- STYLED COMPONENTS ---
-
-const HomeContainer = styled(motion.div)` 
-  display: flex; justify-content: center; align-items: center; 
-  padding: 2rem 1rem; background: #f2e8df; min-height: 100vh; 
-`;
-
-const ContentCard = styled.div` 
-  background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); 
-  border-radius: 30px; padding: 2.5rem; width: 100%; max-width: 500px; 
-  color: #8c6a53; text-align: center; border: 1px solid #d9c7b8;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-`;
-
+// --- ESTILOS ---
+const HomeContainer = styled(motion.div)` display: flex; justify-content: center; align-items: center; padding: 2rem 1rem; background: #f2e8df; min-height: 100vh; `;
+const ContentCard = styled.div` background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border-radius: 30px; padding: 2.5rem; width: 100%; max-width: 500px; color: #8c6a53; text-align: center; border: 1px solid #d9c7b8; box-shadow: 0 10px 30px rgba(0,0,0,0.05); `;
 const NamesTitle = styled.h1` font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; `;
 const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1rem 0; `;
 const CountdownSection = styled.div` background: #a68974; color: white; padding: 0.8rem; border-radius: 15px; margin-bottom: 1.5rem; font-weight: bold; `;
@@ -128,28 +119,9 @@ const PhotoWrapper = styled.div` width: 100%; height: 320px; border-radius: 20px
 const InvitationText = styled.p` font-size: 1.1rem; color: #8c6a53; margin-bottom: 1.5rem; line-height: 1.4; `;
 const DressCodeBox = styled.div` background: white; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.95rem; border: 1px solid #d9c7b8; color: #a68974; `;
 const DetailsBox = styled.div` font-size: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; `;
-
-const GiftButton = styled.button`
-  background: white; color: #8c6a53; border: 1px solid #d9c7b8;
-  padding: 1.2rem; border-radius: 15px; width: 100%; margin-top: 10px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold;
-  transition: all 0.3s;
-  &:hover { background: #fdfaf7; transform: translateY(-2px); }
-`;
-
-const ConfirmButton = styled.button` 
-  background: #25D366; color: white; border: none; padding: 1.2rem; 
-  border-radius: 15px; width: 100%; margin-top: 12px; font-weight: bold; 
-  display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; 
-`;
-
+const GiftButton = styled.button` background: white; color: #8c6a53; border: 1px solid #d9c7b8; padding: 1.2rem; border-radius: 15px; width: 100%; margin-top: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; transition: all 0.3s; &:hover { background: #fdfaf7; transform: translateY(-2px); } `;
+const ConfirmButton = styled.button` background: #25D366; color: white; border: none; padding: 1.2rem; border-radius: 15px; width: 100%; margin-top: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; `;
 const ActionsGrid = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 2rem; `;
-
-const ActionButton = styled.button` 
-  background: ${props => props.color}; color: white; border: none; padding: 1.2rem; 
-  border-radius: 15px; cursor: pointer; display: flex; flex-direction: column; 
-  align-items: center; gap: 8px; font-weight: bold; transition: all 0.2s;
-  &:hover { opacity: 0.9; transform: scale(1.02); }
-`;
+const ActionButton = styled.button` background: ${props => props.color}; color: white; border: none; padding: 1.2rem; border-radius: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: bold; transition: all 0.2s; &:hover { opacity: 0.9; transform: scale(1.02); } `;
 
 export default HomePage;
