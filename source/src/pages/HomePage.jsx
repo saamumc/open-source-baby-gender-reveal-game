@@ -8,39 +8,39 @@ import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
 
-// CORRECCIÓN DE RUTA: 
-// Desde 'source/src/pages/HomePage.jsx', subimos dos niveles (..) para llegar a 'source/'
-// y luego entramos a la carpeta 'screenshots'.
-import fotoRevelacion from "../../screenshots/Revelacion.jpg";
-
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [timeLeft, setTimeLeft] = useState({});
 
+  // CONFIGURACIÓN DE IMAGEN
+  // Al mover la imagen a la carpeta 'public', la llamamos con '/' directamente.
+  const fotoRevelacion = "/Revelacion.jpg"; 
+
   const whatsappNumber = "573196911965"; 
   const message = encodeURIComponent("¡Hola Samuel y Sara! Confirmo mi asistencia a la revelación de sexo de Valentina y Janppier.");
 
   useEffect(() => {
-    // Fecha del evento actualizada según tu invitación
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = eventDate - now;
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       
       if (distance < 0) { 
         clearInterval(timer); 
         setTimeLeft({ expired: true }); 
       } else { 
-        setTimeLeft({ days, hours }); 
+        setTimeLeft({ 
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)), 
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) 
+        }); 
       }
     }, 1000);
     return () => clearInterval(timer);
   }, []);
 
   const handleVoteClick = () => {
+    // Limpiamos rastro de votos previos para que el dispositivo pueda votar de nuevo
     localStorage.clear();
     dispatch(resetVote());
     dispatch(resetUi());
@@ -68,7 +68,7 @@ const HomePage = () => {
               alt="Valentina y Janppier" 
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               onError={(e) => { 
-                console.error("No se encontró la imagen en source/screenshots/");
+                console.error("Imagen no encontrada en /public/");
                 e.target.src = "https://via.placeholder.com/400?text=Cargando+Invitación..."; 
               }} 
             />
