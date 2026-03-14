@@ -58,10 +58,10 @@ const HomePage = () => {
         <MainContent>
           <PhotoWrapper>
             <img 
-              src="/revelacion.jpg" 
-              alt="Valentina y Janppier" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-            />
+  src="/Revelacion.jpg"  // Cambia la r por R mayúscula
+  alt="Valentina y Janppier" 
+  ...
+/>
           </PhotoWrapper>
 
           <InvitationText>
