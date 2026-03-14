@@ -8,9 +8,11 @@ import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
 
-// En lugar de usar un import, usa la ruta directa desde la raíz
-<video src="/Revelacion.jpg" autoPlay loop muted />
-
+<img 
+  src="/revelacion.jpg" 
+  alt="Revelación de género Valentina y Janppier" 
+  style={{ width: '100%', height: 'auto', borderRadius: '8px' }} 
+/>
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
