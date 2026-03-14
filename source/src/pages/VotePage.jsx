@@ -15,12 +15,10 @@ const VotePage = () => {
   const { selectedGender, hasVoted } = useSelector((state) => state.vote);
   const { showVotingScreen } = useSelector((state) => state.results);
 
-  // 1. Reseteo de voto SOLO al cargar la página por primera vez
   useEffect(() => {
     dispatch(resetVote());
   }, [dispatch]);
 
-  // 2. Redirección si la votación se cierra desde Firebase
   useEffect(() => {
     if (showVotingScreen === false) {
       navigate("/");
@@ -46,9 +44,6 @@ const VotePage = () => {
         origin: { y: 0.6 },
         colors: [color, "#FFFFFF", "#F9F6F1"]
       });
-
-      // Aquí podrías enviar el 'message' a Firebase si lo necesitas
-      console.log("Mensaje guardado:", message); 
       dispatch(submitVote());
     }
   };
@@ -110,6 +105,44 @@ const VotePage = () => {
   );
 };
 
-// ... (Tus estilos están perfectos, no hace falta cambiarlos)
+// --- ESTILOS QUE FALTABAN ---
+
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fce4ec 0%, #e3f2fd 100%);
+  padding: 20px;
+`;
+
+const GlassCard = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+`;
+
+const TitleSection = styled.div` margin-bottom: 2rem; `;
+const MainTitle = styled.h1` color: #4b3f6b; font-size: 1.8rem; margin-bottom: 0.5rem; `;
+const SubTitle = styled.p` color: #888; font-size: 1rem; `;
+const OptionsContainer = styled.div` display: flex; gap: 20px; justify-content: center; margin-bottom: 2rem; `;
+const MessageSection = styled(motion.div)` margin-bottom: 1.5rem; overflow: hidden; `;
+const MessageLabel = styled.label` display: block; color: #4b3f6b; margin-bottom: 0.5rem; font-size: 0.9rem; `;
+const StyledTextArea = styled.textarea` width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #ddd; resize: none; height: 80px; `;
+const SubmitButton = styled(motion.button)`
+  width: 100%;
+  padding: 15px;
+  border-radius: 20px;
+  border: none;
+  background: ${props => props.$active ? 'linear-gradient(45deg, #ff9a9e, #fad0c4)' : '#ccc'};
+  color: white;
+  font-weight: bold;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+`;
 
 export default VotePage;
