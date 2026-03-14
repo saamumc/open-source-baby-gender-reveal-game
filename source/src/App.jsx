@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+// Estas rutas ahora deben ser relativas a la carpeta source/src
 import AnimatedBackground from "./components/AnimatedBackground";
 import FloatingIcons from "./components/FloatingIcons";
 import { storage, STORAGE_KEYS } from "./utils/storage";
@@ -16,10 +17,9 @@ import { database } from "./firebase/config";
 const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const showResultPage = useSelector((state) => state.results.showResultPage);
-
+  // Eliminamos showResultPage si no se usa para evitar errores de compilación
+  
   useEffect(() => {
-    // Evitar redirecciones automáticas en páginas informativas
     if (location.pathname === "/control-panel" || location.pathname === "/traer") {
       return;
     }
@@ -27,7 +27,6 @@ const AppContent = () => {
     const resultsRef = ref(database, "results");
     const unsubscribe = onValue(resultsRef, (snapshot) => {
       const data = snapshot.val();
-      // Si el juego no ha empezado y no estamos en la home, manda a la home
       if (data && data.showGameStarted === false && location.pathname === "/vote") {
           navigate("/");
       }
