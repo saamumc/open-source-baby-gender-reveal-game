@@ -57,11 +57,12 @@ const HomePage = () => {
 
         <MainContent>
           <PhotoWrapper>
+            {/* CORRECCIÓN: Revelacion con R mayúscula para coincidir con el archivo */}
             <img 
-  src="/Revelacion.jpg"  // Cambia la r por R mayúscula
-  alt="Valentina y Janppier" 
-  ...
-/>
+              src="/Revelacion.jpg" 
+              alt="Valentina y Janppier" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
           </PhotoWrapper>
 
           <InvitationText>
@@ -98,7 +99,7 @@ const HomePage = () => {
   );
 };
 
-// --- ESTILOS INSPIRADOS EN LA INVITACIÓN DE OSITOS ---
+// --- ESTILOS ---
 
 const HomeContainer = styled(motion.div)` 
   display: flex; justify-content: center; align-items: center; 
@@ -112,9 +113,7 @@ const ContentCard = styled.div`
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 `;
 
-const NamesTitle = styled.h1` 
-  font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; 
-`;
+const NamesTitle = styled.h1` font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; `;
 
 const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1.5rem 0; `;
 
