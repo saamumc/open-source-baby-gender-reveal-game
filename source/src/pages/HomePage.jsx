@@ -9,7 +9,7 @@ import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
 
 // IMPORTANTE: Asegúrate que el nombre del archivo en la carpeta sea idéntico (mayúsculas/minúsculas)
-import videoRevelacion from "../screenshots/Revelacion.mp4";
+import videoRevelacion from "../../../screenshots/Revelacion.mp4";
 
 const HomePage = () => {
   const navigate = useNavigate();
