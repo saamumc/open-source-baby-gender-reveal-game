@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import Header from "../components/Header";
 import GenderOption from "../components/GenderOption";
 import VoteConfirmation from "../components/VoteConfirmation";
 import { selectGender, submitVote, resetVote } from "../store/voteSlice";
@@ -24,7 +23,7 @@ const VotePage = () => {
 
   useEffect(() => {
     dispatch(resetVote());
-  }, []);
+  }, [dispatch]);
 
   const handleSelect = (gender) => {
     dispatch(selectGender(gender));
@@ -36,21 +35,20 @@ const VotePage = () => {
     }
   };
 
-  if (!showVotingScreen) {
-    return null;
-  }
-
-  if (hasVoted) {
-    return <VoteConfirmation />;
-  }
+  if (!showVotingScreen) return null;
+  if (hasVoted) return <VoteConfirmation />;
 
   return (
-    <ContentCard>
-      <HeaderSection>
-        <Header />
-      </HeaderSection>
+    <PageWrapper>
+      {/* Elementos decorativos de fondo (opcional, si no los tienes en el layout global) */}
+      <FloatingIcons /> 
+      
+      <GlassCard>
+        <TitleSection>
+          <MainTitle>Baby Gender Vote</MainTitle>
+          <SubTitle>Please select a gender prediction</SubTitle>
+        </TitleSection>
 
-      <OptionsSection>
         <OptionsContainer>
           <GenderOption
             type="girl"
@@ -60,103 +58,109 @@ const VotePage = () => {
           <GenderOption
             type="boy"
             selected={selectedGender === "boy"}
-            onSelect={() => handleSelect("boy")}
+          onSelect={() => handleSelect("boy")}
           />
         </OptionsContainer>
 
-        <SubmitButtonWrapper
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+        <SubmitButton
+          disabled={!selectedGender}
+          onClick={handleSubmit}
+          whileTap={selectedGender ? { scale: 0.95 } : {}}
         >
-          <SubmitButton
-            disabled={!selectedGender}
-            onClick={handleSubmit}
-            whileHover={selectedGender ? { scale: 1.05 } : {}}
-            whileTap={selectedGender ? { scale: 0.95 } : {}}
-          >
-            {t("votePage.submitButton")}
-          </SubmitButton>
-        </SubmitButtonWrapper>
-      </OptionsSection>
-    </ContentCard>
+          {t("votePage.submitButton")}
+        </SubmitButton>
+      </GlassCard>
+    </PageWrapper>
   );
 };
 
-const ContentCard = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-  padding: min(1.5rem, 4vw);
+// --- STYLED COMPONENTS ---
+
+const PageWrapper = styled.div`
+  min-height: 100vh;
   width: 100%;
-  height: auto;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  background-color: #E6D5F7; /* Color lila de fondo */
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 `;
 
-const HeaderSection = styled.section`
-  margin-bottom: min(2rem, 5vw);
-  flex-shrink: 0;
-`;
-
-const OptionsSection = styled.section`
+const GlassCard = styled.div`
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 30px;
+  padding: 40px 20px;
+  width: 100%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  align-items: center;
+  gap: 25px;
+  box-shadow: 0 8px 32px 0 rgba(142, 106, 181, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+`;
+
+const TitleSection = styled.div`
+  text-align: center;
+`;
+
+const MainTitle = styled.h1`
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(to right, #e91e63, #9c27b0, #3f51b5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.7;
+`;
+
+const SubTitle = styled.p`
+  background: rgba(255, 255, 255, 0.6);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+  display: inline-block;
 `;
 
 const OptionsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(250px, 90vw), 1fr));
-  gap: min(2rem, 5vw);
-  justify-items: center;
-  align-items: center;
-  width: 100%;
-  margin: auto;
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-`;
-
-const SubmitButtonWrapper = styled(motion.div)`
   display: flex;
-  justify-content: center;
-  margin-top: 2rem;
-  position: relative;
-  overflow: visible;
-  width: min(300px, 90%);
-  margin: 0 auto;
+  flex-direction: column; /* Apilados verticalmente como en la foto */
+  gap: 20px;
+  width: 100%;
+  align-items: center;
 `;
 
 const SubmitButton = styled(motion.button)`
-  background: ${(props) =>
-    props.disabled
-      ? "linear-gradient(135deg, #cccccc, #999999)"
-      : "linear-gradient(135deg, #4682B4, #2c5272)"};
-  color: white;
+  background: rgba(180, 180, 180, 0.5);
+  color: #fff;
   border: none;
-  padding: min(1.2rem, 3vw) min(2.5rem, 6vw);
-  border-radius: 50px;
-  font-size: min(1.3rem, 5vw);
-  font-weight: 600;
+  padding: 12px 40px;
+  border-radius: 25px;
+  font-size: 1rem;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  position: relative;
-  z-index: 4;
+  width: 80%;
   transition: all 0.3s ease;
-  box-shadow: ${(props) =>
-    props.disabled
-      ? "0 4px 15px rgba(0, 0, 0, 0.2)"
-      : "0 4px 25px rgba(70, 130, 180, 0.4)"};
-  width: min(300px, 90%);
-  margin: 0 auto;
-  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
-
-  @media (max-width: 480px) {
-    padding: 0.8rem 1.5rem;
-    font-size: 1.1rem;
+  
+  /* Esto emula el texto grisáceo "votePage.submitButton" de la imagen */
+  &:disabled {
+    opacity: 0.6;
   }
+`;
+
+const FloatingIcons = styled.div`
+  /* Estilo para los iconos morados que flotan de fondo */
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  /* Aquí podrías añadir un SVG de fondo o iconos dispersos */
 `;
 
 export default VotePage;
