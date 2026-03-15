@@ -19,18 +19,15 @@ import {
 } from "chart.js";
 
 import { BabyBoyIcon, BabyGirlIcon } from "../components/GenderOption";
-// Eliminamos la importación de WaitingForResultPage si esta causa el redireccionamiento
-import LoadingScreen from "../components/LoadingScreen"; // O un componente simple de "Cargando"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ChartTitle, Tooltip, Legend);
 
 const ResultsPage = () => {
   const dispatch = useDispatch();
-  const { voteCounts, showResultPage, loading } = useSelector((state) => state.results);
+  const { voteCounts, showResultPage } = useSelector((state) => state.results);
   const [manualAdjustments, setManualAdjustments] = useState({ boy: 0, girl: 0 });
 
   useEffect(() => {
-    // Escuchar cambios en los resultados
     const resultsRef = ref(db, "results");
     const unsubscribeResults = onValue(resultsRef, (snapshot) => {
       if (snapshot.exists()) {
@@ -38,7 +35,6 @@ const ResultsPage = () => {
       }
     });
 
-    // Escuchar ajustes manuales
     const adjustmentsRef = ref(db, "manualAdjustments");
     const unsubscribeAdjustments = onValue(adjustmentsRef, (snapshot) => {
       if (snapshot.exists()) setManualAdjustments(snapshot.val());
@@ -50,22 +46,22 @@ const ResultsPage = () => {
     };
   }, [dispatch]);
 
-  // CORRECCIÓN CLAVE: 
-  // Si showResultPage es false, NO redirigimos. 
-  // Simplemente mostramos un mensaje de "Preparando resultados..." 
-  // Esto evita que App.jsx se vuelva loco intentando entrar y ResultsPage intentando salir.
+  // Si showResultPage es false, mostramos un estado de espera integrado
+  // Esto evita errores de redirección y dependencias externas
   if (!showResultPage) {
     return (
       <PageBackground>
-        <ResultsContainer>
+        <ResultsContainer
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
           <HeaderSection>
             <MainTitle>Esperando resultados...</MainTitle>
-            <SubTitle>Los resultados se mostrarán pronto</SubTitle>
+            <SubTitle>Valentina & Janppier</SubTitle>
             <LoaderMargin>
-               {/* Un spinner simple o texto */}
-               <p>Sincronizando con la base de datos...</p>
+               <p>Los resultados se revelarán pronto. ¡Mantente conectado!</p>
             </LoaderMargin>
-            <NavigationButton to="/">Volver al Inicio</NavigationButton>
+            <NavigationButton to="/">🏠 VOLVER AL INICIO</NavigationButton>
           </HeaderSection>
         </ResultsContainer>
       </PageBackground>
@@ -169,7 +165,7 @@ const ResultsPage = () => {
 };
 
 // --- ESTILOS ---
-const LoaderMargin = styled.div` margin: 2rem 0; color: #a68974; `;
+const LoaderMargin = styled.div` margin: 2rem 0; color: #a68974; font-weight: 500; `;
 const PageBackground = styled.div` min-height: 100vh; background: #f2e8df; display: flex; align-items: center; justify-content: center; padding: 20px; `;
 const ResultsContainer = styled(motion.div)` background: rgba(255, 255, 255, 0.7); border-radius: 30px; padding: 2.5rem; width: 100%; max-width: 600px; backdrop-filter: blur(10px); border: 1px solid #d9c7b8; box-shadow: 0 10px 30px rgba(0,0,0,0.05); `;
 const ContentWrapper = styled.div` display: flex; flex-direction: column; gap: 1.5rem; `;
@@ -190,6 +186,6 @@ const GenderIcon = styled.div` width: 50px; height: 50px; svg { width: 100%; hei
 const StatDetails = styled.div` display: flex; flex-direction: column; `;
 const StatTitle = styled.div` font-size: 0.8rem; color: #888; font-weight: 600; `;
 const Percentage = styled.div` font-size: 1.6rem; font-weight: 900; color: ${props => props.$boy ? "#89CFF0" : "#FFB6C1"}; `;
-const NavigationButton = styled(Link)` background: #8c6a53; color: white; text-decoration: none; padding: 1.1rem; border-radius: 20px; text-align: center; font-weight: bold; display: block; &:hover { background: #765945; transform: translateY(-2px); } `;
+const NavigationButton = styled(Link)` background: #8c6a53; color: white; text-decoration: none; padding: 1.1rem; border-radius: 20px; text-align: center; font-weight: bold; display: block; transition: all 0.3s ease; &:hover { background: #765945; transform: translateY(-2px); } `;
 
 export default ResultsPage;
