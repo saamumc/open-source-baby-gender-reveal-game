@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -19,22 +19,39 @@ const AppContent = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   
+  // Este estado evita que la app te obligue a quedarte en resultados si quieres volver al inicio
+  const [hasAutoRedirected, setHasAutoRedirected] = useState(false);
+  
   useEffect(() => {
     const resultsRef = ref(db, "results");
+    
     const unsubscribe = onValue(resultsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
+        
+        // 1. Sincronizamos con Redux
         dispatch(updateResults(data));
 
+        // 2. LÓGICA DE NAVEGACIÓN
         if (location.pathname === "/control-panel" || location.pathname === "/traer") {
           return;
         }
 
-        if (data.showResultPage === true && location.pathname !== "/results") {
-            navigate("/results");
-            return; 
+        // --- SALTO INTELIGENTE A RESULTADOS ---
+        // Si el admin activa resultados y aún no hemos redirigido en esta sesión de 'true'
+        if (data.showResultPage === true && !hasAutoRedirected) {
+            setHasAutoRedirected(true); // Marcamos que ya se hizo el salto automático
+            if (location.pathname !== "/results") {
+              navigate("/results");
+            }
         }
 
+        // Si el admin apaga los resultados, reseteamos el candado para la próxima activación
+        if (data.showResultPage === false && hasAutoRedirected) {
+            setHasAutoRedirected(false);
+        }
+
+        // --- CIERRE DE VOTACIÓN ---
         if (data.showVotingScreen === false && location.pathname === "/vote") {
             navigate("/");
         }
@@ -44,7 +61,7 @@ const AppContent = () => {
     });
 
     return () => unsubscribe();
-  }, [location.pathname, navigate, dispatch]);
+  }, [location.pathname, navigate, dispatch, hasAutoRedirected]);
 
   return (
     <AppContainer>
@@ -72,7 +89,7 @@ const App = () => (
   </Router>
 );
 
-// --- ESTILOS (Solo una declaración por cada uno) ---
+// --- ESTILOS CORREGIDOS ---
 const AppContainer = styled.div`
   min-height: 100vh; 
   display: flex; 
@@ -100,7 +117,7 @@ const FloatingIconsWrapper = styled.div`
   left: 0; 
   right: 0; 
   bottom: 0; 
-  z-index: 5; /* Ajustado para que se vea sobre el fondo pero bajo el contenido */
+  z-index: 5; 
   pointer-events: none; 
 `;
 
