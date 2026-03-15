@@ -15,7 +15,7 @@ const WhatToBring = () => {
     >
       <ContentCard>
         <BackButton onClick={() => navigate("/")}>
-          <FaArrowLeft /> Volver
+          <FaArrowLeft /> Volver al Inicio
         </BackButton>
 
         <Title>¿Qué traer?</Title>
@@ -32,18 +32,22 @@ const WhatToBring = () => {
 
         <Grid>
           <GiftCard color="#C08081">
-            <FaBabyCarriage size={30} />
-            <h3>Si crees que es NIÑA</h3>
+            <IconHeader color="#C08081">
+              <FaBabyCarriage size={24} />
+              <h3>Si crees que es NIÑA</h3>
+            </IconHeader>
             <ul>
-              <li><FaCheckCircle /> Pañitos Huggies Dermacare</li>
+              <li><FaCheckCircle color="#C08081" /> Pañitos Huggies Dermacare</li>
             </ul>
           </GiftCard>
 
           <GiftCard color="#4682B4">
-            <FaBabyCarriage size={30} />
-            <h3>Si crees que es NIÑO</h3>
+            <IconHeader color="#4682B4">
+              <FaBabyCarriage size={24} />
+              <h3>Si crees que es NIÑO</h3>
+            </IconHeader>
             <ul>
-              <li><FaCheckCircle /> Pañales Huggies Dermacare</li>
+              <li><FaCheckCircle color="#4682B4" /> Pañales Huggies Dermacare</li>
             </ul>
           </GiftCard>
         </Grid>
@@ -57,36 +61,111 @@ const WhatToBring = () => {
   );
 };
 
-// --- ESTILOS ---
+// --- ESTILOS (Sincronizados con HomePage) ---
+
 const Container = styled(motion.div)`
-  display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 2rem 1rem; background: #0f0f0f;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh; 
+  padding: 2rem 1rem; 
+  background: #f2e8df; /* Mismo fondo que HomePage */
 `;
 
 const ContentCard = styled.div`
-  background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 2rem; width: 100%; max-width: 500px; text-align: center;
+  background: rgba(255, 255, 255, 0.7); 
+  backdrop-filter: blur(10px); 
+  border-radius: 30px; 
+  padding: 2.5rem; 
+  width: 100%; 
+  max-width: 500px; 
+  color: #8c6a53; 
+  text-align: center; 
+  border: 1px solid #d9c7b8; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 `;
 
 const BackButton = styled.button`
-  background: transparent; color: #888; border: none; display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 1rem; font-size: 0.9rem;
+  background: transparent; 
+  color: #a68974; 
+  border: none; 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  cursor: pointer; 
+  margin-bottom: 1.5rem; 
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: opacity 0.2s;
+  &:hover { opacity: 0.7; }
 `;
 
-const Title = styled.h1` color: white; font-family: serif; font-size: 2.2rem; margin-bottom: 0.5rem; `;
-const Subtitle = styled.p` color: #aaa; margin-bottom: 2rem; `;
+const Title = styled.h1` 
+  color: #8c6a53; 
+  font-family: 'Georgia', serif; 
+  font-size: 2.4rem; 
+  margin-bottom: 0.5rem; 
+`;
+
+const Subtitle = styled.p` 
+  color: #a68974; 
+  margin-bottom: 2rem; 
+  font-weight: 500;
+`;
 
 const Section = styled.div`
-  background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 20px; color: #ccc; line-height: 1.6; font-size: 0.95rem; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.05);
-  strong { color: white; }
+  background: white; 
+  padding: 1.5rem; 
+  border-radius: 20px; 
+  color: #a68974; 
+  line-height: 1.5; 
+  font-size: 0.95rem; 
+  margin-bottom: 2rem; 
+  border: 1px solid #d9c7b8;
+  text-align: left;
+  strong { color: #8c6a53; }
 `;
 
-const Grid = styled.div` display: flex; flex-direction: column; gap: 15px; `;
+const Grid = styled.div` 
+  display: flex; 
+  flex-direction: column; 
+  gap: 15px; 
+`;
 
 const GiftCard = styled.div`
-  background: ${props => props.color}22; border: 1px solid ${props => props.color}55; border-radius: 20px; padding: 1.5rem; text-align: left;
-  h3 { color: ${props => props.color}; margin: 10px 0; font-size: 1.1rem; }
+  background: white; 
+  border: 1px solid #d9c7b8; 
+  border-radius: 20px; 
+  padding: 1.5rem; 
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+  
   ul { list-style: none; padding: 0; margin: 0; }
-  li { color: white; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  li { 
+    color: #8c6a53; 
+    font-size: 0.95rem; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-weight: 500;
+  }
 `;
 
-const Note = styled.p` color: #666; font-size: 0.8rem; margin-top: 1.5rem; font-style: italic; `;
+const IconHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: ${props => props.color};
+  h3 { margin: 0; font-size: 1.1rem; font-family: 'Georgia', serif; }
+`;
+
+const Note = styled.p` 
+  color: #a68974; 
+  font-size: 0.85rem; 
+  margin-top: 2rem; 
+  font-style: italic; 
+  line-height: 1.4;
+`;
 
 export default WhatToBring;
