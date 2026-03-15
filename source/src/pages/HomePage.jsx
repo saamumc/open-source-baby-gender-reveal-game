@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
+// 1. IMPORTA TU FONDO ANIMADO
+import AnimatedBackground from "../components/AnimatedBackground"; 
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -52,6 +54,9 @@ const HomePage = () => {
 
   return (
     <HomeContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      {/* 2. COLOCA EL FONDO AQUÍ PARA QUE FLOTE DETRÁS */}
+      <AnimatedBackground />
+
       <ContentCard>
         <NamesTitle>Valentina & Janppier</NamesTitle>
         <Divider />
@@ -109,8 +114,33 @@ const HomePage = () => {
 };
 
 // --- ESTILOS ---
-const HomeContainer = styled(motion.div)` display: flex; justify-content: center; align-items: center; padding: 2rem 1rem; background: #f2e8df; min-height: 100vh; `;
-const ContentCard = styled.div` background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border-radius: 30px; padding: 2.5rem; width: 100%; max-width: 500px; color: #8c6a53; text-align: center; border: 1px solid #d9c7b8; box-shadow: 0 10px 30px rgba(0,0,0,0.05); `;
+
+const HomeContainer = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+  /* 3. CAMBIAMOS EL COLOR SÓLIDO POR TRANSPARENTE */
+  background: transparent; 
+  min-height: 100vh;
+  position: relative;
+`;
+
+const ContentCard = styled.div`
+  /* 4. AJUSTAMOS LA TRANSPARENCIA DE LA TARJETA (0.85 para que se vea atrás pero se lea bien) */
+  background: rgba(255, 255, 255, 0.85); 
+  backdrop-filter: blur(8px); 
+  border-radius: 30px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 500px;
+  color: #8c6a53;
+  text-align: center;
+  border: 1px solid rgba(217, 199, 184, 0.5);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  z-index: 1; /* Asegura que la tarjeta esté encima de los ositos */
+`;
+
 const NamesTitle = styled.h1` font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; `;
 const Divider = styled.hr` border: 0; height: 1px; background: #d9c7b8; margin: 1rem 0; `;
 const CountdownSection = styled.div` background: #a68974; color: white; padding: 0.8rem; border-radius: 15px; margin-bottom: 1.5rem; font-weight: bold; `;
