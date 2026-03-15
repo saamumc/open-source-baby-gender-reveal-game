@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Bar } from "react-chartjs-2";
-import { useSelector, useDispatch } from "react-redux"; // Añadimos useDispatch
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { db } from "../firebase/config";
 import { ref, onValue } from "firebase/database";
-import { updateResults } from "../store/resultsSlice"; // Importa tu acción de Redux para actualizar
+import { updateResults } from "../store/resultsSlice";
 
 import {
   Chart as ChartJS,
@@ -19,33 +19,30 @@ import {
 } from "chart.js";
 
 import { BabyBoyIcon, BabyGirlIcon } from "../components/GenderOption";
-import WaitingForResultPage from "./WaitingForResultPage";
+// Eliminamos la importación de WaitingForResultPage si esta causa el redireccionamiento
+import LoadingScreen from "../components/LoadingScreen"; // O un componente simple de "Cargando"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ChartTitle, Tooltip, Legend);
 
 const ResultsPage = () => {
   const dispatch = useDispatch();
-  // Traemos los datos de Redux
-  const { voteCounts, showResultPage } = useSelector((state) => state.results);
+  const { voteCounts, showResultPage, loading } = useSelector((state) => state.results);
   const [manualAdjustments, setManualAdjustments] = useState({ boy: 0, girl: 0 });
 
   useEffect(() => {
-    // 1. ESCUCHAR INTERRUPTOR DE RESULTADOS (Nodo "results")
-    // Esto hace que si cambias 'showResultPage' a true en Firebase, la página aparezca sola
+    // Escuchar cambios en los resultados
     const resultsRef = ref(db, "results");
     const unsubscribeResults = onValue(resultsRef, (snapshot) => {
       if (snapshot.exists()) {
-        const data = snapshot.val();
-        // Actualizamos Redux al instante para que el componente reaccione
-        dispatch(updateResults(data)); 
+        dispatch(updateResults(snapshot.val())); 
       }
     });
 
-    // 2. ESCUCHAR AJUSTES MANUALES
+    // Escuchar ajustes manuales
     const adjustmentsRef = ref(db, "manualAdjustments");
     const unsubscribeAdjustments = onValue(adjustmentsRef, (snapshot) => {
       if (snapshot.exists()) setManualAdjustments(snapshot.val());
-    }, (error) => console.error("Error Firebase:", error));
+    });
 
     return () => {
       unsubscribeResults();
@@ -53,11 +50,30 @@ const ResultsPage = () => {
     };
   }, [dispatch]);
 
-  // Si showResultPage es false en Firebase, este return saltará automáticamente al cambiar el nodo
-  if (!showResultPage) return <WaitingForResultPage />;
+  // CORRECCIÓN CLAVE: 
+  // Si showResultPage es false, NO redirigimos. 
+  // Simplemente mostramos un mensaje de "Preparando resultados..." 
+  // Esto evita que App.jsx se vuelva loco intentando entrar y ResultsPage intentando salir.
+  if (!showResultPage) {
+    return (
+      <PageBackground>
+        <ResultsContainer>
+          <HeaderSection>
+            <MainTitle>Esperando resultados...</MainTitle>
+            <SubTitle>Los resultados se mostrarán pronto</SubTitle>
+            <LoaderMargin>
+               {/* Un spinner simple o texto */}
+               <p>Sincronizando con la base de datos...</p>
+            </LoaderMargin>
+            <NavigationButton to="/">Volver al Inicio</NavigationButton>
+          </HeaderSection>
+        </ResultsContainer>
+      </PageBackground>
+    );
+  }
 
-  const boyVotes = (voteCounts.boy || 0) + (manualAdjustments.boy || 0);
-  const girlVotes = (voteCounts.girl || 0) + (manualAdjustments.girl || 0);
+  const boyVotes = (voteCounts?.boy || 0) + (manualAdjustments.boy || 0);
+  const girlVotes = (voteCounts?.girl || 0) + (manualAdjustments.girl || 0);
   const totalVotes = boyVotes + girlVotes;
 
   const calculatePercentage = (votes) => {
@@ -152,7 +168,8 @@ const ResultsPage = () => {
   );
 };
 
-// --- ESTILOS MISMOS DE ANTES ---
+// --- ESTILOS ---
+const LoaderMargin = styled.div` margin: 2rem 0; color: #a68974; `;
 const PageBackground = styled.div` min-height: 100vh; background: #f2e8df; display: flex; align-items: center; justify-content: center; padding: 20px; `;
 const ResultsContainer = styled(motion.div)` background: rgba(255, 255, 255, 0.7); border-radius: 30px; padding: 2.5rem; width: 100%; max-width: 600px; backdrop-filter: blur(10px); border: 1px solid #d9c7b8; box-shadow: 0 10px 30px rgba(0,0,0,0.05); `;
 const ContentWrapper = styled.div` display: flex; flex-direction: column; gap: 1.5rem; `;
@@ -173,6 +190,6 @@ const GenderIcon = styled.div` width: 50px; height: 50px; svg { width: 100%; hei
 const StatDetails = styled.div` display: flex; flex-direction: column; `;
 const StatTitle = styled.div` font-size: 0.8rem; color: #888; font-weight: 600; `;
 const Percentage = styled.div` font-size: 1.6rem; font-weight: 900; color: ${props => props.$boy ? "#89CFF0" : "#FFB6C1"}; `;
-const NavigationButton = styled(Link)` background: #8c6a53; color: white; text-decoration: none; padding: 1.1rem; border-radius: 20px; text-align: center; font-weight: bold; &:hover { background: #765945; transform: translateY(-2px); } `;
+const NavigationButton = styled(Link)` background: #8c6a53; color: white; text-decoration: none; padding: 1.1rem; border-radius: 20px; text-align: center; font-weight: bold; display: block; &:hover { background: #765945; transform: translateY(-2px); } `;
 
 export default ResultsPage;
