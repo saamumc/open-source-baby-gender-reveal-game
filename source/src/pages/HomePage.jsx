@@ -73,7 +73,7 @@ const HomePage = () => {
           </PhotoWrapper>
 
           <InvitationText>
-            Los <strong>abuelitos y tíos</strong> queremos invitarte a la revelación de sexo del bebé.
+            Los <strong>abuelitos y tíos</strong> queremos invitarte a la revelación de genero del bebé.
           </InvitationText>
 
           <DressCodeBox>
