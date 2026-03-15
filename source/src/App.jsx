@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux"; // <--- IMPORTANTE
 import AnimatedBackground from "./components/AnimatedBackground";
 import FloatingIcons from "./components/FloatingIcons";
 import VotePage from "./pages/VotePage";
@@ -9,30 +10,35 @@ import HomePage from "./pages/HomePage";
 import WhatToBring from "./pages/WhatToBring";
 import ControlPanel from "./pages/ControlPanel";
 
-// CORRECCIÓN: Asegúrate de que el nombre (db o database) coincida con tu config
 import { db } from "./firebase/config"; 
 import { ref, onValue } from "firebase/database";
+import { updateResults } from "./store/resultsSlice"; // <--- IMPORTANTE: Importa la acción corregida
 
 const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch(); // <--- Inicializamos el disparador de Redux
   
   useEffect(() => {
-    // Excluir rutas administrativas o informativas
-    if (location.pathname === "/control-panel" || location.pathname === "/traer") {
-      return;
-    }
-
-    // Referencia a los ajustes de resultados/estado del juego
+    // Referencia al nodo principal de resultados en Firebase
     const resultsRef = ref(db, "results");
     
     const unsubscribe = onValue(resultsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         
-        // Si el juego no ha empezado y el usuario intenta entrar a votar, se devuelve al inicio
+        // 1. ACTUALIZAR REDUX AL INSTANTE
+        // Esto es lo que faltaba. Sin esto, Redux no se entera del cambio en la DB.
+        dispatch(updateResults(data));
+
+        // 2. LÓGICA DE NAVEGACIÓN
+        if (location.pathname === "/control-panel" || location.pathname === "/traer") {
+          return;
+        }
+
+        // Si el juego se cierra y el usuario está en /vote, lo sacamos
         if (data.showVotingScreen === false && location.pathname === "/vote") {
-            console.log("Acceso a votación restringido: El juego no ha iniciado.");
+            console.log("Acceso a votación restringido.");
             navigate("/");
         }
       }
@@ -41,7 +47,7 @@ const AppContent = () => {
     });
 
     return () => unsubscribe();
-  }, [location.pathname, navigate]);
+  }, [location.pathname, navigate, dispatch]);
 
   return (
     <AppContainer>
@@ -69,32 +75,13 @@ const App = () => (
   </Router>
 );
 
-// --- ESTILOS ---
+// --- ESTILOS (Sin cambios) ---
 const AppContainer = styled.div`
-  min-height: 100vh; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center;
-  padding: 1rem; 
-  position: relative; 
-  overflow: hidden; 
-  background: #F9F6F1; // Cambiado a un tono crema acorde al Baby Shower
-  color: #333;
+  min-height: 100vh; display: flex; justify-content: center; align-items: center;
+  padding: 1rem; position: relative; overflow: hidden; background: #F9F6F1; color: #333;
 `;
-
-const MainContent = styled.div` 
-  width: 100%; 
-  max-width: 800px; 
-  z-index: 10; 
-  position: relative; 
-  margin: 0 auto; 
-`;
-
-const FloatingIconsWrapper = styled.div` 
-  position: fixed; 
-  top: 0; left: 0; right: 0; bottom: 0; 
-  z-index: 5; 
-  pointer-events: none; 
-`;
+const MainContent = styled.div` width: 100%; max-width: 800px; z-index: 10; position: relative; margin: 0 auto; `;
+const FloatingIconsWrapper = styled.div` position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 5; pointer-events: none; `;
 
 export default App;
+
