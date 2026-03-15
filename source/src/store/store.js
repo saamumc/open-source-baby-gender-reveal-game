@@ -1,4 +1,4 @@
-import { db } from "./config";
+import { db } from "../firebase/config"; // <--- ESTA ES LA RUTA CORREGIDA
 import { ref, set, onValue, update } from "firebase/database";
 import { updateResults } from "../store/resultsSlice";
 
@@ -10,16 +10,16 @@ export const firebaseMiddleware = (store) => (next) => (action) => {
     const state = store.getState().vote;
     const { selectedGender, uuid, message, timestamp } = state;
 
-    // 1. Guardar el voto con mensaje en userVotes
+    // 1. Guardar el voto con mensaje en userVotes (como vimos en tu captura de Firebase)
     set(ref(db, `userVotes/${uuid}`), {
-      selectedGender,
-      message: message || "", // <--- AQUÍ SE ENVÍA EL MENSAJE
-      uuid,
-      timestamp,
+      selectedGender: selectedGender,
+      message: message || "", // <--- Aquí enviamos el mensaje por fin
+      uuid: uuid,
+      timestamp: timestamp || Date.now(),
       hasVoted: true
     });
 
-    // 2. Actualizar el conteo global (Esto hace que las barras suban)
+    // 2. Actualizar el conteo global para las barras de resultados
     const currentCounts = store.getState().results.voteCounts;
     const newCounts = {
       ...currentCounts,
