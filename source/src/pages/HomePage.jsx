@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
-// 1. IMPORTA TU FONDO ANIMADO
 import AnimatedBackground from "../components/AnimatedBackground"; 
 
 const HomePage = () => {
@@ -54,7 +53,6 @@ const HomePage = () => {
 
   return (
     <HomeContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      {/* 2. COLOCA EL FONDO AQUÍ PARA QUE FLOTE DETRÁS */}
       <AnimatedBackground />
 
       <ContentCard>
@@ -120,25 +118,27 @@ const HomeContainer = styled(motion.div)`
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
-  /* 3. CAMBIAMOS EL COLOR SÓLIDO POR TRANSPARENTE */
-  background: transparent; 
+  background-color: #f2e8df; /* El fondo sólido va en la capa más profunda */
   min-height: 100vh;
   position: relative;
+  overflow: hidden;
 `;
 
 const ContentCard = styled.div`
-  /* 4. AJUSTAMOS LA TRANSPARENCIA DE LA TARJETA (0.85 para que se vea atrás pero se lea bien) */
-  background: rgba(255, 255, 255, 0.85); 
-  backdrop-filter: blur(8px); 
+  /* Bajamos la opacidad a 0.6 para que el vidrio sea más evidente */
+  background: rgba(255, 255, 255, 0.6); 
+  backdrop-filter: blur(15px); 
+  -webkit-backdrop-filter: blur(15px);
   border-radius: 30px;
   padding: 2.5rem;
   width: 100%;
   max-width: 500px;
   color: #8c6a53;
   text-align: center;
-  border: 1px solid rgba(217, 199, 184, 0.5);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  z-index: 1; /* Asegura que la tarjeta esté encima de los ositos */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  z-index: 10; /* Por encima de los ositos */
+  position: relative;
 `;
 
 const NamesTitle = styled.h1` font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; `;
