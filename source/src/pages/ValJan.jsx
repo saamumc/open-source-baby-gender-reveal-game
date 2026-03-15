@@ -6,20 +6,44 @@ import { motion } from "framer-motion";
 
 const ValJan = () => {
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const votesRef = ref(db, "votes");
-    onValue(votesRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        // Convertimos el objeto en array y filtramos los que tengan texto
-        const list = Object.values(data)
+    try {
+      const votesRef = ref(db, "votes");
+      const unsubscribe = onValue(votesRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          // Convertimos el objeto en array de forma segura
+          const list = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          }))
           .filter((v) => v.message && v.message.trim() !== "")
-          .reverse(); // Los más nuevos arriba
-        setMessages(list);
-      }
-    });
+          .reverse(); 
+          
+          setMessages(list);
+        }
+        setLoading(false);
+      }, (error) => {
+        console.error("Error en Firebase:", error);
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    } catch (err) {
+      console.error("Error de inicialización:", err);
+      setLoading(false);
+    }
   }, []);
+
+  if (loading) {
+    return (
+      <Container>
+        <Header><h1>Cargando mensajes...</h1></Header>
+      </Container>
+    );
+  }
 
   return (
     <Container initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -29,20 +53,23 @@ const ValJan = () => {
       </Header>
 
       <MessageGrid>
-        {messages.map((m, i) => (
-          <Card key={i} gender={m.gender} whileHover={{ scale: 1.02 }}>
-            <Badge gender={m.gender}>
-              {m.gender === "boy" ? "Votó por NIÑO 🧸" : "Votó por NIÑA 🎀"}
-            </Badge>
-            <Text>"{m.message}"</Text>
-            <Time>Enviado con amor</Time>
-          </Card>
-        ))}
+        {messages.length > 0 ? (
+          messages.map((m, i) => (
+            <Card key={m.id || i} gender={m.gender} whileHover={{ scale: 1.02 }}>
+              <Badge gender={m.gender}>
+                {m.gender === "boy" ? "Votó por NIÑO 🧸" : "Votó por NIÑA 🎀"}
+              </Badge>
+              <Text>"{m.message}"</Text>
+              <Time>Recibido</Time>
+            </Card>
+          ))
+        ) : (
+          <NoMessagesCard>
+            <p>Aún no han llegado mensajes.</p>
+            <p>¡Pronto aparecerán aquí!</p>
+          </NoMessagesCard>
+        )}
       </MessageGrid>
-      
-      {messages.length === 0 && (
-        <NoMessages>Aún no han llegado mensajes. ¡Pronto se llenará!</NoMessages>
-      )}
     </Container>
   );
 };
@@ -53,12 +80,14 @@ const Container = styled(motion.div)`
   max-width: 900px;
   margin: 0 auto;
   min-height: 100vh;
+  position: relative;
+  z-index: 20; /* Aseguramos que esté sobre el fondo */
 `;
 
 const Header = styled.div`
   text-align: center;
   margin-bottom: 3rem;
-  h1 { font-family: 'Georgia', serif; color: #8c6a53; font-size: 2.2rem; }
+  h1 { font-family: 'Georgia', serif; color: #8c6a53; font-size: 2.2rem; margin-bottom: 10px; }
   p { color: #a68974; font-style: italic; }
 `;
 
@@ -69,42 +98,47 @@ const MessageGrid = styled.div`
 `;
 
 const Card = styled(motion.div)`
-  background: white;
-  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(5px);
+  padding: 25px;
   border-radius: 20px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.05);
   border-left: 8px solid ${props => props.gender === 'boy' ? '#A3C1AD' : '#F4C2C2'};
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 const Badge = styled.span`
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: bold;
   color: ${props => props.gender === 'boy' ? '#5D7E69' : '#C08081'};
-  margin-bottom: 10px;
-  text-transform: uppercase;
+  margin-bottom: 15px;
 `;
 
 const Text = styled.p`
-  color: #555;
+  color: #444;
   font-size: 1.1rem;
   line-height: 1.5;
-  margin: 10px 0;
-  font-family: 'Courier New', Courier, monospace;
+  margin-bottom: 15px;
+  font-style: italic;
 `;
 
 const Time = styled.span`
-  font-size: 0.8rem;
-  color: #bbb;
-  text-align: right;
+  font-size: 0.7rem;
+  color: #999;
+  text-transform: uppercase;
+  margin-top: auto;
 `;
 
-const NoMessages = styled.p`
+const NoMessagesCard = styled.div`
+  grid-column: 1 / -1;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
   text-align: center;
-  color: #a68974;
-  margin-top: 50px;
+  color: #8c6a53;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 `;
 
 export default ValJan;
+
