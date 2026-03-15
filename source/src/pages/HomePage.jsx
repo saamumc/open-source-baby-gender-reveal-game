@@ -20,6 +20,7 @@ const HomePage = () => {
   );
 
   useEffect(() => {
+    // Fecha actualizada para el 18 de Abril de 2026
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -67,20 +68,22 @@ const HomePage = () => {
               alt="Valentina y Janppier"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
               onError={(e) => {
-                console.error("Error cargando imagen. Verifica que esté en /public/Revelacion.jpg");
                 e.target.src = "https://via.placeholder.com/400?text=Cargando+Invitacion...";
               }}
             />
           </PhotoWrapper>
 
           <InvitationText>
-            Invitación de los tíos <strong>Samuel y Sara</strong> para conocer el sexo del bebé.
+            Invitación de parte de los <strong>abuelos y tíos</strong> para conocer el sexo del bebé.
           </InvitationText>
 
           <DressCodeBox>
+            <p style={{ marginBottom: "8px" }}>
+              <strong>Prenda base:</strong> Todos traer la parte de arriba <strong>blanca</strong> (saco, chaqueta, etc).
+            </p>
             <p>
-              <strong>Vestimenta:</strong> Trae una prenda <strong>azul</strong> si crees que es niño,
-              <strong> rosada</strong> si niña 💙💗
+              <strong>Accesorio:</strong> Trae algo <strong>azul</strong> si crees que es niño o 
+              <strong> rosado</strong> si crees que es niña 💙💗
             </p>
           </DressCodeBox>
 
@@ -110,6 +113,7 @@ const HomePage = () => {
   );
 };
 
+// --- ESTILOS ---
 const HomeContainer = styled(motion.div)` display: flex; justify-content: center; align-items: center; padding: 2rem 1rem; background: #f2e8df; min-height: 100vh; `;
 const ContentCard = styled.div` background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border-radius: 30px; padding: 2.5rem; width: 100%; max-width: 500px; color: #8c6a53; text-align: center; border: 1px solid #d9c7b8; box-shadow: 0 10px 30px rgba(0,0,0,0.05); `;
 const NamesTitle = styled.h1` font-family: 'Georgia', serif; font-size: 2.4rem; margin: 0; color: #8c6a53; `;
@@ -118,7 +122,7 @@ const CountdownSection = styled.div` background: #a68974; color: white; padding:
 const MainContent = styled.div` margin-bottom: 1.5rem; `;
 const PhotoWrapper = styled.div` width: 100%; height: 320px; border-radius: 20px; overflow: hidden; margin-bottom: 1.5rem; border: 6px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); `;
 const InvitationText = styled.p` font-size: 1.1rem; color: #8c6a53; margin-bottom: 1.5rem; line-height: 1.4; `;
-const DressCodeBox = styled.div` background: white; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.95rem; border: 1px solid #d9c7b8; color: #a68974; `;
+const DressCodeBox = styled.div` background: white; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.95rem; border: 1px solid #d9c7b8; color: #a68974; text-align: left; `;
 const DetailsBox = styled.div` font-size: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; `;
 const GiftButton = styled.button` background: white; color: #8c6a53; border: 1px solid #d9c7b8; padding: 1.2rem; border-radius: 15px; width: 100%; margin-top: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; transition: all 0.3s; &:hover { background: #fdfaf7; transform: translateY(-2px); } `;
 const ConfirmButton = styled.button` background: #25D366; color: white; border: none; padding: 1.2rem; border-radius: 15px; width: 100%; margin-top: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; `;
