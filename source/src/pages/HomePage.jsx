@@ -81,10 +81,7 @@ const HomePage = () => {
             <p style={{ marginBottom: "8px" }}>
               <strong>Prenda base:</strong> Todos traer la parte de arriba <strong>blanca</strong> (saco, chaqueta, etc).
             </p>
-            <p>
-              <strong>Accesorio:</strong> Trae algo <strong>azul</strong> si crees que es niño o 
-              <strong> rosado</strong> si crees que es niña 💙💗
-            </p>
+           
           </DressCodeBox>
 
           <DetailsBox>
