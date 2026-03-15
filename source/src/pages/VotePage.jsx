@@ -15,11 +15,11 @@ const VotePage = () => {
   const { selectedGender, hasVoted } = useSelector((state) => state.vote);
   const { showVotingScreen } = useSelector((state) => state.results);
 
-  // 1. Verificar si ya votó anteriormente al cargar la página
+  // 1. Verificar si ya votó anteriormente para bloquear el acceso
   useEffect(() => {
     const alreadyVoted = localStorage.getItem("baby_shower_voted");
     if (alreadyVoted) {
-      // Si ya votó, lo mandamos a resultados o mostramos la confirmación
+      // Si ya votó, lo mandamos directo a resultados
       navigate("/results");
     } else {
       dispatch(resetVote());
@@ -34,7 +34,7 @@ const VotePage = () => {
 
   const playPop = () => {
     const audio = new Audio("/sounds/pop.mp3"); 
-    audio.play().catch(() => console.log("Audio interactivo requerido primero"));
+    audio.play().catch(() => console.log("Audio interactivo requerido"));
   };
 
   const handleSelect = (gender) => {
@@ -42,9 +42,9 @@ const VotePage = () => {
     dispatch(selectGender(gender));
   };
 
-  const handleSubmit = () => {
-    if (selectedGender) {
-      // 2. Ejecutar efectos visuales
+  const handleSubmit = async () => {
+    if (selectedGender && !hasVoted) {
+      // 2. Efecto de confeti
       const color = selectedGender === "girl" ? "#FFB6C1" : "#89CFF0";
       confetti({
         particleCount: 150,
@@ -53,27 +53,25 @@ const VotePage = () => {
         colors: [color, "#FFFFFF", "#F9F6F1"]
       });
 
-      // 3. Guardar marca local para impedir re-voto
+      // 3. Enviar a Firebase y guardar marca local
+      // Enviamos el género y el mensaje a los papás
+      await dispatch(submitVote({ 
+        gender: selectedGender, 
+        message: message 
+      }));
+
       localStorage.setItem("baby_shower_voted", "true");
-
-      // 4. Disparar el mensaje a WhatsApp (Opcional, si quieres que se abra al votar)
-      const phoneNumber = "573214559144"; 
-      const wpMessage = encodeURIComponent(`¡Hola! Ya voté por ${selectedGender === 'girl' ? 'NIÑA' : 'NIÑO'}. Mi mensaje: ${message}`);
-      window.open(`https://wa.me/${phoneNumber}?text=${wpMessage}`, "_blank");
-
-      // 5. Enviar a Redux/Firebase
-      dispatch(submitVote());
     }
   };
 
   if (showVotingScreen === false) return null;
 
-  // 6. Esta es la "pantallita" que pedías que saliera después de votar
-  if (hasVoted) {
+  // 4. Pantalla de bloqueo post-votación
+  if (hasVoted || localStorage.getItem("baby_shower_voted")) {
     return (
       <VoteConfirmation 
         selected={selectedGender} 
-        customMessage="¡Ya sabemos lo que crees que va a ser! Ve a la página de resultados. Solo se permite un voto por persona."
+        customMessage="¡Ya sabemos lo que crees que va a ser! Solo se permite un voto por persona. Ahora ve a la página de resultados para ver cómo van las votaciones."
       />
     );
   }
@@ -111,7 +109,7 @@ const VotePage = () => {
             >
               <MessageLabel>Déjales un mensaje a los papás:</MessageLabel>
               <StyledTextArea
-                placeholder="Ej: ¡Muero por conocerte! Presiento que serás una princesa..."
+                placeholder="Ej: ¡Presiento que será una princesa!..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
@@ -132,14 +130,14 @@ const VotePage = () => {
   );
 };
 
-// --- ESTILOS ACTUALIZADOS (Mismo estilo que HomePage) ---
+// --- ESTILOS Sincronizados con HomePage ---
 
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f2e8df; /* Fondo crema de la invitación */
+  background: #f2e8df; 
   padding: 20px;
 `;
 
@@ -159,33 +157,14 @@ const TitleSection = styled.div` margin-bottom: 2rem; `;
 const MainTitle = styled.h1` color: #8c6a53; font-family: 'Georgia', serif; font-size: 2rem; margin-bottom: 0.5rem; `;
 const SubTitle = styled.p` color: #a68974; font-size: 1.1rem; `;
 
-const OptionsContainer = styled.div` 
-  display: flex; 
-  gap: 20px; 
-  justify-content: center; 
-  margin-bottom: 2rem; 
-`;
+const OptionsContainer = styled.div` display: flex; gap: 20px; justify-content: center; margin-bottom: 2rem; `;
 
 const MessageSection = styled(motion.div)` margin-bottom: 1.5rem; overflow: hidden; `;
-
-const MessageLabel = styled.label` 
-  display: block; 
-  color: #8c6a53; 
-  margin-bottom: 0.8rem; 
-  font-size: 0.95rem; 
-  font-weight: 600;
-`;
+const MessageLabel = styled.label` display: block; color: #8c6a53; margin-bottom: 0.8rem; font-size: 0.95rem; font-weight: 600; `;
 
 const StyledTextArea = styled.textarea` 
-  width: 100%; 
-  padding: 15px; 
-  border-radius: 15px; 
-  border: 1px solid #d9c7b8; 
-  background: white;
-  color: #8c6a53;
-  resize: none; 
-  height: 90px;
-  font-family: inherit;
+  width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #d9c7b8; 
+  background: white; color: #8c6a53; resize: none; height: 90px; font-family: inherit;
   &:focus { outline: none; border-color: #a68974; }
 `;
 
