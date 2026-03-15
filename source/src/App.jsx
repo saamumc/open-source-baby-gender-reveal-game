@@ -32,15 +32,20 @@ const AppContent = () => {
         // 1. Sincronizamos con Redux
         dispatch(updateResults(data));
 
-        // 2. LÓGICA DE NAVEGACIÓN
-        if (location.pathname === "/control-panel" || location.pathname === "/traer") {
+        // 2. LÓGICA DE NAVEGACIÓN PROTEGIDA
+        // Si estamos en el panel, en "qué traer" O VOTANDO, no interrumpimos al usuario
+        if (
+          location.pathname === "/control-panel" || 
+          location.pathname === "/traer" || 
+          location.pathname === "/vote"
+        ) {
           return;
         }
 
         // --- SALTO INTELIGENTE A RESULTADOS ---
-        // Si el admin activa resultados y aún no hemos redirigido en esta sesión de 'true'
+        // Solo redirige si el admin activa resultados y el usuario NO está en la página de votos
         if (data.showResultPage === true && !hasAutoRedirected) {
-            setHasAutoRedirected(true); // Marcamos que ya se hizo el salto automático
+            setHasAutoRedirected(true); 
             if (location.pathname !== "/results") {
               navigate("/results");
             }
@@ -51,7 +56,8 @@ const AppContent = () => {
             setHasAutoRedirected(false);
         }
 
-        // --- CIERRE DE VOTACIÓN ---
+        // --- CIERRE DE SEGURIDAD PARA VOTACIÓN ---
+        // Solo sacamos al usuario de /vote si el admin explícitamente cierra la pantalla de votación
         if (data.showVotingScreen === false && location.pathname === "/vote") {
             navigate("/");
         }
@@ -89,7 +95,7 @@ const App = () => (
   </Router>
 );
 
-// --- ESTILOS CORREGIDOS ---
+// --- ESTILOS ---
 const AppContainer = styled.div`
   min-height: 100vh; 
   display: flex; 
@@ -122,3 +128,4 @@ const FloatingIconsWrapper = styled.div`
 `;
 
 export default App;
+
