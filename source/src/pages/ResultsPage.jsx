@@ -16,7 +16,7 @@ import {
   Legend,
 } from "chart.js";
 
-// IMPORTANTE: Asegúrate de que el archivo se llame GenderOption.jsx exactamente
+// Asegúrate de que estos componentes existan en GenderOption.jsx
 import { BabyBoyIcon, BabyGirlIcon } from "../components/GenderOption";
 import WaitingForResultPage from "./WaitingForResultPage";
 
@@ -34,6 +34,7 @@ const ResultsPage = () => {
   const [manualAdjustments, setManualAdjustments] = useState({ boy: 0, girl: 0 });
 
   useEffect(() => {
+    // Escuchar ajustes manuales desde Firebase Realtime Database
     const adjustmentsRef = ref(db, "manualAdjustments");
     const unsubscribe = onValue(adjustmentsRef, (snapshot) => {
       if (snapshot.exists()) setManualAdjustments(snapshot.val());
@@ -41,7 +42,7 @@ const ResultsPage = () => {
     return () => unsubscribe();
   }, []);
 
-  // Si la página de resultados no está activa en Firebase, mostramos la de espera
+  // Si la página de resultados está desactivada en Firebase, mostrar espera
   if (!showResultPage) return <WaitingForResultPage />;
 
   const boyVotes = (voteCounts.boy || 0) + (manualAdjustments.boy || 0);
@@ -57,8 +58,8 @@ const ResultsPage = () => {
     labels: ["Niño", "Niña"],
     datasets: [{
       data: [boyVotes, girlVotes],
-      backgroundColor: ["rgba(64, 169, 255, 0.7)", "rgba(255, 143, 203, 0.7)"],
-      borderColor: ["#2979FF", "#FF69B4"],
+      backgroundColor: ["rgba(137, 207, 240, 0.7)", "rgba(255, 182, 193, 0.7)"],
+      borderColor: ["#89CFF0", "#FFB6C1"],
       borderWidth: 2,
       borderRadius: 12,
       barThickness: 50,
@@ -76,78 +77,104 @@ const ResultsPage = () => {
   };
 
   return (
-    <ResultsContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <ContentWrapper>
-        <StatsGrid>
-          <StatCard>
-            <StatIconWrapper>🏆</StatIconWrapper>
-            <StatInfo>
-              <StatLabel>Tendencia</StatLabel>
-              <StatValue $highlight>
-                {boyVotes === girlVotes ? "¡Empate!" : (boyVotes > girlVotes ? "Niño 👶" : "Niña 👧")}
-              </StatValue>
-            </StatInfo>
-          </StatCard>
+    <PageBackground>
+      <ResultsContainer 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <ContentWrapper>
+          <HeaderSection>
+            <MainTitle>Resultados Actuales</MainTitle>
+            <SubTitle>Valentina & Janppier</SubTitle>
+          </HeaderSection>
 
-          <StatCard>
-            <StatIconWrapper>👥</StatIconWrapper>
-            <StatInfo>
-              <StatLabel>Votos Totales</StatLabel>
-              <StatValue>{totalVotes}</StatValue>
-            </StatInfo>
-          </StatCard>
-        </StatsGrid>
+          <StatsGrid>
+            <StatCard>
+              <StatIconWrapper>🏆</StatIconWrapper>
+              <StatInfo>
+                <StatLabel>Tendencia</StatLabel>
+                <StatValue $highlight>
+                  {boyVotes === girlVotes ? "¡Empate!" : (boyVotes > girlVotes ? "Niño 👶" : "Niña 👧")}
+                </StatValue>
+              </StatInfo>
+            </StatCard>
 
-        <ChartSection>
-          <ChartWrapper>
-            <Bar data={data} options={options} height={220} />
-          </ChartWrapper>
+            <StatCard>
+              <StatIconWrapper>👥</StatIconWrapper>
+              <StatInfo>
+                <StatLabel>Votos Totales</StatLabel>
+                <StatValue>{totalVotes}</StatValue>
+              </StatInfo>
+            </StatCard>
+          </StatsGrid>
 
-          <DetailedStats>
-            <GenderStatCard>
-              <GenderIcon $boy><BabyBoyIcon /></GenderIcon>
-              <StatDetails>
-                <StatTitle>{boyVotes} Votos</StatTitle>
-                <Percentage $boy>{calculatePercentage(boyVotes)}%</Percentage>
-              </StatDetails>
-            </GenderStatCard>
+          <ChartSection>
+            <ChartWrapper>
+              <Bar data={data} options={options} height={220} />
+            </ChartWrapper>
 
-            <GenderStatCard>
-              <GenderIcon><BabyGirlIcon /></GenderIcon>
-              <StatDetails>
-                <StatTitle>{girlVotes} Votos</StatTitle>
-                <Percentage>{calculatePercentage(girlVotes)}%</Percentage>
-              </StatDetails>
-            </GenderStatCard>
-          </DetailedStats>
-        </ChartSection>
+            <DetailedStats>
+              <GenderStatCard>
+                <GenderIcon $boy><BabyBoyIcon /></GenderIcon>
+                <StatDetails>
+                  <StatTitle>{boyVotes} Votos</StatTitle>
+                  <Percentage $boy>{calculatePercentage(boyVotes)}%</Percentage>
+                </StatDetails>
+              </GenderStatCard>
 
-        <NavigationButton to="/">VOLVER AL INICIO</NavigationButton>
-      </ContentWrapper>
-    </ResultsContainer>
+              <GenderStatCard>
+                <GenderIcon><BabyGirlIcon /></GenderIcon>
+                <StatDetails>
+                  <StatTitle>{girlVotes} Votos</StatTitle>
+                  <Percentage>{calculatePercentage(girlVotes)}%</Percentage>
+                </StatDetails>
+              </GenderStatCard>
+            </DetailedStats>
+          </ChartSection>
+
+          {/* BOTÓN PARA DEVOLVERSE AL HOME */}
+          <NavigationButton to="/">
+            🏠 VOLVER AL INICIO
+          </NavigationButton>
+        </ContentWrapper>
+      </ResultsContainer>
+    </PageBackground>
   );
 };
 
-// --- ESTILOS (Ajustados para evitar conflictos de props) ---
+// --- ESTILOS ---
+
+const PageBackground = styled.div`
+  min-height: 100vh;
+  background: #f2e8df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+`;
 
 const ResultsContainer = styled(motion.div)` 
-  background: rgba(255, 255, 255, 0.2); 
+  background: rgba(255, 255, 255, 0.7); 
   border-radius: 30px; 
-  padding: 2rem; 
-  width: 95%; 
+  padding: 2.5rem; 
+  width: 100%; 
   max-width: 600px; 
-  margin: 20px auto; 
-  backdrop-filter: blur(15px); 
-  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(10px); 
+  border: 1px solid #d9c7b8;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 `;
 
 const ContentWrapper = styled.div` display: flex; flex-direction: column; gap: 1.5rem; `;
+
+const HeaderSection = styled.div` text-align: center; margin-bottom: 0.5rem; `;
+const MainTitle = styled.h1` color: #8c6a53; font-family: 'Georgia', serif; font-size: 1.8rem; margin: 0; `;
+const SubTitle = styled.p` color: #a68974; font-size: 1.1rem; margin: 5px 0 0; `;
 
 const ChartWrapper = styled.div` 
   background: white; 
   border-radius: 25px; 
   padding: 1.5rem; 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+  box-shadow: 0 5px 15px rgba(0,0,0,0.02); 
 `;
 
 const StatsGrid = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; `;
@@ -159,22 +186,23 @@ const StatCard = styled.div`
   display: flex; 
   align-items: center; 
   gap: 0.8rem;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.03);
 `;
 
 const StatIconWrapper = styled.div` 
-  width: 45px; height: 45px; border-radius: 50%; 
-  background: #f8f9fa; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; 
+  width: 40px; height: 40px; border-radius: 50%; 
+  background: #f8f1eb; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; 
 `;
 
 const StatInfo = styled.div` display: flex; flex-direction: column; `;
-const StatLabel = styled.div` font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; `;
-const StatValue = styled.div` font-size: 1.1rem; font-weight: bold; color: ${props => props.$highlight ? "#8d775f" : "#333"}; `;
+const StatLabel = styled.div` font-size: 0.7rem; color: #a68974; text-transform: uppercase; font-weight: bold; `;
+const StatValue = styled.div` font-size: 1rem; font-weight: bold; color: ${props => props.$highlight ? "#8c6a53" : "#555"}; `;
 
 const ChartSection = styled.div` display: flex; flex-direction: column; gap: 1.2rem; `;
 
 const DetailedStats = styled.div` 
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 1rem; 
   @media (max-width: 480px) { grid-template-columns: 1fr; }
 `;
 
@@ -184,22 +212,34 @@ const GenderStatCard = styled.div`
 `;
 
 const GenderIcon = styled.div` 
-  width: 60px; height: 60px; 
+  width: 50px; height: 50px; 
   svg { width: 100%; height: 100%; }
 `;
 
 const StatDetails = styled.div` display: flex; flex-direction: column; `;
-const StatTitle = styled.div` font-size: 0.85rem; color: #666; font-weight: 600; `;
+const StatTitle = styled.div` font-size: 0.8rem; color: #888; font-weight: 600; `;
 const Percentage = styled.div` 
-  font-size: 1.8rem; font-weight: 900; 
-  color: ${props => props.$boy ? "#40A9FF" : "#FF8FCB"}; 
+  font-size: 1.6rem; font-weight: 900; 
+  color: ${props => props.$boy ? "#89CFF0" : "#FFB6C1"}; 
 `;
 
 const NavigationButton = styled(Link)` 
-  background: #8d775f; color: white; text-decoration: none; 
-  padding: 1.2rem; border-radius: 20px; text-align: center; 
-  font-weight: bold; transition: all 0.3s;
-  &:hover { background: #7a6652; transform: translateY(-2px); }
+  background: #8c6a53; 
+  color: white; 
+  text-decoration: none; 
+  padding: 1.1rem; 
+  border-radius: 20px; 
+  text-align: center; 
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(140, 106, 83, 0.2);
+  
+  &:hover { 
+    background: #765945; 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(140, 106, 83, 0.3);
+  }
 `;
 
 export default ResultsPage;
