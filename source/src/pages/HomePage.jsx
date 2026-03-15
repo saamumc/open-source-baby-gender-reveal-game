@@ -20,7 +20,6 @@ const HomePage = () => {
   );
 
   useEffect(() => {
-    // Fecha actualizada para el 18 de Abril de 2026
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -74,14 +73,13 @@ const HomePage = () => {
           </PhotoWrapper>
 
           <InvitationText>
-            Invitación de parte de los <strong>abuelos y tíos</strong> para conocer el sexo del bebé.
+            Los <strong>abuelitos y tíos</strong> queremos invitarte a la revelación de sexo del bebé.
           </InvitationText>
 
           <DressCodeBox>
-            <p style={{ marginBottom: "8px" }}>
-              <strong>Prenda base:</strong> Todos traer la parte de arriba <strong>blanca</strong> (saco, chaqueta, etc).
+            <p>
+              <strong>Prenda base:</strong> Trae tu <strong>chaqueta, bufanda o camisa en color blanco</strong>.
             </p>
-           
           </DressCodeBox>
 
           <DetailsBox>
