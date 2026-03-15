@@ -13,13 +13,25 @@ const initialState = {
 };
 
 const resultsSlice = createSlice({
-  name: "Resultado Votacion",
+  name: "results", // Nombre simplificado para evitar errores de nombres largos
   initialState,
   reducers: {
+    // ESTA ES LA FUNCIÓN QUE VERCEL BUSCABA
+    updateResults: (state, action) => {
+      if (action.payload) {
+        return {
+          ...state,
+          ...action.payload,
+          // Mantenemos voteCounts si no viene en el payload para no borrar los votos
+          voteCounts: action.payload.voteCounts || state.voteCounts,
+        };
+      }
+      return state;
+    },
     updateVoteCounts: (state, action) => {
       state.voteCounts = {
-        boy: action.payload.boy,
-        girl: action.payload.girl,
+        boy: action.payload.boy || 0,
+        girl: action.payload.girl || 0,
       };
     },
     setShowResultPage: (state, action) => {
@@ -33,16 +45,6 @@ const resultsSlice = createSlice({
     },
     setShowVotingScreen: (state, action) => {
       state.showVotingScreen = action.payload;
-    },
-    syncFromFirebase: (state, action) => {
-      if (action.payload) {
-        return {
-          ...state,
-          ...action.payload,
-          voteCounts: state.voteCounts,
-        };
-      }
-      return state;
     },
     setShowGameStarted: (state, action) => {
       state.showGameStarted = action.payload;
@@ -59,15 +61,16 @@ const resultsSlice = createSlice({
 });
 
 export const {
+  updateResults, // Exportada para que coincida con la importación en ResultsPage.jsx
   updateVoteCounts,
   setShowResultPage,
   setLoading,
   setError,
   setShowVotingScreen,
-  syncFromFirebase,
   setShowGameStarted,
 } = resultsSlice.actions;
 
 export const resetResults = createAction("results/resetResults");
 
 export default resultsSlice.reducer;
+
