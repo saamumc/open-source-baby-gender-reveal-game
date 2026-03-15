@@ -9,6 +9,8 @@ import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
 import WhatToBring from "./pages/WhatToBring";
 import ControlPanel from "./pages/ControlPanel";
+import ValJan from "./pages/ValJan";
+
 
 import { db } from "./firebase/config"; 
 import { ref, onValue } from "firebase/database";
