@@ -9,7 +9,7 @@ import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
 import WhatToBring from "./pages/WhatToBring";
 import ControlPanel from "./pages/ControlPanel";
-import ValJan from "./pages/ValJan";
+import ValJan from "./pages/ValJan"; // Importado correctamente
 
 
 import { db } from "./firebase/config"; 
@@ -21,7 +21,6 @@ const AppContent = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   
-  // Usamos una referencia para saber si es la primera vez que cargamos los datos
   const isInitialLoad = useRef(true);
   const [hasAutoRedirected, setHasAutoRedirected] = useState(false);
   
@@ -33,26 +32,24 @@ const AppContent = () => {
         const data = snapshot.val();
         dispatch(updateResults(data));
 
-        // --- REGLA DE ORO: Si acabas de abrir el link, NO te muevas ---
         if (isInitialLoad.current) {
           isInitialLoad.current = false;
-          // Si al cargar ya estaba en true, marcamos como "ya saltado" para que no lo haga después
           if (data.showResultPage === true) {
             setHasAutoRedirected(true);
           }
           return;
         }
 
-        // Excepciones de rutas donde NUNCA queremos ser interrumpidos
+        // Agregamos /val-jan a las excepciones para que no te saque de la página de mensajes
         if (
           location.pathname === "/control-panel" || 
           location.pathname === "/traer" || 
-          location.pathname === "/vote"
+          location.pathname === "/vote" ||
+          location.pathname === "/val-jan"
         ) {
           return;
         }
 
-        // --- SALTO INTELIGENTE (Solo si cambia mientras el usuario navega) ---
         if (data.showResultPage === true && !hasAutoRedirected) {
             setHasAutoRedirected(true); 
             if (location.pathname !== "/results") {
@@ -64,7 +61,6 @@ const AppContent = () => {
             setHasAutoRedirected(false);
         }
 
-        // --- CIERRE DE SEGURIDAD ---
         if (data.showVotingScreen === false && location.pathname === "/vote") {
             navigate("/");
         }
@@ -90,6 +86,8 @@ const AppContent = () => {
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/control-panel" element={<ControlPanel />} />
           <Route path="/traer" element={<WhatToBring />} />
+          {/* AQUÍ ESTÁ LA NUEVA RUTA */}
+          <Route path="/val-jan" element={<ValJan />} />
         </Routes>
       </MainContent>
     </AppContainer>
