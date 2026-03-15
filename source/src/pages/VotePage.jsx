@@ -6,6 +6,8 @@ import confetti from "canvas-confetti";
 import GenderOption from "../components/GenderOption";
 import { selectGender, submitVote, resetVote } from "../store/voteSlice";
 import { useNavigate } from "react-router-dom";
+// 1. IMPORTAR EL FONDO ANIMADO
+import AnimatedBackground from "../components/AnimatedBackground"; 
 
 const VotePage = () => {
   const dispatch = useDispatch();
@@ -18,7 +20,6 @@ const VotePage = () => {
   useEffect(() => {
     const alreadyVoted = localStorage.getItem("baby_shower_voted");
     if (alreadyVoted) {
-      // Si ya votó anteriormente, lo mandamos a resultados directamente
       navigate("/results");
     } else {
       dispatch(resetVote());
@@ -49,7 +50,6 @@ const VotePage = () => {
         colors: [color, "#FFFFFF", "#F9F6F1"]
       });
 
-      // Guardamos la marca local ANTES de la petición para evitar re-votos
       localStorage.setItem("baby_shower_voted", "true");
 
       try {
@@ -59,112 +59,117 @@ const VotePage = () => {
         }));
       } catch (error) {
         console.error("Error al votar:", error);
+        setIsProcessing(false); // Liberar si falla
       }
     }
   };
 
   if (showVotingScreen === false) return null;
 
-  // --- PANTALLA DE ÉXITO (Reemplaza a VoteConfirmation para asegurar navegación) ---
-  if (hasVoted || isProcessing || localStorage.getItem("baby_shower_voted")) {
-    return (
-      <PageWrapper>
-        <GlassCard
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <SuccessIcon>✨</SuccessIcon>
-          <MainTitle>¡Voto Registrado!</MainTitle>
-          <SubTitle style={{ marginBottom: '20px' }}>
-            ¡Ya sabemos lo que crees que va a ser! Solo se permite un voto por persona.
-          </SubTitle>
-          
-          <SubmitButton 
-            $active={true} 
-            onClick={() => navigate("/results")}
-          >
-            Ver Resultados de la Votación
-          </SubmitButton>
-        </GlassCard>
-      </PageWrapper>
-    );
-  }
-
   return (
     <PageWrapper>
+      {/* 2. AGREGAR EL FONDO ANIMADO DETRÁS */}
+      <AnimatedBackground />
+
       <GlassCard
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
       >
-        <TitleSection>
-          <MainTitle>Valentina & Janppier</MainTitle>
-          <SubTitle>¿Qué crees que será el bebé?</SubTitle>
-        </TitleSection>
-
-        <OptionsContainer>
-          <GenderOption
-            type="girl"
-            selected={selectedGender === "girl"}
-            onSelect={() => handleSelect("girl")}
-          />
-          <GenderOption
-            type="boy"
-            selected={selectedGender === "boy"}
-            onSelect={() => handleSelect("boy")}
-          />
-        </OptionsContainer>
-
-        <AnimatePresence>
-          {selectedGender && (
-            <MessageSection
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
+        {/* Lógica de Éxito / Votado */}
+        {(hasVoted || isProcessing || localStorage.getItem("baby_shower_voted")) ? (
+          <>
+            <SuccessIcon>✨</SuccessIcon>
+            <MainTitle>¡Voto Registrado!</MainTitle>
+            <SubTitle style={{ marginBottom: '20px' }}>
+              ¡Ya sabemos lo que crees que va a ser! Solo se permite un voto por persona.
+            </SubTitle>
+            
+            <SubmitButton 
+              $active={true} 
+              onClick={() => navigate("/results")}
             >
-              <MessageLabel>Déjales un mensaje a los papás:</MessageLabel>
-              <StyledTextArea
-                placeholder="Ej: ¡Presiento que será una princesa!..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-            </MessageSection>
-          )}
-        </AnimatePresence>
+              Ver Resultados de la Votación
+            </SubmitButton>
+          </>
+        ) : (
+          /* Lógica de Formulario de Votación */
+          <>
+            <TitleSection>
+              <MainTitle>Valentina & Janppier</MainTitle>
+              <SubTitle>¿Qué crees que será el bebé?</SubTitle>
+            </TitleSection>
 
-        <SubmitButton
-          disabled={!selectedGender || isProcessing}
-          onClick={handleSubmit}
-          whileTap={selectedGender ? { scale: 0.98 } : {}}
-          $active={!!selectedGender}
-        >
-          {isProcessing ? "Enviando apuesta..." : selectedGender ? "¡Confirmar mi apuesta!" : "Elige una opción"}
-        </SubmitButton>
+            <OptionsContainer>
+              <GenderOption
+                type="girl"
+                selected={selectedGender === "girl"}
+                onSelect={() => handleSelect("girl")}
+              />
+              <GenderOption
+                type="boy"
+                selected={selectedGender === "boy"}
+                onSelect={() => handleSelect("boy")}
+              />
+            </OptionsContainer>
+
+            <AnimatePresence>
+              {selectedGender && (
+                <MessageSection
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                >
+                  <MessageLabel>Déjales un mensaje a los papás:</MessageLabel>
+                  <StyledTextArea
+                    placeholder="Ej: ¡Presiento que será una princesa!..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                </MessageSection>
+              )}
+            </AnimatePresence>
+
+            <SubmitButton
+              disabled={!selectedGender || isProcessing}
+              onClick={handleSubmit}
+              whileTap={selectedGender ? { scale: 0.98 } : {}}
+              $active={!!selectedGender}
+            >
+              {isProcessing ? "Enviando apuesta..." : selectedGender ? "¡Confirmar mi apuesta!" : "Elige una opción"}
+            </SubmitButton>
+          </>
+        )}
       </GlassCard>
     </PageWrapper>
   );
 };
 
-// --- ESTILOS ---
+// --- ESTILOS ACTUALIZADOS ---
 
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f2e8df; 
+  /* 3. FONDO TRANSPARENTE */
+  background: transparent; 
   padding: 20px;
+  position: relative;
+  overflow: hidden;
 `;
 
 const GlassCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.7);
+  /* 4. TARJETA TRASLÚCIDA CON DESENFOQUE */
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
   padding: 2.5rem;
   border-radius: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 500px;
   text-align: center;
-  border: 1px solid #d9c7b8;
+  border: 1px solid rgba(217, 199, 184, 0.5);
+  z-index: 1;
 `;
 
 const SuccessIcon = styled.div`
