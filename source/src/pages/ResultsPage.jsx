@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Bar } from "react-chartjs-2";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"; // Añadimos useDispatch
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { db } from "../firebase/config";
 import { ref, onValue } from "firebase/database";
+import { updateResults } from "../store/resultsSlice"; // Importa tu acción de Redux para actualizar
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,33 +18,42 @@ import {
   Legend,
 } from "chart.js";
 
-// Asegúrate de que estos componentes existan en GenderOption.jsx
 import { BabyBoyIcon, BabyGirlIcon } from "../components/GenderOption";
 import WaitingForResultPage from "./WaitingForResultPage";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ChartTitle,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, ChartTitle, Tooltip, Legend);
 
 const ResultsPage = () => {
+  const dispatch = useDispatch();
+  // Traemos los datos de Redux
   const { voteCounts, showResultPage } = useSelector((state) => state.results);
   const [manualAdjustments, setManualAdjustments] = useState({ boy: 0, girl: 0 });
 
   useEffect(() => {
-    // Escuchar ajustes manuales desde Firebase Realtime Database
+    // 1. ESCUCHAR INTERRUPTOR DE RESULTADOS (Nodo "results")
+    // Esto hace que si cambias 'showResultPage' a true en Firebase, la página aparezca sola
+    const resultsRef = ref(db, "results");
+    const unsubscribeResults = onValue(resultsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        // Actualizamos Redux al instante para que el componente reaccione
+        dispatch(updateResults(data)); 
+      }
+    });
+
+    // 2. ESCUCHAR AJUSTES MANUALES
     const adjustmentsRef = ref(db, "manualAdjustments");
-    const unsubscribe = onValue(adjustmentsRef, (snapshot) => {
+    const unsubscribeAdjustments = onValue(adjustmentsRef, (snapshot) => {
       if (snapshot.exists()) setManualAdjustments(snapshot.val());
     }, (error) => console.error("Error Firebase:", error));
-    return () => unsubscribe();
-  }, []);
 
-  // Si la página de resultados está desactivada en Firebase, mostrar espera
+    return () => {
+      unsubscribeResults();
+      unsubscribeAdjustments();
+    };
+  }, [dispatch]);
+
+  // Si showResultPage es false en Firebase, este return saltará automáticamente al cambiar el nodo
   if (!showResultPage) return <WaitingForResultPage />;
 
   const boyVotes = (voteCounts.boy || 0) + (manualAdjustments.boy || 0);
@@ -132,7 +143,6 @@ const ResultsPage = () => {
             </DetailedStats>
           </ChartSection>
 
-          {/* BOTÓN PARA DEVOLVERSE AL HOME */}
           <NavigationButton to="/">
             🏠 VOLVER AL INICIO
           </NavigationButton>
@@ -142,104 +152,27 @@ const ResultsPage = () => {
   );
 };
 
-// --- ESTILOS ---
-
-const PageBackground = styled.div`
-  min-height: 100vh;
-  background: #f2e8df;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-`;
-
-const ResultsContainer = styled(motion.div)` 
-  background: rgba(255, 255, 255, 0.7); 
-  border-radius: 30px; 
-  padding: 2.5rem; 
-  width: 100%; 
-  max-width: 600px; 
-  backdrop-filter: blur(10px); 
-  border: 1px solid #d9c7b8;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-`;
-
+// --- ESTILOS MISMOS DE ANTES ---
+const PageBackground = styled.div` min-height: 100vh; background: #f2e8df; display: flex; align-items: center; justify-content: center; padding: 20px; `;
+const ResultsContainer = styled(motion.div)` background: rgba(255, 255, 255, 0.7); border-radius: 30px; padding: 2.5rem; width: 100%; max-width: 600px; backdrop-filter: blur(10px); border: 1px solid #d9c7b8; box-shadow: 0 10px 30px rgba(0,0,0,0.05); `;
 const ContentWrapper = styled.div` display: flex; flex-direction: column; gap: 1.5rem; `;
-
-const HeaderSection = styled.div` text-align: center; margin-bottom: 0.5rem; `;
+const HeaderSection = styled.div` text-align: center; `;
 const MainTitle = styled.h1` color: #8c6a53; font-family: 'Georgia', serif; font-size: 1.8rem; margin: 0; `;
-const SubTitle = styled.p` color: #a68974; font-size: 1.1rem; margin: 5px 0 0; `;
-
-const ChartWrapper = styled.div` 
-  background: white; 
-  border-radius: 25px; 
-  padding: 1.5rem; 
-  box-shadow: 0 5px 15px rgba(0,0,0,0.02); 
-`;
-
+const SubTitle = styled.p` color: #a68974; font-size: 1.1rem; `;
+const ChartWrapper = styled.div` background: white; border-radius: 25px; padding: 1.5rem; `;
 const StatsGrid = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; `;
-
-const StatCard = styled.div` 
-  background: white; 
-  border-radius: 20px; 
-  padding: 1rem; 
-  display: flex; 
-  align-items: center; 
-  gap: 0.8rem;
-`;
-
-const StatIconWrapper = styled.div` 
-  width: 40px; height: 40px; border-radius: 50%; 
-  background: #f8f1eb; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; 
-`;
-
+const StatCard = styled.div` background: white; border-radius: 20px; padding: 1rem; display: flex; align-items: center; gap: 0.8rem; `;
+const StatIconWrapper = styled.div` width: 40px; height: 40px; border-radius: 50%; background: #f8f1eb; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; `;
 const StatInfo = styled.div` display: flex; flex-direction: column; `;
 const StatLabel = styled.div` font-size: 0.7rem; color: #a68974; text-transform: uppercase; font-weight: bold; `;
 const StatValue = styled.div` font-size: 1rem; font-weight: bold; color: ${props => props.$highlight ? "#8c6a53" : "#555"}; `;
-
 const ChartSection = styled.div` display: flex; flex-direction: column; gap: 1.2rem; `;
-
-const DetailedStats = styled.div` 
-  display: grid; 
-  grid-template-columns: 1fr 1fr; 
-  gap: 1rem; 
-  @media (max-width: 480px) { grid-template-columns: 1fr; }
-`;
-
-const GenderStatCard = styled.div` 
-  background: white; border-radius: 20px; padding: 1.2rem; 
-  display: flex; align-items: center; gap: 1rem; 
-`;
-
-const GenderIcon = styled.div` 
-  width: 50px; height: 50px; 
-  svg { width: 100%; height: 100%; }
-`;
-
+const DetailedStats = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; @media (max-width: 480px) { grid-template-columns: 1fr; } `;
+const GenderStatCard = styled.div` background: white; border-radius: 20px; padding: 1.2rem; display: flex; align-items: center; gap: 1rem; `;
+const GenderIcon = styled.div` width: 50px; height: 50px; svg { width: 100%; height: 100%; } `;
 const StatDetails = styled.div` display: flex; flex-direction: column; `;
 const StatTitle = styled.div` font-size: 0.8rem; color: #888; font-weight: 600; `;
-const Percentage = styled.div` 
-  font-size: 1.6rem; font-weight: 900; 
-  color: ${props => props.$boy ? "#89CFF0" : "#FFB6C1"}; 
-`;
-
-const NavigationButton = styled(Link)` 
-  background: #8c6a53; 
-  color: white; 
-  text-decoration: none; 
-  padding: 1.1rem; 
-  border-radius: 20px; 
-  text-align: center; 
-  font-weight: bold;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(140, 106, 83, 0.2);
-  
-  &:hover { 
-    background: #765945; 
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(140, 106, 83, 0.3);
-  }
-`;
+const Percentage = styled.div` font-size: 1.6rem; font-weight: 900; color: ${props => props.$boy ? "#89CFF0" : "#FFB6C1"}; `;
+const NavigationButton = styled(Link)` background: #8c6a53; color: white; text-decoration: none; padding: 1.1rem; border-radius: 20px; text-align: center; font-weight: bold; &:hover { background: #765945; transform: translateY(-2px); } `;
 
 export default ResultsPage;
