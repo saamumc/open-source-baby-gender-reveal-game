@@ -20,35 +20,21 @@ const AppContent = () => {
   const dispatch = useDispatch();
   
   useEffect(() => {
-    // Referencia al nodo principal de resultados en Firebase
     const resultsRef = ref(db, "results");
-    
     const unsubscribe = onValue(resultsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        
-        // 1. Actualizamos Redux para que todos los componentes tengan los datos frescos
         dispatch(updateResults(data));
 
-        // 2. LÓGICA DE NAVEGACIÓN PROTEGIDA
-        // Si estamos en el panel de control o en la lista de "qué traer", no hacemos nada
         if (location.pathname === "/control-panel" || location.pathname === "/traer") {
           return;
         }
 
-        // --- SALTO AUTOMÁTICO A RESULTADOS ---
-        // Si el admin activa el interruptor (true), llevamos a todos a la revelación
         if (data.showResultPage === true && location.pathname !== "/results") {
-            console.log("Revelación activada. Navegando a resultados...");
             navigate("/results");
             return; 
         }
 
-        // --- NOTA: HEMOS ELIMINADO LA LOGICA QUE TE EXPULSABA DE /RESULTS ---
-        // Esto evita el "rebote" al HomePage si Firebase tarda en cargar o si entras manualmente.
-
-        // --- CIERRE DE VOTACIÓN ---
-        // Si el periodo de votos terminó (false) y el usuario intenta entrar a votar, lo mandamos al inicio
         if (data.showVotingScreen === false && location.pathname === "/vote") {
             navigate("/");
         }
@@ -86,7 +72,7 @@ const App = () => (
   </Router>
 );
 
-// --- ESTILOS ---
+// --- ESTILOS (Solo una declaración por cada uno) ---
 const AppContainer = styled.div`
   min-height: 100vh; 
   display: flex; 
@@ -105,6 +91,7 @@ const MainContent = styled.div`
   z-index: 10; 
   position: relative; 
   margin: 0 auto; 
+  background: transparent;
 `;
 
 const FloatingIconsWrapper = styled.div` 
@@ -113,19 +100,8 @@ const FloatingIconsWrapper = styled.div`
   left: 0; 
   right: 0; 
   bottom: 0; 
-  z-index: 1; /* Bajamos el z-index */
+  z-index: 5; /* Ajustado para que se vea sobre el fondo pero bajo el contenido */
   pointer-events: none; 
 `;
 
-const MainContent = styled.div` 
-  width: 100%; 
-  max-width: 800px; 
-  z-index: 5; /* El contenido por encima de los iconos */
-  position: relative; 
-  margin: 0 auto;
-  background: transparent; /* Asegúrate de que no tenga fondo */
-`;
-
-
 export default App;
-
