@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { db } from "../firebase/config"; // Ruta corregida para Vercel
+import { db } from "../firebase/config"; 
 import { ref, set, onValue, update } from "firebase/database";
 import voteReducer from "./voteSlice";
 import resultsReducer from "./resultsSlice";
 import { updateResults } from "./resultsSlice";
 
-// 1. Definimos el Middleware (El cartero que lleva los mensajes a Firebase)
+// --- 1. MIDDLEWARE PARA ENVIAR VOTOS ---
 const firebaseMiddleware = (store) => (next) => (action) => {
   const result = next(action);
 
@@ -13,16 +13,14 @@ const firebaseMiddleware = (store) => (next) => (action) => {
     const state = store.getState().vote;
     const { selectedGender, uuid, message, timestamp } = state;
 
-    // Guardamos en la carpeta userVotes que vimos en tu captura
     set(ref(db, `userVotes/${uuid}`), {
-      selectedGender: selectedGender,
+      selectedGender,
       message: message || "", 
-      uuid: uuid,
+      uuid,
       timestamp: timestamp || Date.now(),
       hasVoted: true
     });
 
-    // Actualizamos el conteo para las barras
     const currentCounts = store.getState().results.voteCounts;
     const newCounts = {
       ...currentCounts,
@@ -34,7 +32,21 @@ const firebaseMiddleware = (store) => (next) => (action) => {
   return result;
 };
 
-// 2. Creamos y EXPORTAMOS el Store (Lo que buscaba main.jsx)
+// --- 2. ACCIONES DEL PANEL DE CONTROL (Exportadas para que el panel funcione) ---
+export const toggleVoting = (status) => {
+  update(ref(db, "results"), { showVotingScreen: status });
+};
+
+export const toggleResults = (status) => {
+  update(ref(db, "results"), { showResultPage: status });
+};
+
+export const resetGame = () => {
+  set(ref(db, "userVotes"), {}); // Borra los votos
+  set(ref(db, "results/voteCounts"), { boy: 0, girl: 0 }); // Resetea barras
+};
+
+// --- 3. CONFIGURACIÓN DEL STORE ---
 export const store = configureStore({
   reducer: {
     vote: voteReducer,
@@ -46,7 +58,7 @@ export const store = configureStore({
     }).concat(firebaseMiddleware),
 });
 
-// 3. Escuchamos los cambios globales de Firebase
+// --- 4. ESCUCHA DE CAMBIOS EN TIEMPO REAL ---
 const resultsRef = ref(db, "results");
 onValue(resultsRef, (snapshot) => {
   if (snapshot.exists()) {
