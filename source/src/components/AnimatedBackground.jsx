@@ -12,7 +12,7 @@ const AnimatedBackground = () => {
     await loadSlim(engine);
   }, []);
 
-  // --- Lógica de Colores Existente ---
+  // Configuración de colores dinámica
   const getParticleColor = () => {
     if (isVoteSubmitted) return "#D4AF37";
     if (!selectedGender) return "#C2B280";
@@ -26,110 +26,102 @@ const AnimatedBackground = () => {
   };
 
   const options = {
-    fullScreen: { enable: true, zIndex: -2 }, // Movido a -2 para estar detrás de los ositos
+    fullScreen: { enable: true, zIndex: -2 }, // Detrás de todo
     particles: {
       color: { value: getParticleColor() },
       number: { value: isVoteSubmitted ? 100 : 35, density: { enable: true, area: 800 } },
       shape: { type: isVoteSubmitted ? ["circle", "star"] : "circle" },
       opacity: { value: 0.5, random: true },
       size: { value: isVoteSubmitted ? { min: 2, max: 4 } : { min: 1, max: 3 }, random: true },
-      move: { enable: true, speed: isVoteSubmitted ? 4 : 1.2, direction: isVoteSubmitted ? "top" : "none", outModes: { default: "out" } },
+      move: { 
+        enable: true, 
+        speed: isVoteSubmitted ? 4 : 1.2, 
+        direction: isVoteSubmitted ? "top" : "none", 
+        outModes: { default: "out" } 
+      },
       links: { enable: !isVoteSubmitted, distance: 150, color: getParticleColor(), opacity: 0.2, width: 1 },
     },
     background: { color: getBackgroundColor() },
-    interactivity: {
-      events: { onHover: { enable: true, mode: "bubble" } },
-      modes: { bubble: { size: 6, distance: 200, duration: 2, opacity: 0.8 } },
-    },
-    detectRetina: true,
   };
 
-  // --- Configuración de Animación para Elementos Flotantes ---
-  const floatingAnimation = {
-    animate: {
-      y: [0, -20, 0],
-      x: [0, 10, 0],
+  // Variantes de animación para los elementos flotantes
+  const floatVariants = {
+    animate: (custom) => ({
+      y: [0, custom.y, 0],
+      x: [0, custom.x, 0],
+      rotate: [0, custom.r, 0],
       transition: {
-        duration: 5,
+        duration: custom.d,
         repeat: Infinity,
         ease: "easeInOut"
       }
-    }
+    })
   };
 
   return (
     <BackgroundWrapper>
-      <Particles 
-        id="tsparticles" 
-        init={particlesInit} 
-        options={options} 
-      />
+      <Particles id="tsparticles" init={particlesInit} options={options} />
       
-      {/* Ositos y Nubes Flotantes */}
       <FloatingElementsContainer>
-        <FloatingImg
-          as={motion.img}
-          src="/osito_azul.png"
-          alt="Osito Azul"
-          variants={floatingAnimation}
-          animate="animate"
-          style={{ top: '10%', right: '10%', width: '120px' }}
-        />
-        <FloatingImg
-          as={motion.img}
-          src="/osito_rosa.png"
-          alt="Osito Rosa"
-          variants={floatingAnimation}
-          animate="animate"
-          style={{ bottom: '15%', left: '5%', width: '130px' }}
-          transition={{ delay: 1 }}
-        />
+        {/* Nube Grande arriba a la izquierda */}
         <FloatingImg
           as={motion.img}
           src="/nube_grande_1.png"
-          alt="Nube"
-          variants={floatingAnimation}
+          custom={{ y: -15, x: 10, r: 2, d: 8 }}
+          variants={floatVariants}
           animate="animate"
-          style={{ top: '15%', left: '10%', width: '150px', opacity: 0.6 }}
-          transition={{ delay: 2 }}
+          style={{ top: '5%', left: '5%', width: '180px', opacity: 0.7 }}
         />
+
+        {/* Osito Azul arriba a la derecha */}
+        <FloatingImg
+          as={motion.img}
+          src="/osito_azul.png"
+          custom={{ y: -25, x: -15, r: 3, d: 6 }}
+          variants={floatVariants}
+          animate="animate"
+          style={{ top: '10%', right: '8%', width: '110px' }}
+        />
+
+        {/* Estrella Grande en el centro */}
         <FloatingImg
           as={motion.img}
           src="/estrella_grande_1.png"
-          alt="Estrella"
           variants={{
             animate: {
               scale: [1, 1.2, 1],
-              opacity: [0.4, 0.8, 0.4],
-              transition: { duration: 3, repeat: Infinity }
+              opacity: [0.4, 0.9, 0.4],
+              transition: { duration: 4, repeat: Infinity }
             }
           }}
           animate="animate"
-          style={{ top: '40%', right: '20%', width: '40px' }}
+          style={{ top: '45%', right: '15%', width: '45px' }}
+        />
+
+        {/* Osito Rosa abajo a la izquierda */}
+        <FloatingImg
+          as={motion.img}
+          src="/osito_rosa.png"
+          custom={{ y: 20, x: 15, r: -4, d: 7 }}
+          variants={floatVariants}
+          animate="animate"
+          style={{ bottom: '10%', left: '10%', width: '120px' }}
         />
       </FloatingElementsContainer>
     </BackgroundWrapper>
   );
 };
 
-// --- ESTILOS ---
-
 const BackgroundWrapper = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0; width: 100%; height: 100%;
   z-index: -1;
 `;
 
 const FloatingElementsContainer = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Para que no bloquee los clics en los botones */
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; // No bloquea los botones de votación
 `;
 
 const FloatingImg = styled.img`
