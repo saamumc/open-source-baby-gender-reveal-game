@@ -113,9 +113,19 @@ const FloatingIconsWrapper = styled.div`
   left: 0; 
   right: 0; 
   bottom: 0; 
-  z-index: 5; 
+  z-index: 1; /* Bajamos el z-index */
   pointer-events: none; 
 `;
+
+const MainContent = styled.div` 
+  width: 100%; 
+  max-width: 800px; 
+  z-index: 5; /* El contenido por encima de los iconos */
+  position: relative; 
+  margin: 0 auto;
+  background: transparent; /* Asegúrate de que no tenga fondo */
+`;
+
 
 export default App;
 
