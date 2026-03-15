@@ -12,14 +12,13 @@ const VotePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false); // <--- ESTADO NUEVO PARA CAMBIO INSTANTÁNEO
   const { selectedGender, hasVoted } = useSelector((state) => state.vote);
   const { showVotingScreen } = useSelector((state) => state.results);
 
-  // 1. Verificar si ya votó anteriormente para bloquear el acceso
   useEffect(() => {
     const alreadyVoted = localStorage.getItem("baby_shower_voted");
     if (alreadyVoted) {
-      // Si ya votó, lo mandamos directo a resultados
       navigate("/results");
     } else {
       dispatch(resetVote());
@@ -32,19 +31,17 @@ const VotePage = () => {
     }
   }, [showVotingScreen, navigate]);
 
-  const playPop = () => {
-    const audio = new Audio("/sounds/pop.mp3"); 
-    audio.play().catch(() => console.log("Audio interactivo requerido"));
-  };
-
   const handleSelect = (gender) => {
-    playPop(); 
+    const audio = new Audio("/sounds/pop.mp3");
+    audio.play().catch(() => {});
     dispatch(selectGender(gender));
   };
 
   const handleSubmit = async () => {
-    if (selectedGender && !hasVoted) {
-      // 2. Efecto de confeti
+    if (selectedGender && !isProcessing) {
+      // 1. Bloqueo instantáneo y efecto visual
+      setIsProcessing(true); 
+      
       const color = selectedGender === "girl" ? "#FFB6C1" : "#89CFF0";
       confetti({
         particleCount: 150,
@@ -53,21 +50,25 @@ const VotePage = () => {
         colors: [color, "#FFFFFF", "#F9F6F1"]
       });
 
-      // 3. Enviar a Firebase y guardar marca local
-      // Enviamos el género y el mensaje a los papás
-      await dispatch(submitVote({ 
-        gender: selectedGender, 
-        message: message 
-      }));
-
+      // 2. Marca local inmediata
       localStorage.setItem("baby_shower_voted", "true");
+
+      // 3. Enviar a Firebase (Redux se encarga del resto en segundo plano)
+      try {
+        await dispatch(submitVote({ 
+          gender: selectedGender, 
+          message: message 
+        }));
+      } catch (error) {
+        console.error("Error al votar:", error);
+      }
     }
   };
 
   if (showVotingScreen === false) return null;
 
-  // 4. Pantalla de bloqueo post-votación
-  if (hasVoted || localStorage.getItem("baby_shower_voted")) {
+  // 4. CAMBIO: Ahora revisamos isProcessing o hasVoted para mostrar la pantalla de éxito al instante
+  if (hasVoted || isProcessing || localStorage.getItem("baby_shower_voted")) {
     return (
       <VoteConfirmation 
         selected={selectedGender} 
@@ -118,68 +119,37 @@ const VotePage = () => {
         </AnimatePresence>
 
         <SubmitButton
-          disabled={!selectedGender}
+          disabled={!selectedGender || isProcessing}
           onClick={handleSubmit}
           whileTap={selectedGender ? { scale: 0.98 } : {}}
           $active={!!selectedGender}
         >
-          {selectedGender ? "¡Confirmar mi apuesta!" : "Elige una opción"}
+          {isProcessing ? "Enviando apuesta..." : selectedGender ? "¡Confirmar mi apuesta!" : "Elige una opción"}
         </SubmitButton>
       </GlassCard>
     </PageWrapper>
   );
 };
 
-// --- ESTILOS Sincronizados con HomePage ---
-
+// --- ESTILOS Mantenidos ---
 const PageWrapper = styled.div`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f2e8df; 
-  padding: 20px;
+  min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f2e8df; padding: 20px;
 `;
-
 const GlassCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  padding: 2.5rem;
-  border-radius: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  max-width: 500px;
-  text-align: center;
-  border: 1px solid #d9c7b8;
+  background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); padding: 2.5rem; border-radius: 30px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); width: 100%; max-width: 500px; text-align: center; border: 1px solid #d9c7b8;
 `;
-
 const TitleSection = styled.div` margin-bottom: 2rem; `;
 const MainTitle = styled.h1` color: #8c6a53; font-family: 'Georgia', serif; font-size: 2rem; margin-bottom: 0.5rem; `;
 const SubTitle = styled.p` color: #a68974; font-size: 1.1rem; `;
-
 const OptionsContainer = styled.div` display: flex; gap: 20px; justify-content: center; margin-bottom: 2rem; `;
-
 const MessageSection = styled(motion.div)` margin-bottom: 1.5rem; overflow: hidden; `;
 const MessageLabel = styled.label` display: block; color: #8c6a53; margin-bottom: 0.8rem; font-size: 0.95rem; font-weight: 600; `;
-
 const StyledTextArea = styled.textarea` 
-  width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #d9c7b8; 
-  background: white; color: #8c6a53; resize: none; height: 90px; font-family: inherit;
+  width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #d9c7b8; background: white; color: #8c6a53; resize: none; height: 90px; font-family: inherit;
   &:focus { outline: none; border-color: #a68974; }
 `;
-
 const SubmitButton = styled(motion.button)`
-  width: 100%;
-  padding: 16px;
-  border-radius: 20px;
-  border: none;
-  background: ${props => props.$active ? '#8c6a53' : '#d9c7b8'};
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+  width: 100%; padding: 16px; border-radius: 20px; border: none; background: ${props => props.$active ? '#8c6a53' : '#d9c7b8'}; color: white; font-weight: bold; font-size: 1rem; cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 `;
 
 export default VotePage;
