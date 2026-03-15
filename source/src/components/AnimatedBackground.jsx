@@ -37,7 +37,7 @@ const AnimatedBackground = () => {
     background: { color: getBackgroundColor() },
   };
 
-  const floatVariants = {
+  const chaoticVariants = {
     animate: (custom) => ({
       y: [0, custom.y, 0],
       x: [0, custom.x, 0],
@@ -55,50 +55,25 @@ const AnimatedBackground = () => {
       <Particles id="tsparticles" init={particlesInit} options={options} />
       
       <FloatingElementsContainer>
-        {/* Nube Grande - Corregido a .png */}
-        <FloatingImg
-          as={motion.img}
-          src="/nube_grande_1.png"
-          custom={{ y: -10, x: 15, d: 10 }}
-          variants={floatVariants}
-          animate="animate"
-          style={{ top: '8%', left: '5%', width: '160px', opacity: 0.6 }}
-        />
+        {/* --- 10 ELEMENTOS PARA EL CAOS --- */}
+        
+        {/* Nubes */}
+        <FloatingImg as={motion.img} src="/nube_grande_1.png" custom={{ y: -20, x: 20, d: 12 }} variants={chaoticVariants} animate="animate" style={{ top: '5%', left: '2%', width: '150px', opacity: 0.5 }} />
+        <FloatingImg as={motion.img} src="/nube_grande_1.png" custom={{ y: 15, x: -25, d: 15 }} variants={chaoticVariants} animate="animate" style={{ top: '60%', right: '5%', width: '130px', opacity: 0.4 }} />
 
-        {/* Osito Azul (Lado derecho superior) - Corregido a .png */}
-        <FloatingImg
-          as={motion.img}
-          src="/osito_azul.png"
-          custom={{ y: -20, x: -10, r: 2, d: 7 }}
-          variants={floatVariants}
-          animate="animate"
-          style={{ top: '15%', right: '5%', width: '130px' }}
-        />
+        {/* Ositos Azules */}
+        <FloatingImg as={motion.img} src="/osito_azul.png" custom={{ y: -30, x: -15, r: 5, d: 7 }} variants={chaoticVariants} animate="animate" style={{ top: '10%', right: '10%', width: '110px' }} />
+        <FloatingImg as={motion.img} src="/osito_azul.png" custom={{ y: 20, x: 30, r: -5, d: 9 }} variants={chaoticVariants} animate="animate" style={{ bottom: '20%', right: '15%', width: '90px' }} />
+        <FloatingImg as={motion.img} src="/osito_azul.png" custom={{ y: -15, x: -20, r: 10, d: 11 }} variants={chaoticVariants} animate="animate" style={{ top: '40%', left: '5%', width: '100px' }} />
 
-        {/* Estrella (Cerca de los resultados) - Corregido a .png */}
-        <FloatingImg
-          as={motion.img}
-          src="/estrella_grande_1.png"
-          variants={{
-            animate: {
-              opacity: [0.3, 0.8, 0.3],
-              scale: [0.9, 1.1, 0.9],
-              transition: { duration: 5, repeat: Infinity }
-            }
-          }}
-          animate="animate"
-          style={{ top: '45%', right: '12%', width: '40px' }}
-        />
+        {/* Ositos Rosas */}
+        <FloatingImg as={motion.img} src="/osito_rosa.png" custom={{ y: 25, x: 15, r: -3, d: 8 }} variants={chaoticVariants} animate="animate" style={{ bottom: '10%', left: '8%', width: '120px' }} />
+        <FloatingImg as={motion.img} src="/osito_rosa.png" custom={{ y: -40, x: -10, r: 4, d: 6 }} variants={chaoticVariants} animate="animate" style={{ top: '20%', left: '20%', width: '95px' }} />
+        <FloatingImg as={motion.img} src="/osito_rosa.png" custom={{ y: 30, x: -25, r: -8, d: 10 }} variants={chaoticVariants} animate="animate" style={{ top: '50%', right: '25%', width: '105px' }} />
 
-        {/* Osito Rosa (Lado izquierdo inferior) - Corregido a .png */}
-        <FloatingImg
-          as={motion.img}
-          src="/osito_rosa.png"
-          custom={{ y: 25, x: 10, r: -3, d: 8 }}
-          variants={floatVariants}
-          animate="animate"
-          style={{ bottom: '10%', left: '8%', width: '140px' }}
-        />
+        {/* Estrellas */}
+        <FloatingImg as={motion.img} src="/estrella_grande_1.png" custom={{ y: -10, x: 10, d: 5 }} variants={chaoticVariants} animate="animate" style={{ top: '35%', right: '12%', width: '40px' }} />
+        <FloatingImg as={motion.img} src="/estrella_grande_1.png" custom={{ y: 15, x: -10, d: 4 }} variants={chaoticVariants} animate="animate" style={{ bottom: '40%', left: '15%', width: '35px' }} />
       </FloatingElementsContainer>
     </BackgroundWrapper>
   );
