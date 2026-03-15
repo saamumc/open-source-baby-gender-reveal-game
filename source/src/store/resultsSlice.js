@@ -13,26 +13,27 @@ const initialState = {
 };
 
 const resultsSlice = createSlice({
-  name: "results", // Nombre simplificado para evitar errores de nombres largos
+  name: "results",
   initialState,
   reducers: {
-    // ESTA ES LA FUNCIÓN QUE VERCEL BUSCABA
     updateResults: (state, action) => {
-      if (action.payload) {
-        return {
-          ...state,
-          ...action.payload,
-          // Mantenemos voteCounts si no viene en el payload para no borrar los votos
-          voteCounts: action.payload.voteCounts || state.voteCounts,
-        };
+      const data = action.payload;
+      if (data) {
+        // Actualizamos solo si el valor existe en Firebase para no sobreescribir con undefined
+        if (data.showResultPage !== undefined) state.showResultPage = data.showResultPage;
+        if (data.showVotingScreen !== undefined) state.showVotingScreen = data.showVotingScreen;
+        if (data.showGameStarted !== undefined) state.showGameStarted = data.showGameStarted;
+        
+        // Sincronización de votos
+        if (data.voteCounts) {
+          state.voteCounts.boy = data.voteCounts.boy ?? state.voteCounts.boy;
+          state.voteCounts.girl = data.voteCounts.girl ?? state.voteCounts.girl;
+        }
       }
-      return state;
     },
     updateVoteCounts: (state, action) => {
-      state.voteCounts = {
-        boy: action.payload.boy || 0,
-        girl: action.payload.girl || 0,
-      };
+      state.voteCounts.boy = action.payload.boy ?? 0;
+      state.voteCounts.girl = action.payload.girl ?? 0;
     },
     setShowResultPage: (state, action) => {
       state.showResultPage = action.payload;
@@ -52,16 +53,13 @@ const resultsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(resetResults, (state) => {
-      state.voteCounts = {
-        boy: 0,
-        girl: 0,
-      };
+      state.voteCounts = { boy: 0, girl: 0 };
     });
   },
 });
 
 export const {
-  updateResults, // Exportada para que coincida con la importación en ResultsPage.jsx
+  updateResults,
   updateVoteCounts,
   setShowResultPage,
   setLoading,
@@ -71,6 +69,5 @@ export const {
 } = resultsSlice.actions;
 
 export const resetResults = createAction("results/resetResults");
-
 export default resultsSlice.reducer;
 
