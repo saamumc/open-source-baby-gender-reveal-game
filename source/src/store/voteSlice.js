@@ -3,13 +3,21 @@ import { storage, STORAGE_KEYS } from "../utils/storage";
 
 const loadInitialState = () => {
   const savedState = storage.get(STORAGE_KEYS.VOTE_STATE);
+  
+  // Verificamos si ya hay un UUID en el storage, si no, creamos uno fijo
+  let deviceUUID = localStorage.getItem("device_uuid");
+  if (!deviceUUID) {
+    deviceUUID = crypto.randomUUID(); 
+    localStorage.setItem("device_uuid", deviceUUID);
+  }
+
   return (
     savedState || {
-      name: "",           // 1. Agregamos campo de nombre
+      name: "",
       selectedGender: null,
       message: "", 
       hasVoted: false,
-      uuid: storage.getUUID(),
+      uuid: deviceUUID, // Siempre usamos el ID del dispositivo
       timestamp: null,
     }
   );
@@ -25,31 +33,24 @@ const voteSlice = createSlice({
       state.selectedGender = action.payload;
       storage.set(STORAGE_KEYS.VOTE_STATE, state);
     },
-    // 2. Modificamos para recibir name y message
     submitVote: (state, action) => {
       state.hasVoted = true; 
-      state.name = action.payload?.name || "";       // Guardamos el nombre
-      state.message = action.payload?.message || ""; // Guardamos el mensaje
+      state.name = action.payload?.name || "";
+      state.message = action.payload?.message || ""; 
       state.timestamp = Date.now();
-      
-      // Guardamos el estado completo en el almacenamiento local
       storage.set(STORAGE_KEYS.VOTE_STATE, state);
     },
     resetVote: (state) => {
-      state.name = "";            // Limpiamos el nombre
+      state.name = "";
       state.selectedGender = null;
       state.message = ""; 
       state.hasVoted = false;
       state.timestamp = null;
-      state.uuid = storage.getUUID();
+      // No reseteamos el UUID para que siga siendo el mismo dispositivo
       storage.set(STORAGE_KEYS.VOTE_STATE, state);
-    },
-    setFirebaseDeleteStatus: (state, action) => {
-      state.firebaseDeleteStatus = action.payload;
     },
   },
 });
 
-export const { selectGender, submitVote, resetVote, setFirebaseDeleteStatus } =
-  voteSlice.actions;
+export const { selectGender, submitVote, resetVote } = voteSlice.actions;
 export default voteSlice.reducer;
