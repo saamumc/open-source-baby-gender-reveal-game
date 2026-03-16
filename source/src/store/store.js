@@ -5,16 +5,22 @@ import voteReducer from "./voteSlice";
 import resultsReducer from "./resultsSlice";
 import { updateResults } from "./resultsSlice";
 
-// --- 1. MIDDLEWARE PARA ENVIAR VOTOS A FIREBASE ---
+// --- 1. MIDDLEWARE PARA ENVIAR VOTOS A FIREBASE (CON BLOQUEO DE DUPLICADOS) ---
 const firebaseMiddleware = (store) => (next) => (action) => {
-  const result = next(action);
-
   if (action.type === "vote/submitVote") {
+    // A. Verificación de seguridad: ¿Ya existe la marca en este navegador?
+    const alreadyVoted = localStorage.getItem("baby_shower_voted");
+    if (alreadyVoted === "true") {
+      console.warn("Bloqueo de seguridad: Intento de voto duplicado detectado.");
+      return; // Detiene la ejecución aquí mismo
+    }
+
     const state = store.getState().vote;
-    // Extraemos el nombre junto con los demás datos
     const { selectedGender, uuid, message, timestamp, name } = state;
 
-    // Guardamos en la lista de votos individuales
+    // B. Guardamos en Firebase usando el UUID como llave fija.
+    // Si el usuario logra enviar otro voto, Firebase sobrescribe el anterior 
+    // en lugar de sumar uno nuevo, manteniendo el conteo real.
     set(ref(db, `userVotes/${uuid}`), {
       name: name || "Anónimo", 
       selectedGender,
@@ -24,16 +30,19 @@ const firebaseMiddleware = (store) => (next) => (action) => {
       hasVoted: true
     });
 
-    // Actualizamos el contador global (Barras de progreso)
+    // C. Actualizamos el contador global
     const currentCounts = store.getState().results.voteCounts;
     const newCounts = {
       ...currentCounts,
       [selectedGender]: (currentCounts[selectedGender] || 0) + 1
     };
     update(ref(db, "results/voteCounts"), newCounts);
+
+    // D. Dejamos la marca física en el dispositivo para bloquear la UI
+    localStorage.setItem("baby_shower_voted", "true");
   }
 
-  return result;
+  return next(action);
 };
 
 // --- 2. ACCIONES DEL PANEL DE CONTROL ---
@@ -46,12 +55,12 @@ export const toggleResults = (status) => {
 };
 
 export const resetGame = () => {
+  // Al resetear el juego, también deberías limpiar el localStorage si estás probando
   set(ref(db, "userVotes"), {}); 
   set(ref(db, "results/voteCounts"), { boy: 0, girl: 0 });
 };
 
 // --- 3. CONFIGURACIÓN DEL STORE (CON EXPORT PARA VERCEL) ---
-// Agregamos 'export' aquí para solucionar el error de Rollup/Vercel
 export const store = configureStore({
   reducer: {
     vote: voteReducer,
