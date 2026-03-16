@@ -16,7 +16,7 @@ const AnimatedBackground = () => {
     fullScreen: { enable: true, zIndex: -1 },
     particles: {
       color: { value: isVoteSubmitted ? "#D4AF37" : (selectedGender === "girl" ? "#E195AB" : "#90ADC6") },
-      number: { value: isVoteSubmitted ? 80 : 25, density: { enable: true, area: 800 } },
+      number: { value: isVoteSubmitted ? 60 : 25, density: { enable: true, area: 800 } },
       move: { enable: true, speed: 0.8 },
       opacity: { value: 0.3 }
     },
@@ -25,9 +25,10 @@ const AnimatedBackground = () => {
 
   const chaoticVariants = {
     animate: (custom) => ({
-      x: ["0%", `${custom.xDir * custom.range}%`, `${-custom.xDir * (custom.range * 0.5)}%`, "0%"],
-      y: ["0%", `${custom.yDir * custom.range}%`, `${-custom.yDir * (custom.range * 0.5)}%`, "0%"],
+      x: ["0%", `${custom.xDir * 70}%`, `${-custom.xDir * 30}%`, "0%"],
+      y: ["0%", `${custom.yDir * 70}%`, `${-custom.yDir * 30}%`, "0%"],
       rotate: [0, custom.r, -custom.r, 0],
+      scale: [1, 1.1, 0.9, 1], // Efecto de profundidad
       transition: {
         duration: custom.d,
         repeat: Infinity,
@@ -41,66 +42,67 @@ const AnimatedBackground = () => {
     <BackgroundWrapper>
       <Particles id="tsparticles" init={particlesInit} options={options} />
 
-      <AnimatePresence>
-        <FloatingElementsContainer key="bg-elements">
+      {/* La key dinámica ayuda a resetear el componente y eliminar duplicados */}
+      <AnimatePresence mode="wait">
+        <FloatingElementsContainer key={selectedGender ? "gender-set" : "default-set"}>
           
-          {/* ESQUINA SUPERIOR IZQUIERDA - OSO ROSA 1 */}
-          <FloatingImg
-            as={motion.img}
-            src="/osito_rosa.png"
-            custom={{ xDir: 1, yDir: 1, range: 60, r: 15, d: 28, delay: 0 }}
-            variants={chaoticVariants}
-            animate="animate"
-            style={{ top: "5%", left: "5%", width: "120px" }}
-          />
-
-          {/* ESQUINA SUPERIOR DERECHA - OSO AZUL 1 */}
+          {/* OSO NIÑO - Esquina Superior Izquierda */}
+          {/* (Asumiendo que el fantasma de niña está en la Inferior Izquierda y el de niño en la Superior Derecha) */}
           <FloatingImg
             as={motion.img}
             src="/osito_azul.png"
-            custom={{ xDir: -1, yDir: 1, range: 70, r: -15, d: 32, delay: 2 }}
+            custom={{ xDir: 1, yDir: 1, r: 15, d: 25, delay: 0 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ top: "5%", right: "5%", width: "120px" }}
+            style={{ top: "8%", left: "8%", width: "140px" }}
           />
 
-          {/* ESQUINA INFERIOR IZQUIERDA - OSO AZUL 2 */}
-          <FloatingImg
-            as={motion.img}
-            src="/osito_azul.png"
-            custom={{ xDir: 1, yDir: -1, range: 65, r: 10, d: 30, delay: 5 }}
-            variants={chaoticVariants}
-            animate="animate"
-            style={{ bottom: "5%", left: "5%", width: "110px", opacity: 0.9 }}
-          />
-
-          {/* ESQUINA INFERIOR DERECHA - OSO ROSA 2 */}
+          {/* OSO NIÑA - Esquina Inferior Derecha */}
           <FloatingImg
             as={motion.img}
             src="/osito_rosa.png"
-            custom={{ xDir: -1, yDir: -1, range: 75, r: -10, d: 26, delay: 3 }}
+            custom={{ xDir: -1, yDir: -1, r: -15, d: 28, delay: 2 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ bottom: "5%", right: "5%", width: "110px", opacity: 0.9 }}
+            style={{ bottom: "8%", right: "8%", width: "140px" }}
           />
 
-          {/* NUBES AMBIENTALES (CENTRALES) */}
+          {/* NUBES MÁS GRANDES Y VISIBLES */}
           <FloatingImg
             as={motion.img}
             src="/nube_grande_1.png"
-            custom={{ xDir: 0.5, yDir: 0.2, range: 30, r: 0, d: 45 }}
+            custom={{ xDir: 0.4, yDir: 0.3, r: 0, d: 40 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ top: "40%", left: "30%", width: "200px", opacity: 0.3 }}
+            style={{ top: "20%", right: "15%", width: "250px", opacity: 0.6 }}
           />
 
           <FloatingImg
             as={motion.img}
             src="/nube_grande_1.png"
-            custom={{ xDir: -0.5, yDir: -0.3, range: 40, r: 0, d: 50 }}
+            custom={{ xDir: -0.4, yDir: -0.3, r: 0, d: 50 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ bottom: "30%", right: "20%", width: "180px", opacity: 0.2 }}
+            style={{ bottom: "25%", left: "10%", width: "280px", opacity: 0.5 }}
+          />
+
+          {/* ESTRELLAS MÁS GRANDES */}
+          <FloatingImg
+            as={motion.img}
+            src="/estrella_grande_1.png"
+            custom={{ xDir: 1, yDir: -1, r: 20, d: 15 }}
+            variants={chaoticVariants}
+            animate="animate"
+            style={{ top: "50%", left: "15%", width: "60px" }}
+          />
+
+          <FloatingImg
+            as={motion.img}
+            src="/estrella_grande_1.png"
+            custom={{ xDir: -1, yDir: 1, r: -20, d: 18 }}
+            variants={chaoticVariants}
+            animate="animate"
+            style={{ top: "40%", right: "20%", width: "75px" }}
           />
 
         </FloatingElementsContainer>
@@ -117,7 +119,6 @@ const BackgroundWrapper = styled.div`
   height: 100vh;
   z-index: -1;
   overflow: hidden;
-  background-color: transparent;
 `;
 
 const FloatingElementsContainer = styled.div`
@@ -131,7 +132,8 @@ const FloatingImg = styled.img`
   position: absolute;
   user-select: none;
   will-change: transform;
-  filter: drop-shadow(0 8px 15px rgba(0,0,0,0.06));
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
 `;
 
 export default AnimatedBackground;
+
