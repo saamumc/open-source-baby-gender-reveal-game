@@ -5,8 +5,9 @@ const loadInitialState = () => {
   const savedState = storage.get(STORAGE_KEYS.VOTE_STATE);
   return (
     savedState || {
+      name: "",           // 1. Agregamos campo de nombre
       selectedGender: null,
-      message: "", // Agregamos campo de mensaje aquí
+      message: "", 
       hasVoted: false,
       uuid: storage.getUUID(),
       timestamp: null,
@@ -24,16 +25,20 @@ const voteSlice = createSlice({
       state.selectedGender = action.payload;
       storage.set(STORAGE_KEYS.VOTE_STATE, state);
     },
-    // Modificamos submitVote para que acepte el mensaje en el payload
+    // 2. Modificamos para recibir name y message
     submitVote: (state, action) => {
       state.hasVoted = true; 
+      state.name = action.payload?.name || "";       // Guardamos el nombre
       state.message = action.payload?.message || ""; // Guardamos el mensaje
       state.timestamp = Date.now();
+      
+      // Guardamos el estado completo en el almacenamiento local
       storage.set(STORAGE_KEYS.VOTE_STATE, state);
     },
     resetVote: (state) => {
+      state.name = "";            // Limpiamos el nombre
       state.selectedGender = null;
-      state.message = ""; // Limpiamos el mensaje al resetear
+      state.message = ""; 
       state.hasVoted = false;
       state.timestamp = null;
       state.uuid = storage.getUUID();
