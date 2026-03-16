@@ -1,51 +1,69 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { db } from "../firebase/config"; 
-import { ref, set, onValue, update } from "firebase/database";
+import { ref, set, onValue, update, get } from "firebase/database";
 import voteReducer from "./voteSlice";
 import resultsReducer from "./resultsSlice";
 import { updateResults } from "./resultsSlice";
 
-// --- 1. MIDDLEWARE PARA ENVIAR VOTOS A FIREBASE (CON BLOQUEO DE DUPLICADOS) ---
-const firebaseMiddleware = (store) => (next) => (action) => {
+// --- 1. MIDDLEWARE BLINDADO ---
+const firebaseMiddleware = (store) => (next) => async (action) => {
+  // Solo actuamos cuando la acción es submitVote
   if (action.type === "vote/submitVote") {
-    // A. Verificación de seguridad: ¿Ya existe la marca en este navegador?
-    const alreadyVoted = localStorage.getItem("baby_shower_voted");
-    if (alreadyVoted === "true") {
-      console.warn("Bloqueo de seguridad: Intento de voto duplicado detectado.");
-      return; // Detiene la ejecución aquí mismo
+    const state = store.getState().vote;
+    const { selectedGender, uuid, message, name } = state;
+
+    // A. Verificación en LocalStorage (Primer candado)
+    const alreadyVotedLocal = localStorage.getItem("baby_shower_voted");
+    if (alreadyVotedLocal === "true") {
+      console.warn("Voto bloqueado: Ya votaste desde este dispositivo.");
+      return; // Detiene la acción, no llega al reducer ni a Firebase
     }
 
-    const state = store.getState().vote;
-    const { selectedGender, uuid, message, timestamp, name } = state;
+    try {
+      // B. Verificación en Firebase (Segundo candado por si borran LocalStorage)
+      const voteRef = ref(db, `userVotes/${uuid}`);
+      const snapshot = await get(voteRef);
 
-    // B. Guardamos en Firebase usando el UUID como llave fija.
-    // Si el usuario logra enviar otro voto, Firebase sobrescribe el anterior 
-    // en lugar de sumar uno nuevo, manteniendo el conteo real.
-    set(ref(db, `userVotes/${uuid}`), {
-      name: name || "Anónimo", 
-      selectedGender,
-      message: message || "", 
-      uuid,
-      timestamp: timestamp || Date.now(),
-      hasVoted: true
-    });
+      if (snapshot.exists()) {
+        console.warn("Voto bloqueado: Este ID ya existe en la base de datos.");
+        localStorage.setItem("baby_shower_voted", "true");
+        return;
+      }
 
-    // C. Actualizamos el contador global
-    const currentCounts = store.getState().results.voteCounts;
-    const newCounts = {
-      ...currentCounts,
-      [selectedGender]: (currentCounts[selectedGender] || 0) + 1
-    };
-    update(ref(db, "results/voteCounts"), newCounts);
+      // C. Si pasa los filtros, registramos el voto
+      const timestamp = Date.now();
+      
+      await set(voteRef, {
+        name: name || "Anónimo",
+        selectedGender,
+        message: message || "",
+        uuid,
+        timestamp,
+        hasVoted: true
+      });
 
-    // D. Dejamos la marca física en el dispositivo para bloquear la UI
-    localStorage.setItem("baby_shower_voted", "true");
+      // D. Actualizamos los contadores globales
+      const currentCounts = store.getState().results.voteCounts;
+      const newCounts = {
+        ...currentCounts,
+        [selectedGender]: (currentCounts[selectedGender] || 0) + 1
+      };
+      await update(ref(db, "results/voteCounts"), newCounts);
+
+      // E. Marcamos como votado con éxito
+      localStorage.setItem("baby_shower_voted", "true");
+      
+    } catch (error) {
+      console.error("Error al procesar el voto:", error);
+      return; // Si hay error, no dejamos que la acción continúe
+    }
   }
 
+  // Solo si no es un voto duplicado, permitimos que Redux actualice el estado
   return next(action);
 };
 
-// --- 2. ACCIONES DEL PANEL DE CONTROL ---
+// --- 2. ACCIONES DEL PANEL ---
 export const toggleVoting = (status) => {
   update(ref(db, "results"), { showVotingScreen: status });
 };
@@ -55,12 +73,12 @@ export const toggleResults = (status) => {
 };
 
 export const resetGame = () => {
-  // Al resetear el juego, también deberías limpiar el localStorage si estás probando
   set(ref(db, "userVotes"), {}); 
   set(ref(db, "results/voteCounts"), { boy: 0, girl: 0 });
+  // NOTA: Para volver a votar tú mismo, debes borrar el LocalStorage de tu navegador manualmente
 };
 
-// --- 3. CONFIGURACIÓN DEL STORE (CON EXPORT PARA VERCEL) ---
+// --- 3. CONFIGURACIÓN DEL STORE ---
 export const store = configureStore({
   reducer: {
     vote: voteReducer,
@@ -72,10 +90,11 @@ export const store = configureStore({
     }).concat(firebaseMiddleware),
 });
 
-// --- 4. ESCUCHA DE CAMBIOS EN TIEMPO REAL ---
+// --- 4. ESCUCHA EN TIEMPO REAL ---
 const resultsRef = ref(db, "results");
 onValue(resultsRef, (snapshot) => {
   if (snapshot.exists()) {
     store.dispatch(updateResults(snapshot.val()));
   }
 });
+
