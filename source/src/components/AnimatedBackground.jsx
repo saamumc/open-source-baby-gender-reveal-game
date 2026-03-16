@@ -51,11 +51,10 @@ const AnimatedBackground = () => {
       <FloatingElementsContainer>
         {/* --- OSITOS GIRL (2 instancias) --- */}
         <FloatingImg as={motion.img} src="/osito_rosa.png" custom={{ y: 25, x: 15, r: -3, d: 8 }} variants={chaoticVariants} animate="animate" style={{ bottom: '10%', left: '8%', width: '130px' }} />
-        <FloatingImg as={motion.img} src="/osito_rosa.png" custom={{ y: -30, x: -20, r: 5, d: 11 }} variants={chaoticVariants} animate="animate" style={{ top: '25%', left: '22%', width: '100px' }} />
 
         {/* --- OSITOS BOY (2 instancias) --- */}
         <FloatingImg as={motion.img} src="/osito_azul.png" custom={{ y: -20, x: -10, r: 2, d: 7 }} variants={chaoticVariants} animate="animate" style={{ top: '15%', right: '5%', width: '120px' }} />
-        <FloatingImg as={motion.img} src="/osito_azul.png" custom={{ y: 20, x: 30, r: -6, d: 9 }} variants={chaoticVariants} animate="animate" style={{ bottom: '20%', right: '15%', width: '95px' }} />
+      
 
         {/* --- NUBES Y ESTRELLAS (10 instancias mezcladas) --- */}
         
