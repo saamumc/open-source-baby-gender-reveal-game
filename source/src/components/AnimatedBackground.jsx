@@ -36,28 +36,16 @@ const AnimatedBackground = () => {
     background: { color: "transparent" }
   };
 
-  // ANIMACIÓN QUE RECORRE TODA LA PANTALLA
+  // VARIANTES OPTIMIZADAS PARA GPU
   const chaoticVariants = {
     animate: (custom) => ({
-      x: [
-        "0vw",
-        `${custom.x}vw`,
-        `${-custom.x}vw`,
-        `${custom.x / 2}vw`,
-        "0vw"
-      ],
-      y: [
-        "0vh",
-        `${custom.y}vh`,
-        `${-custom.y}vh`,
-        `${custom.y / 2}vh`,
-        "0vh"
-      ],
+      x: [0, custom.x * 5, -custom.x * 5, custom.x * 2, 0],
+      y: [0, custom.y * 5, -custom.y * 5, custom.y * 2, 0],
       rotate: [0, custom.r || 0, -(custom.r || 0), 0],
       transition: {
         duration: custom.d || 12,
         repeat: Infinity,
-        ease: "linear"
+        ease: "linear",
       }
     })
   };
@@ -67,12 +55,11 @@ const AnimatedBackground = () => {
       <Particles id="tsparticles" init={particlesInit} options={options} />
 
       <FloatingElementsContainer>
-
         {/* OSITO ROSA */}
         <FloatingImg
           as={motion.img}
           src="/osito_rosa.png"
-          custom={{ y: 40, x: 35, r: -5, d: 18 }}
+          custom={{ y: 8, x: 7, r: -5, d: 18 }}
           variants={chaoticVariants}
           animate="animate"
           style={{ bottom: "10%", left: "8%", width: "130px" }}
@@ -82,106 +69,62 @@ const AnimatedBackground = () => {
         <FloatingImg
           as={motion.img}
           src="/osito_azul.png"
-          custom={{ y: 35, x: 40, r: 6, d: 20 }}
+          custom={{ y: 7, x: 8, r: 6, d: 20 }}
           variants={chaoticVariants}
           animate="animate"
           style={{ top: "15%", right: "5%", width: "120px" }}
         />
 
         {/* NUBES */}
-
-        <FloatingImg
-          as={motion.img}
-          src="/nube_grande_1.png"
-          custom={{ y: 25, x: 50, d: 35 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ top: "8%", left: "5%", width: "160px", opacity: 0.6 }}
-        />
-
-        <FloatingImg
-          as={motion.img}
-          src="/nube_grande_1.png"
-          custom={{ y: 20, x: 45, d: 40 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ bottom: "35%", left: "3%", width: "140px", opacity: 0.5 }}
-        />
-
-        <FloatingImg
-          as={motion.img}
-          src="/nube_grande_1.png"
-          custom={{ y: 30, x: 40, d: 45 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ top: "50%", right: "25%", width: "150px", opacity: 0.4 }}
-        />
-
-        <FloatingImg
-          as={motion.img}
-          src="/nube_grande_1.png"
-          custom={{ y: 28, x: 48, d: 38 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ bottom: "15%", right: "35%", width: "130px", opacity: 0.6 }}
-        />
-
-        <FloatingImg
-          as={motion.img}
-          src="/nube_grande_1.png"
-          custom={{ y: 25, x: 42, d: 42 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ top: "5%", right: "35%", width: "145px", opacity: 0.5 }}
-        />
+        {[
+          { top: "8%", left: "5%", w: "160px", op: 0.6, c: { y: 5, x: 10, d: 35 } },
+          { bottom: "35%", left: "3%", w: "140px", op: 0.5, c: { y: 4, x: 9, d: 40 } },
+          { top: "50%", right: "25%", w: "150px", op: 0.4, c: { y: 6, x: 8, d: 45 } },
+          { bottom: "15%", right: "35%", w: "130px", op: 0.6, c: { y: 5, x: 9, d: 38 } },
+          { top: "5%", right: "35%", w: "145px", op: 0.5, c: { y: 5, x: 8, d: 42 } },
+        ].map((nube, i) => (
+          <FloatingImg
+            key={`nube-${i}`}
+            as={motion.img}
+            src="/nube_grande_1.png"
+            custom={nube.c}
+            variants={chaoticVariants}
+            animate="animate"
+            style={{ 
+              top: nube.top, 
+              bottom: nube.bottom, 
+              left: nube.left, 
+              right: nube.right, 
+              width: nube.w, 
+              opacity: nube.op 
+            }}
+          />
+        ))}
 
         {/* ESTRELLAS */}
-
-        <FloatingImg
-          as={motion.img}
-          src="/estrella_grande_1.png"
-          custom={{ y: 35, x: 60, d: 18 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ top: "35%", right: "12%", width: "40px" }}
-        />
-
-        <FloatingImg
-          as={motion.img}
-          src="/estrella_grande_1.png"
-          custom={{ y: 40, x: 55, d: 20 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ bottom: "40%", left: "15%", width: "35px" }}
-        />
-
-        <FloatingImg
-          as={motion.img}
-          src="/estrella_grande_1.png"
-          custom={{ y: 45, x: 50, d: 22 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ top: "65%", left: "40%", width: "45px" }}
-        />
-
-        <FloatingImg
-          as={motion.img}
-          src="/estrella_grande_1.png"
-          custom={{ y: 38, x: 48, d: 21 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ bottom: "60%", right: "40%", width: "38px" }}
-        />
-
-        <FloatingImg
-          as={motion.img}
-          src="/estrella_grande_1.png"
-          custom={{ y: 42, x: 52, d: 19 }}
-          variants={chaoticVariants}
-          animate="animate"
-          style={{ top: "20%", left: "50%", width: "42px" }}
-        />
-
+        {[
+          { top: "35%", right: "12%", w: "40px", c: { y: 7, x: 12, d: 18 } },
+          { bottom: "40%", left: "15%", w: "35px", c: { y: 8, x: 11, d: 20 } },
+          { top: "65%", left: "40%", w: "45px", c: { y: 9, x: 10, d: 22 } },
+          { bottom: "60%", right: "40%", w: "38px", c: { y: 7, x: 9, d: 21 } },
+          { top: "20%", left: "50%", w: "42px", c: { y: 8, x: 10, d: 19 } },
+        ].map((star, i) => (
+          <FloatingImg
+            key={`star-${i}`}
+            as={motion.img}
+            src="/estrella_grande_1.png"
+            custom={star.c}
+            variants={chaoticVariants}
+            animate="animate"
+            style={{ 
+              top: star.top, 
+              bottom: star.bottom, 
+              left: star.left, 
+              right: star.right, 
+              width: star.w 
+            }}
+          />
+        ))}
       </FloatingElementsContainer>
     </BackgroundWrapper>
   );
@@ -191,9 +134,10 @@ const BackgroundWrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* Cambiado a -1 para asegurar que no bloquee interacciones */
+  overflow: hidden;
 `;
 
 const FloatingElementsContainer = styled.div`
@@ -206,6 +150,8 @@ const FloatingElementsContainer = styled.div`
 const FloatingImg = styled.img`
   position: absolute;
   user-select: none;
+  /* El filtro drop-shadow es costoso, pero will-change ayuda a la GPU */
+  will-change: transform;
   filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
 `;
 
