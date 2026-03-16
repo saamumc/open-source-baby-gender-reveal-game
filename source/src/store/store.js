@@ -1,21 +1,24 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { db } from "../firebase/config"; 
-import { ref, set, onValue, update, get } from "firebase/database"; // Añadimos 'get'
+import { ref, set, onValue, update, get } from "firebase/database";
 import voteReducer from "./voteSlice";
 import resultsReducer from "./resultsSlice";
 import { updateResults } from "./resultsSlice";
 
-// --- 1. MIDDLEWARE CON RE-CONTEO AUTOMÁTICO ---
+// --- 1. MIDDLEWARE CON RE-CONTEO Y BLOQUEO ---
 const firebaseMiddleware = (store) => (next) => async (action) => {
   if (action.type === "vote/submitVote") {
+    // CANDADO 1: Si ya existe la marca en el navegador, bloqueamos el proceso
+    if (localStorage.getItem("baby_shower_voted") === "true") {
+      console.warn("Voto duplicado bloqueado localmente.");
+      return; 
+    }
+
     const state = store.getState().vote;
     const { selectedGender, uuid, message, name } = state;
 
-    // Bloqueo local para evitar spam de clics
-    if (localStorage.getItem("baby_shower_voted") === "true") return;
-
     try {
-      // A. Guardamos/Actualizamos el voto individual
+      // A. Guardamos el voto (Firebase sobrescribirá si el UUID es igual)
       const voteRef = ref(db, `userVotes/${uuid}`);
       await set(voteRef, {
         name: name || "Anónimo",
@@ -26,8 +29,7 @@ const firebaseMiddleware = (store) => (next) => async (action) => {
         hasVoted: true
       });
 
-      // B. RE-CALCULAR EL CONTEO TOTAL DESDE LA REALIDAD
-      // En lugar de sumar +1, contamos los documentos reales en Firebase
+      // B. RE-CONTEO REAL: Contamos lo que hay físicamente en Firebase
       const allVotesRef = ref(db, "userVotes");
       const snapshot = await get(allVotesRef);
       
@@ -35,17 +37,16 @@ const firebaseMiddleware = (store) => (next) => async (action) => {
         const allVotes = snapshot.val();
         const counts = { boy: 0, girl: 0 };
 
-        // Contamos físicamente cada voto en la base de datos
         Object.values(allVotes).forEach(vote => {
           if (vote.selectedGender === "boy") counts.boy++;
           if (vote.selectedGender === "girl") counts.girl++;
         });
 
-        // Sobrescribimos el contador con el valor real
+        // Actualizamos el contador oficial
         await update(ref(db, "results/voteCounts"), counts);
       }
 
-      // C. Marcamos como votado con éxito
+      // CANDADO 2: Marcamos el dispositivo como "Ya votó"
       localStorage.setItem("baby_shower_voted", "true");
 
     } catch (error) {
@@ -66,8 +67,10 @@ export const toggleResults = (status) => {
 };
 
 export const resetGame = () => {
+  // Limpiamos Firebase
   set(ref(db, "userVotes"), {}); 
   set(ref(db, "results/voteCounts"), { boy: 0, girl: 0 });
+  // NOTA: Para volver a votar tú, debes borrar el LocalStorage manualmente
 };
 
 // --- 3. CONFIGURACIÓN DEL STORE ---
