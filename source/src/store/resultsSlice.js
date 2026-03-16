@@ -19,18 +19,19 @@ const resultsSlice = createSlice({
     updateResults: (state, action) => {
       const data = action.payload;
       if (data) {
-        // Actualizamos solo si el valor existe en Firebase para no sobreescribir con undefined
-        if (data.showResultPage !== undefined) state.showResultPage = data.showResultPage;
-        if (data.showVotingScreen !== undefined) state.showVotingScreen = data.showVotingScreen;
-        if (data.showGameStarted !== undefined) state.showGameStarted = data.showGameStarted;
+        // Actualizamos switches de la interfaz
+        state.showResultPage = data.showResultPage ?? state.showResultPage;
+        state.showVotingScreen = data.showVotingScreen ?? state.showVotingScreen;
+        state.showGameStarted = data.showGameStarted ?? state.showGameStarted;
         
-        // Sincronización de votos
+        // Sincronización de votos DIRECTA desde Firebase
         if (data.voteCounts) {
-          state.voteCounts.boy = data.voteCounts.boy ?? state.voteCounts.boy;
-          state.voteCounts.girl = data.voteCounts.girl ?? state.voteCounts.girl;
+          state.voteCounts.boy = data.voteCounts.boy || 0;
+          state.voteCounts.girl = data.voteCounts.girl || 0;
         }
       }
     },
+    // Este reducer se usa cuando queremos forzar un número manual
     updateVoteCounts: (state, action) => {
       state.voteCounts.boy = action.payload.boy ?? 0;
       state.voteCounts.girl = action.payload.girl ?? 0;
@@ -70,4 +71,3 @@ export const {
 
 export const resetResults = createAction("results/resetResults");
 export default resultsSlice.reducer;
-
