@@ -159,4 +159,3 @@ const NoMessages = styled.div`
 `;
 
 export default ValJan;
-
