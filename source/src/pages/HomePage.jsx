@@ -118,26 +118,29 @@ const HomeContainer = styled(motion.div)`
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
-  background-color: #f2e8df; /* El fondo sólido va en la capa más profunda */
+  background: rgba(242, 232, 223, 0.85);
   min-height: 100vh;
   position: relative;
   overflow: hidden;
 `;
 
 const ContentCard = styled.div`
-  /* Bajamos la opacidad a 0.6 para que el vidrio sea más evidente */
-  background: rgba(255, 255, 255, 0.6); 
-  backdrop-filter: blur(15px); 
-  -webkit-backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
   border-radius: 30px;
   padding: 2.5rem;
   width: 100%;
   max-width: 500px;
   color: #8c6a53;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
   box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-  z-index: 10; /* Por encima de los ositos */
+
+  z-index: 10;
   position: relative;
 `;
 
