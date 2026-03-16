@@ -16,19 +16,20 @@ const AnimatedBackground = () => {
     fullScreen: { enable: true, zIndex: -1 },
     particles: {
       color: { value: isVoteSubmitted ? "#D4AF37" : (selectedGender === "girl" ? "#E195AB" : "#90ADC6") },
-      number: { value: isVoteSubmitted ? 60 : 25, density: { enable: true, area: 800 } },
-      move: { enable: true, speed: 0.8 },
-      opacity: { value: 0.3 }
+      number: { value: isVoteSubmitted ? 60 : 20, density: { enable: true, area: 800 } },
+      move: { enable: true, speed: 0.6 }, // Un poco más lento para no distraer
+      opacity: { value: 0.25 }
     },
     background: { color: "transparent" }
   }), [isVoteSubmitted, selectedGender]);
 
+  // VARIANTES DE ANIMACIÓN (Caótica y Amplia)
   const chaoticVariants = {
     animate: (custom) => ({
-      x: ["0%", `${custom.xDir * 70}%`, `${-custom.xDir * 30}%`, "0%"],
-      y: ["0%", `${custom.yDir * 70}%`, `${-custom.yDir * 30}%`, "0%"],
+      x: ["0%", `${custom.xDir * 65}%`, `${-custom.xDir * 35}%`, "0%"],
+      y: ["0%", `${custom.yDir * 65}%`, `${-custom.yDir * 35}%`, "0%"],
       rotate: [0, custom.r, -custom.r, 0],
-      scale: [1, 1.1, 0.9, 1], // Efecto de profundidad
+      scale: [1, 1.05, 0.95, 1], // Ligero efecto de profundidad
       transition: {
         duration: custom.d,
         repeat: Infinity,
@@ -42,67 +43,91 @@ const AnimatedBackground = () => {
     <BackgroundWrapper>
       <Particles id="tsparticles" init={particlesInit} options={options} />
 
-      {/* La key dinámica ayuda a resetear el componente y eliminar duplicados */}
       <AnimatePresence mode="wait">
-        <FloatingElementsContainer key={selectedGender ? "gender-set" : "default-set"}>
+        <FloatingElementsContainer key={selectedGender ? `gender-${selectedGender}` : "default-set"}>
           
-          {/* OSO NIÑO - Esquina Superior Izquierda */}
-          {/* (Asumiendo que el fantasma de niña está en la Inferior Izquierda y el de niño en la Superior Derecha) */}
+          {/* OSO NIÑO - Esquina Superior Izquierda (Real) */}
           <FloatingImg
             as={motion.img}
             src="/osito_azul.png"
-            custom={{ xDir: 1, yDir: 1, r: 15, d: 25, delay: 0 }}
+            custom={{ xDir: 1, yDir: 1, r: 12, d: 26, delay: 0 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ top: "8%", left: "8%", width: "140px" }}
+            style={{ top: "10%", left: "10%", width: "130px" }}
           />
 
-          {/* OSO NIÑA - Esquina Inferior Derecha */}
+          {/* OSO NIÑA - Esquina Inferior Derecha (Real) */}
           <FloatingImg
             as={motion.img}
             src="/osito_rosa.png"
-            custom={{ xDir: -1, yDir: -1, r: -15, d: 28, delay: 2 }}
+            custom={{ xDir: -1, yDir: -1, r: -12, d: 29, delay: 2 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ bottom: "8%", right: "8%", width: "140px" }}
+            style={{ bottom: "10%", right: "10%", width: "130px" }}
           />
 
-          {/* NUBES MÁS GRANDES Y VISIBLES */}
+          {/* --- NUBES GIGANTES Y DE DISTINTOS TAMAÑOS --- */}
+          
+          {/* Nube Máxima - Arriba Derecha */}
           <FloatingImg
             as={motion.img}
             src="/nube_grande_1.png"
-            custom={{ xDir: 0.4, yDir: 0.3, r: 0, d: 40 }}
+            custom={{ xDir: 0.3, yDir: 0.2, r: 0, d: 45 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ top: "20%", right: "15%", width: "250px", opacity: 0.6 }}
+            style={{ top: "15%", right: "10%", width: "500px", opacity: 0.55 }}
           />
 
+          {/* Nube Grande - Abajo Izquierda */}
           <FloatingImg
             as={motion.img}
             src="/nube_grande_1.png"
-            custom={{ xDir: -0.4, yDir: -0.3, r: 0, d: 50 }}
+            custom={{ xDir: -0.3, yDir: -0.2, r: 0, d: 55 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ bottom: "25%", left: "10%", width: "280px", opacity: 0.5 }}
+            style={{ bottom: "20%", left: "8%", width: "450px", opacity: 0.45 }}
           />
 
-          {/* ESTRELLAS MÁS GRANDES */}
+          {/* Nube Mediana - Centro Derecha */}
+          <FloatingImg
+            as={motion.img}
+            src="/nube_grande_1.png"
+            custom={{ xDir: -0.2, yDir: 0.3, r: 0, d: 60, delay: 5 }}
+            variants={chaoticVariants}
+            animate="animate"
+            style={{ top: "45%", right: "-5%", width: "350px", opacity: 0.35 }}
+          />
+
+          {/* --- ESTRELLAS GRANDES Y VISIBLES --- */}
+          
+          {/* Estrella Máxima - Centro Izquierda */}
           <FloatingImg
             as={motion.img}
             src="/estrella_grande_1.png"
-            custom={{ xDir: 1, yDir: -1, r: 20, d: 15 }}
+            custom={{ xDir: 0.8, yDir: -0.8, r: 25, d: 18 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ top: "50%", left: "15%", width: "60px" }}
+            style={{ top: "55%", left: "15%", width: "110px" }}
           />
 
+          {/* Estrella Grande - Arriba Centro */}
           <FloatingImg
             as={motion.img}
             src="/estrella_grande_1.png"
-            custom={{ xDir: -1, yDir: 1, r: -20, d: 18 }}
+            custom={{ xDir: -0.6, yDir: 0.9, r: -20, d: 21, delay: 3 }}
             variants={chaoticVariants}
             animate="animate"
-            style={{ top: "40%", right: "20%", width: "75px" }}
+            style={{ top: "35%", right: "25%", width: "95px" }}
+          />
+
+          {/* Estrella Mediana - Abajo Centro */}
+          <FloatingImg
+            as={motion.img}
+            src="/estrella_grande_1.png"
+            custom={{ xDir: 1, yDir: 0.5, r: 15, d: 24, delay: 6 }}
+            variants={chaoticVariants}
+            animate="animate"
+            style={{ bottom: "35%", left: "40%", width: "80px" }}
           />
 
         </FloatingElementsContainer>
@@ -119,6 +144,7 @@ const BackgroundWrapper = styled.div`
   height: 100vh;
   z-index: -1;
   overflow: hidden;
+  background-color: transparent;
 `;
 
 const FloatingElementsContainer = styled.div`
@@ -132,8 +158,9 @@ const FloatingImg = styled.img`
   position: absolute;
   user-select: none;
   will-change: transform;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
+  filter: drop-shadow(0 12px 25px rgba(0,0,0,0.07));
 `;
 
 export default AnimatedBackground;
+
 
