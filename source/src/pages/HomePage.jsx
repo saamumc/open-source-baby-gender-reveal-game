@@ -134,45 +134,39 @@ const HomePage = () => {
   );
 };
 
+// --- ESTILOS CORREGIDOS CON MAYOR TRANSPARENCIA ---
+
 const HomeContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-
   padding: 2rem 1rem;
-
-  background: rgba(242, 232, 223, 0.85);
-
+  /* Reducido de 0.85 a 0.45 para que el fondo base sea más claro */
+  background: rgba(242, 232, 223, 0.45); 
   min-height: 100vh;
-
   position: relative;
-
   overflow: hidden;
 `;
 
 const ContentCard = styled.div`
-  background: rgba(255, 255, 255, 0.18);
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
+  /* Reducido de 0.18 a 0.08 (aprox 55% menos opaco) para máxima transparencia */
+  background: rgba(255, 255, 255, 0.08); 
+  
+  /* El desenfoque ayuda a leer el texto aunque sea muy transparente */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  
   border-radius: 30px;
-
   padding: 2.5rem;
-
   width: 100%;
   max-width: 500px;
-
   color: #8c6a53;
-
   text-align: center;
-
-  border: 1px solid rgba(255, 255, 255, 0.4);
-
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-
+  
+  /* Borde más sutil */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
   z-index: 10;
-
   position: relative;
 `;
 
@@ -181,17 +175,20 @@ const NamesTitle = styled.h1`
   font-size: 2.4rem;
   margin: 0;
   color: #8c6a53;
+  /* Sombra ligera para asegurar legibilidad sobre el fondo transparente */
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
 `;
 
 const Divider = styled.hr`
   border: 0;
   height: 1px;
-  background: #d9c7b8;
+  background: rgba(140, 106, 83, 0.2);
   margin: 1rem 0;
 `;
 
 const CountdownSection = styled.div`
-  background: #a68974;
+  /* Un poco de transparencia también aquí para mantener el estilo */
+  background: rgba(166, 137, 116, 0.85);
   color: white;
   padding: 0.8rem;
   border-radius: 15px;
@@ -206,160 +203,101 @@ const MainContent = styled.div`
 const PhotoWrapper = styled.div`
   width: 100%;
   height: 320px;
-
   border-radius: 20px;
-
   overflow: hidden;
-
   margin-bottom: 1.5rem;
-
   border: 6px solid white;
-
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 `;
 
 const InvitationText = styled.p`
   font-size: 1.1rem;
-
-  color: #8c6a53;
-
+  color: #5d4637; /* Color un poco más oscuro para que resalte sobre el fondo claro */
   margin-bottom: 1.5rem;
-
   line-height: 1.4;
+  font-weight: 500;
 `;
 
 const DressCodeBox = styled.div`
-  background: rgba(255, 255, 255, 0.65);
-
+  /* Ajustada la transparencia de la caja de Dress Code */
+  background: rgba(255, 255, 255, 0.4);
   padding: 1rem;
-
   border-radius: 12px;
-
   margin-bottom: 1rem;
-
   font-size: 0.95rem;
-
-  border: 1px solid #d9c7b8;
-
-  color: #a68974;
-
+  border: 1px solid rgba(217, 199, 184, 0.5);
+  color: #8c6a53;
   text-align: left;
 `;
 
 const DetailsBox = styled.div`
   font-size: 1rem;
-
   margin-bottom: 1.5rem;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 8px;
-
-  font-weight: 500;
+  font-weight: bold;
 `;
 
 const GiftButton = styled.button`
-  background: white;
-
+  background: rgba(255, 255, 255, 0.8);
   color: #8c6a53;
-
   border: 1px solid #d9c7b8;
-
   padding: 1.2rem;
-
   border-radius: 15px;
-
   width: 100%;
-
   margin-top: 10px;
-
   cursor: pointer;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 10px;
-
   font-weight: bold;
-
   transition: all 0.3s;
-
   &:hover {
-    background: #fdfaf7;
+    background: #ffffff;
     transform: translateY(-2px);
   }
 `;
 
 const ConfirmButton = styled.button`
   background: #25d366;
-
   color: white;
-
   border: none;
-
   padding: 1.2rem;
-
   border-radius: 15px;
-
   width: 100%;
-
   margin-top: 12px;
-
   font-weight: bold;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 10px;
-
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
 `;
 
 const ActionsGrid = styled.div`
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
   gap: 15px;
-
   margin-top: 2rem;
 `;
 
 const ActionButton = styled.button`
   background: ${(props) => props.color};
-
   color: white;
-
   border: none;
-
   padding: 1.2rem;
-
   border-radius: 15px;
-
   cursor: pointer;
-
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   gap: 8px;
-
   font-weight: bold;
-
   transition: all 0.2s;
-
   &:hover {
     opacity: 0.9;
     transform: scale(1.02);
