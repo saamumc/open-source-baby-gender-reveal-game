@@ -36,16 +36,28 @@ const AnimatedBackground = () => {
     background: { color: "transparent" }
   };
 
-  // VARIANTES OPTIMIZADAS PARA GPU
+  // --- VARIANTES CON RANGO AMPLIO (TODA LA PANTALLA) ---
   const chaoticVariants = {
     animate: (custom) => ({
-      x: [0, custom.x * 5, -custom.x * 5, custom.x * 2, 0],
-      y: [0, custom.y * 5, -custom.y * 5, custom.y * 2, 0],
-      rotate: [0, custom.r || 0, -(custom.r || 0), 0],
+      x: [
+        "0%", 
+        `${custom.xRange * 0.8}%`, 
+        `${-custom.xRange * 0.5}%`, 
+        `${custom.xRange * 0.3}%`, 
+        "0%"
+      ],
+      y: [
+        "0%", 
+        `${-custom.yRange * 0.6}%`, 
+        `${custom.yRange * 0.8}%`, 
+        `${-custom.yRange * 0.4}%`, 
+        "0%"
+      ],
+      rotate: [0, custom.r || 10, -(custom.r || 10), 5, 0],
       transition: {
-        duration: custom.d || 12,
+        duration: custom.d || 25, // Duraciones más largas para que el recorrido grande no sea frenético
         repeat: Infinity,
-        ease: "linear",
+        ease: "easeInOut",
       }
     })
   };
@@ -55,33 +67,31 @@ const AnimatedBackground = () => {
       <Particles id="tsparticles" init={particlesInit} options={options} />
 
       <FloatingElementsContainer>
-        {/* OSITO ROSA */}
+        {/* OSITO ROSA - Recorrido amplio */}
         <FloatingImg
           as={motion.img}
           src="/osito_rosa.png"
-          custom={{ y: 8, x: 7, r: -5, d: 18 }}
+          custom={{ yRange: 50, xRange: 40, r: 15, d: 22 }}
           variants={chaoticVariants}
           animate="animate"
-          style={{ bottom: "10%", left: "8%", width: "130px" }}
+          style={{ bottom: "15%", left: "10%", width: "130px" }}
         />
 
-        {/* OSITO AZUL */}
+        {/* OSITO AZUL - Recorrido amplio */}
         <FloatingImg
           as={motion.img}
           src="/osito_azul.png"
-          custom={{ y: 7, x: 8, r: 6, d: 20 }}
+          custom={{ yRange: 60, xRange: 50, r: -15, d: 25 }}
           variants={chaoticVariants}
           animate="animate"
-          style={{ top: "15%", right: "5%", width: "120px" }}
+          style={{ top: "15%", right: "10%", width: "120px" }}
         />
 
-        {/* NUBES */}
+        {/* NUBES CON MOVIMIENTOS DIFERENCIADOS */}
         {[
-          { top: "8%", left: "5%", w: "160px", op: 0.6, c: { y: 5, x: 10, d: 35 } },
-          { bottom: "35%", left: "3%", w: "140px", op: 0.5, c: { y: 4, x: 9, d: 40 } },
-          { top: "50%", right: "25%", w: "150px", op: 0.4, c: { y: 6, x: 8, d: 45 } },
-          { bottom: "15%", right: "35%", w: "130px", op: 0.6, c: { y: 5, x: 9, d: 38 } },
-          { top: "5%", right: "35%", w: "145px", op: 0.5, c: { y: 5, x: 8, d: 42 } },
+          { top: "10%", left: "5%", w: "160px", op: 0.5, c: { yRange: 30, xRange: 60, d: 40 } },
+          { bottom: "20%", right: "5%", w: "150px", op: 0.4, c: { yRange: 40, xRange: 50, d: 50 } },
+          { top: "45%", left: "40%", w: "140px", op: 0.3, c: { yRange: 70, xRange: 30, d: 45 } },
         ].map((nube, i) => (
           <FloatingImg
             key={`nube-${i}`}
@@ -101,13 +111,11 @@ const AnimatedBackground = () => {
           />
         ))}
 
-        {/* ESTRELLAS */}
+        {/* ESTRELLAS - Dispersas y con gran rango */}
         {[
-          { top: "35%", right: "12%", w: "40px", c: { y: 7, x: 12, d: 18 } },
-          { bottom: "40%", left: "15%", w: "35px", c: { y: 8, x: 11, d: 20 } },
-          { top: "65%", left: "40%", w: "45px", c: { y: 9, x: 10, d: 22 } },
-          { bottom: "60%", right: "40%", w: "38px", c: { y: 7, x: 9, d: 21 } },
-          { top: "20%", left: "50%", w: "42px", c: { y: 8, x: 10, d: 19 } },
+          { top: "30%", left: "20%", w: "40px", c: { yRange: 80, xRange: 80, d: 20 } },
+          { bottom: "30%", right: "20%", w: "35px", c: { yRange: 70, xRange: 70, d: 18 } },
+          { top: "70%", left: "50%", w: "45px", c: { yRange: 50, xRange: 90, d: 22 } },
         ].map((star, i) => (
           <FloatingImg
             key={`star-${i}`}
@@ -136,7 +144,7 @@ const BackgroundWrapper = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1; /* Cambiado a -1 para asegurar que no bloquee interacciones */
+  z-index: -1;
   overflow: hidden;
 `;
 
@@ -150,9 +158,9 @@ const FloatingElementsContainer = styled.div`
 const FloatingImg = styled.img`
   position: absolute;
   user-select: none;
-  /* El filtro drop-shadow es costoso, pero will-change ayuda a la GPU */
   will-change: transform;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
+  /* Mantenemos el drop-shadow pero suave para no afectar performance */
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.03));
 `;
 
 export default AnimatedBackground;
