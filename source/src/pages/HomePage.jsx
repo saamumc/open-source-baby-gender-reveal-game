@@ -134,27 +134,27 @@ const HomePage = () => {
   );
 };
 
-// --- ESTILOS CORREGIDOS CON MAYOR TRANSPARENCIA ---
+// --- ESTILOS CON +45% DE TRANSPARENCIA EXTRA ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
-  /* Reducido de 0.85 a 0.45 para que el fondo base sea más claro */
-  background: rgba(242, 232, 223, 0.45); 
+  /* Reducido a 0.25 para que el fondo sea casi totalmente el del componente AnimatedBackground */
+  background: rgba(242, 232, 223, 0.25); 
   min-height: 100vh;
   position: relative;
   overflow: hidden;
 `;
 
 const ContentCard = styled.div`
-  /* Reducido de 0.18 a 0.08 (aprox 55% menos opaco) para máxima transparencia */
-  background: rgba(255, 255, 255, 0.08); 
+  /* Reducido a 0.04 para que sea una capa de cristal ultra delgada */
+  background: rgba(255, 255, 255, 0.04); 
   
-  /* El desenfoque ayuda a leer el texto aunque sea muy transparente */
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  /* El desenfoque se mantiene para que el texto sea legible sobre los osos */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   
   border-radius: 30px;
   padding: 2.5rem;
@@ -163,9 +163,9 @@ const ContentCard = styled.div`
   color: #8c6a53;
   text-align: center;
   
-  /* Borde más sutil */
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+  /* Borde muy tenue */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
   z-index: 10;
   position: relative;
 `;
@@ -175,20 +175,19 @@ const NamesTitle = styled.h1`
   font-size: 2.4rem;
   margin: 0;
   color: #8c6a53;
-  /* Sombra ligera para asegurar legibilidad sobre el fondo transparente */
-  text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
 `;
 
 const Divider = styled.hr`
   border: 0;
   height: 1px;
-  background: rgba(140, 106, 83, 0.2);
+  background: rgba(140, 106, 83, 0.15);
   margin: 1rem 0;
 `;
 
 const CountdownSection = styled.div`
-  /* Un poco de transparencia también aquí para mantener el estilo */
-  background: rgba(166, 137, 116, 0.85);
+  /* Transparencia aplicada también aquí para no tapar tanto el paso de los osos */
+  background: rgba(166, 137, 116, 0.7);
   color: white;
   padding: 0.8rem;
   border-radius: 15px;
@@ -206,26 +205,26 @@ const PhotoWrapper = styled.div`
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 1.5rem;
-  border: 6px solid white;
+  border: 4px solid white;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 `;
 
 const InvitationText = styled.p`
   font-size: 1.1rem;
-  color: #5d4637; /* Color un poco más oscuro para que resalte sobre el fondo claro */
+  color: #4a382b; /* Oscurecido para compensar la transparencia extrema del fondo */
   margin-bottom: 1.5rem;
   line-height: 1.4;
-  font-weight: 500;
+  font-weight: 600;
 `;
 
 const DressCodeBox = styled.div`
-  /* Ajustada la transparencia de la caja de Dress Code */
-  background: rgba(255, 255, 255, 0.4);
+  /* Caja interna más ligera */
+  background: rgba(255, 255, 255, 0.25);
   padding: 1rem;
   border-radius: 12px;
   margin-bottom: 1rem;
   font-size: 0.95rem;
-  border: 1px solid rgba(217, 199, 184, 0.5);
+  border: 1px solid rgba(217, 199, 184, 0.3);
   color: #8c6a53;
   text-align: left;
 `;
@@ -241,9 +240,9 @@ const DetailsBox = styled.div`
 `;
 
 const GiftButton = styled.button`
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.6);
   color: #8c6a53;
-  border: 1px solid #d9c7b8;
+  border: 1px solid rgba(217, 199, 184, 0.6);
   padding: 1.2rem;
   border-radius: 15px;
   width: 100%;
@@ -256,7 +255,7 @@ const GiftButton = styled.button`
   font-weight: bold;
   transition: all 0.3s;
   &:hover {
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.9);
     transform: translateY(-2px);
   }
 `;
@@ -275,7 +274,7 @@ const ConfirmButton = styled.button`
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.15);
 `;
 
 const ActionsGrid = styled.div`
@@ -305,3 +304,4 @@ const ActionButton = styled.button`
 `;
 
 export default HomePage;
+
