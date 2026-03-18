@@ -15,8 +15,12 @@ const HomePage = () => {
   const [timeLeft, setTimeLeft] = useState({});
 
   const fotoRevelacion = "/Revelacion.jpg";
-  // Este número es de WhatsApp, lo usaré para la confirmación
-  const whatsappNumber = "573196911965";
+  const whatsappNumber = "573196911965"; 
+
+  // Mensaje predeterminado para WhatsApp codificado correctamente
+  const whatsappMessage = encodeURIComponent(
+    "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
+  );
 
   useEffect(() => {
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
@@ -58,15 +62,13 @@ const HomePage = () => {
 
       <ContentCard>
         <NamesTitle>
-          Valentina <span style={{ color: "rgba(166, 137, 116, 0.4)", margin: "0 10px" }}>&</span> Janppier
+          Valentina <span>&</span> Janppier
         </NamesTitle>
-
-        <Divider />
 
         <CountdownSection>
           {timeLeft.expired
-            ? "¡Es hoy!"
-            : `Faltan ${timeLeft.days} días & ${timeLeft.hours} horas`}
+            ? "¡El gran día ha llegado!"
+            : `Faltan ${timeLeft.days} días y ${timeLeft.hours} horas`}
         </CountdownSection>
 
         <MainContent>
@@ -76,133 +78,138 @@ const HomePage = () => {
               alt="Valentina y Janppier"
               onError={(e) => {
                 e.target.src =
-                  "https://via.placeholder.com/200?text=Cargando+Invitacion...";
+                  "https://via.placeholder.com/200?text=Cargando...";
               }}
             />
           </PhotoWrapper>
 
-          <InvitationText>
-            ¡La familia crece y la felicidad se multiplica! Los abuelitos y tíos estamos felices de invitarte a la revelación de género de quien será nuestro primer nieto y sobrino. Ha sido una espera llena de ternura y queremos compartir contigo este momento inolvidable donde descubriremos si el mundo se pintará de azul o rosa para nosotros.
-            ¡Tu presencia hará este día aún más especial!
-          </InvitationText>
+          {/* TEXTO REDUCIDO Y AL GRANO */}
+          <InfoCard>
+            <InvitationText>
+              ¡La familia crece y queremos compartirlo contigo! <br/>
+              Acompáñanos a descubrir si nuestro mundo se pintará de <span style={{color: "#83b8d7", fontWeight: "bold"}}>azul</span> o <span style={{color: "#d78398", fontWeight: "bold"}}>rosa</span>.
+            </InvitationText>
+          </InfoCard>
 
-          <DressCodeText>
-            <strong>Prenda base:</strong> Para que el color de la revelación brille más que nunca, queremos pedirte que nos acompañes con una prenda base de <strong>color blanco</strong>. Puede ser tu chaqueta, camisa o camiseta favorita... lo importante es que vengas con toda la actitud a celebrar este momento tan especial con nosotros.
+          {/* DRESS CODE REDUCIDO */}
+          <InfoCard>
+            <DressCodeText>
+              ✨ <strong>Dress Code:</strong> Para que los colores de la revelación resalten, te pedimos venir con una <strong>prenda superior de color blanco</strong>. 🤍
+            </DressCodeText>
+          </InfoCard>
 
-¡Gracias por ser parte de este día y ayudarnos a que todo se vea simplemente perfecto!
-          </DressCodeText>
-
-          <DetailsBox>
-            <FaMapMarkerAlt color="#8c6a53" />
-            La Calera, Cundinamarca - 3:00 PM
-          </DetailsBox>
+          <LocationBox>
+            <FaMapMarkerAlt size={20} color="#a68974" />
+            <p><strong>La Calera, Cundinamarca</strong><br/>3:00 PM</p>
+          </LocationBox>
 
           <ConfirmButton
             onClick={() =>
-              window.open(
-                `https://wa.me/3102021939?text=Tios y Abuelitos confirmo mi asistencia`,
-                "_blank"
-              )
+              window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, "_blank")
             }
           >
-            <FaWhatsapp />
+            <FaWhatsapp size={20} />
             CONFIRMAR ASISTENCIA
           </ConfirmButton>
         </MainContent>
 
         <ActionsGrid>
           <BlueActionButton onClick={handleVoteClick}>
-            <FaVoteYea />
+            <FaVoteYea size={22} />
             VOTAR
           </BlueActionButton>
 
           <PinkActionButton onClick={() => navigate("/results")}>
-            <FaChartBar />
+            <FaChartBar size={22} />
             RESULTADOS
           </PinkActionButton>
         </ActionsGrid>
 
         <GiftButton onClick={() => navigate("/traer")}>
-            <FaBabyCarriage />
-            SUGERENCIA DE REGALO
-          </GiftButton>
+            <FaBabyCarriage size={18} />
+            Sugerencia de Regalo
+        </GiftButton>
       </ContentCard>
     </HomeContainer>
   );
 };
 
-// --- ESTILOS TRANSFORMADOS PARA SER DEMASIADO HERMOSOS ---
+// --- ESTILOS EFECTO ACUARELA Y GLASSMORPHISM ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4rem 2rem; /* Más espacio en los bordes de la pantalla */
-  background: rgba(248, 241, 235, 0.4); /* Un fondo más cremoso y claro */
+  padding: 3rem 1.5rem;
   min-height: 100vh;
   position: relative;
   overflow: hidden;
+  
+  /* EFECTO ACUARELA DE FONDO: Azul arriba a la izquierda, Rosa abajo a la derecha, Blanco al medio */
+  background-color: #ffffff;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(193, 227, 245, 0.6) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(245, 193, 208, 0.6) 0%, transparent 50%);
 `;
 
 const ContentCard = styled.div`
-  background: rgba(255, 255, 255, 0.12); /* Más brillante, menos ultra-transparente */
-  backdrop-filter: blur(8px); /* Mayor desenfoque para suavizar el fondo animado */
-  -webkit-backdrop-filter: blur(8px);
+  /* EFECTO CRISTAL (Glassmorphism) para que se fusione con la acuarela */
+  background: rgba(255, 255, 255, 0.45); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   
-  border-radius: 40px; /* Bordes más suaves y redondeados */
-  padding: 4rem 3rem; /* Espaciado interno generoso para respirar */
+  border-radius: 40px;
+  padding: 3rem 2rem;
   width: 100%;
-  max-width: 600px; /* Ligeramente más ancho para que el texto no se vea apachurrado */
-  color: #a68974; /* Un marrón más suave y claro */
+  max-width: 500px;
   text-align: center;
   
-  border: none; /* Eliminamos el borde rígido */
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.02); /* Sombra muy sutil */
+  border: 1px solid rgba(255, 255, 255, 0.8); /* Borde blanco sutil */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
   z-index: 10;
   position: relative;
 `;
 
 const NamesTitle = styled.h1`
-  font-family: 'Cormorant Garamond', serif; /* Usamos una serif más elegante si está disponible, sino una serif básica */
-  font-size: 2.8rem; /* Más grande, para que sea el foco */
+  font-family: 'Georgia', serif; 
+  font-size: 2.6rem;
   margin: 0;
-  color: #a68974; /* Un marrón más claro y suave */
-  letter-spacing: 1px;
-  font-weight: 300; /* Más delgada para elegancia */
-  text-shadow: none; /* Sin sombras exageradas */
-`;
+  color: #7a6352; 
+  font-weight: 400;
 
-const Divider = styled.hr`
-  border: 0;
-  height: 1px;
-  background: rgba(140, 106, 83, 0.25); /* Un divisor más tenue */
-  width: 80%; /* Más estrecho, más elegante */
-  margin: 2rem auto; /* Más espacio vertical */
+  span {
+    font-family: 'Arial', sans-serif;
+    color: rgba(122, 99, 82, 0.4);
+    font-size: 2rem;
+    margin: 0 10px;
+    font-weight: 300;
+  }
 `;
 
 const CountdownSection = styled.div`
-  background: none; /* Eliminamos el cuadro de fondo pesado */
-  color: #a68974; /* Usamos el color base más claro */
-  padding: 0;
-  border-radius: 0;
-  margin-bottom: 2.5rem; /* Más espacio */
-  font-weight: 300; /* Más delgada */
-  letter-spacing: 2px; /* Más espacio entre letras para legibilidad */
+  color: #a68974;
+  margin: 1rem 0 2rem 0;
+  font-weight: 400;
+  letter-spacing: 2px;
   font-size: 0.9rem;
+  text-transform: uppercase;
 `;
 
 const MainContent = styled.div`
-  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem; /* Espaciado automático entre los elementos */
 `;
 
 const PhotoWrapper = styled.div`
-  width: 160px; /* Reducción drástica del tamaño para que sea un detalle elegante */
-  height: 160px;
-  border-radius: 50%; /* Foto circular para suavidad */
+  width: 140px; 
+  height: 140px;
+  border-radius: 50%; /* Circular */
   overflow: hidden;
-  margin: 0 auto 3rem; /* Centrado y con muchísimo espacio abajo */
-  border: 8px solid rgba(255, 255, 255, 0.8); /* Borde más elegante y grueso */
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); /* Sombra suave */
+  margin-bottom: 1rem;
+  border: 6px solid white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 
   img {
     width: 100%;
@@ -211,131 +218,132 @@ const PhotoWrapper = styled.div`
   }
 `;
 
+/* NUEVOS "CUADRITOS" ELEGANTES */
+const InfoCard = styled.div`
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 1.5rem;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+`;
+
 const InvitationText = styled.p`
-  font-size: 1rem; /* Tamaño más estándar y legible */
-  color: #a68974; /* Usamos el marrón más claro */
-  margin-bottom: 2.5rem; /* Más espacio */
-  line-height: 1.8; /* ¡Muchísimo más espacio entre líneas! */
-  font-weight: 400; /* Peso normal */
-  letter-spacing: 0.5px; /* Ligeramente espaciado para evitar el efecto "apachurrado" */
+  font-size: 1.05rem;
+  color: #6d5849;
+  margin: 0;
+  line-height: 1.6;
 `;
 
 const DressCodeText = styled.p`
-  background: none; /* Eliminamos el cuadro de fondo pesado */
-  border: none; /* Eliminamos el borde */
-  padding: 0;
-  border-radius: 0;
-  margin-bottom: 2.5rem; /* Más espacio */
-  font-size: 0.9rem;
-  color: #a68974; /* Usamos el marrón más claro */
-  text-align: center; /* Centrado para flujo */
-  line-height: 1.8; /* Espaciado entre líneas para legibilidad */
-
-  strong {
-    color: #4c3e34; /* Un marrón oscuro sutil para énfasis */
-  }
-
-  strong:last-child {
-    color: #4682B4; /* Un toque de azul pastel para "color blanco", un guiño al género */
-  }
+  font-size: 0.95rem;
+  color: #6d5849;
+  margin: 0;
+  line-height: 1.6;
 `;
 
-const DetailsBox = styled.div`
-  font-size: 0.9rem;
-  margin-bottom: 2.5rem; /* Más espacio */
+const LocationBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  font-weight: 300; /* Más delgada */
-  color: #a68974; /* Marrón claro */
+  gap: 12px;
+  margin: 1rem 0;
+  color: #6d5849;
+  
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    text-align: left;
+    line-height: 1.4;
+  }
 `;
 
 const ConfirmButton = styled.button`
-  background: rgba(37, 211, 102, 0.7); /* Un verde más suave y transparente */
+  background: linear-gradient(135deg, #25d366 0%, #20b858 100%);
   color: white;
   border: none;
-  padding: 1.2rem 2.5rem; /* Más acolchado lateral para aire */
-  border-radius: 50px; /* Botón tipo píldora muy suave */
-  width: auto; /* Ancho automático, no ocupa todo */
-  max-width: 350px; /* Límite para que sea elegante */
-  margin-top: 3rem; /* Muchísimo espacio arriba */
-  margin-left: auto;
-  margin-right: auto;
-  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.1); /* Sombra más tenue */
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);
   transition: all 0.3s ease;
-  &:hover {
-    background: rgba(37, 211, 102, 0.9);
-    transform: translateY(-2px);
-  }
-`;
-
-const GiftButton = styled.button`
-  background: none; /* Sin fondo sólido */
-  border: 1px solid rgba(140, 106, 83, 0.2); /* Borde tenue marrón */
-  border-radius: 50px; /* Píldora */
-  color: #a68974; /* Marrón claro */
-  padding: 1rem 2rem; /* Acolchado elegante */
-  width: auto; /* No ocupa todo */
+  width: 100%;
   max-width: 300px;
-  margin: 10px auto; /* Centrado */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-weight: 300; /* Más delgada */
-  transition: all 0.3s;
+  
   &:hover {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(140, 106, 83, 0.4);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
   }
 `;
 
 const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px; /* Más espacio entre los botones principales */
-  margin-top: 3.5rem; /* Más espacio arriba */
+  gap: 15px;
+  margin-top: 2rem;
+  width: 100%;
 `;
 
 const ActionButton = styled.button`
   border: none;
-  padding: 1.2rem 2rem; /* Más acolchado lateral */
-  border-radius: 50px; /* Píldora suave */
+  padding: 1.2rem 1rem;
+  border-radius: 25px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  font-weight: bold;
-  transition: all 0.2s;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.85rem;
   letter-spacing: 1px;
+  transition: all 0.3s ease;
 `;
 
 const BlueActionButton = styled(ActionButton)`
-  background: #e1f1f8; /* Un azul pastel ultra suave */
-  color: #4682B4; /* Un azul más fuerte para el texto */
+  background: rgba(193, 227, 245, 0.5); /* Azul acuarela semitransparente */
+  color: #4a84a6;
+  border: 1px solid rgba(193, 227, 245, 0.8);
+  
   &:hover {
-    background: #d4e8f1;
-    transform: scale(1.02);
+    background: rgba(193, 227, 245, 0.8);
+    transform: translateY(-2px);
   }
 `;
 
 const PinkActionButton = styled(ActionButton)`
-  background: #fdf1f4; /* Un rosa pastel ultra suave */
-  color: #C08081; /* Un rosa más fuerte para el texto */
+  background: rgba(245, 193, 208, 0.4); /* Rosa acuarela semitransparente */
+  color: #b05c74;
+  border: 1px solid rgba(245, 193, 208, 0.7);
+  
   &:hover {
-    background: #fce8ee;
-    transform: scale(1.02);
+    background: rgba(245, 193, 208, 0.7);
+    transform: translateY(-2px);
+  }
+`;
+
+const GiftButton = styled.button`
+  background: transparent;
+  border: 1px solid rgba(166, 137, 116, 0.3);
+  border-radius: 30px;
+  color: #8c6a53;
+  padding: 0.8rem 1.5rem;
+  margin-top: 1.5rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.6);
   }
 `;
 
