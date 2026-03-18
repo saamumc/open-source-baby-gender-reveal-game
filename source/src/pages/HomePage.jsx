@@ -134,7 +134,7 @@ const HomePage = () => {
   );
 };
 
-// --- ESTILOS EFECTO ACUARELA Y GLASSMORPHISM ---
+// --- ESTILOS CON TRANSPARENCIA MÁXIMA ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
@@ -145,18 +145,19 @@ const HomeContainer = styled(motion.div)`
   position: relative;
   overflow: hidden;
   
-  /* EFECTO ACUARELA DE FONDO: Azul arriba a la izquierda, Rosa abajo a la derecha, Blanco al medio */
+  /* FONDO CON TOQUE ACUARELA SUTIL (Mantenido pero más pálido) */
   background-color: #ffffff;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(193, 227, 245, 0.6) 0%, transparent 50%),
-    radial-gradient(circle at 90% 80%, rgba(245, 193, 208, 0.6) 0%, transparent 50%);
+    radial-gradient(circle at 10% 20%, rgba(193, 227, 245, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(245, 193, 208, 0.4) 0%, transparent 50%);
 `;
 
 const ContentCard = styled.div`
-  /* EFECTO CRISTAL (Glassmorphism) para que se fusione con la acuarela */
-  background: rgba(255, 255, 255, 0.45); 
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* --- TRANSPARENCIA EXTREMA --- */
+  /* Fondo blanco al 12% de opacidad. El desenfoque subió a 18px para legibilidad. */
+  background: rgba(255, 255, 255, 0.12); 
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   
   border-radius: 40px;
   padding: 3rem 2rem;
@@ -164,8 +165,9 @@ const ContentCard = styled.div`
   max-width: 500px;
   text-align: center;
   
-  border: 1px solid rgba(255, 255, 255, 0.8); /* Borde blanco sutil */
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+  /* Borde blanco ultra fino y casi transparente */
+  border: 1px solid rgba(255, 255, 255, 0.15); 
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.02); /* Sombra muy tenue */
   z-index: 10;
   position: relative;
 `;
@@ -199,17 +201,18 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2rem; /* Espaciado automático entre los elementos */
+  gap: 1.2rem; 
 `;
 
 const PhotoWrapper = styled.div`
   width: 140px; 
   height: 140px;
-  border-radius: 50%; /* Circular */
+  border-radius: 50%; 
   overflow: hidden;
   margin-bottom: 1rem;
-  border: 6px solid white;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  /* Borde de la foto con más transparencia */
+  border: 6px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
 
   img {
     width: 100%;
@@ -218,14 +221,18 @@ const PhotoWrapper = styled.div`
   }
 `;
 
-/* NUEVOS "CUADRITOS" ELEGANTES */
+/* "CUADRITOS" INTERNOS ULTRA TRANSPARENTES */
 const InfoCard = styled.div`
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  /* Casi invisible, solo el efecto blur separa el texto */
+  background: rgba(255, 255, 255, 0.03); 
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   padding: 1.5rem;
   width: 100%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01);
 `;
 
 const InvitationText = styled.p`
@@ -259,7 +266,8 @@ const LocationBox = styled.div`
 `;
 
 const ConfirmButton = styled.button`
-  background: linear-gradient(135deg, #25d366 0%, #20b858 100%);
+  /* Botón con ligera transparencia para no romper la estética */
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.9) 0%, rgba(32, 184, 88, 0.9) 100%);
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -271,14 +279,14 @@ const ConfirmButton = styled.button`
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.1);
   transition: all 0.3s ease;
   width: 100%;
   max-width: 300px;
   
   &:hover {
+    background: linear-gradient(135deg, #25d366 0%, #20b858 100%);
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
   }
 `;
 
@@ -306,30 +314,30 @@ const ActionButton = styled.button`
 `;
 
 const BlueActionButton = styled(ActionButton)`
-  background: rgba(193, 227, 245, 0.5); /* Azul acuarela semitransparente */
+  background: rgba(193, 227, 245, 0.2); /* Súper transparente */
   color: #4a84a6;
-  border: 1px solid rgba(193, 227, 245, 0.8);
+  border: 1px solid rgba(193, 227, 245, 0.5);
   
   &:hover {
-    background: rgba(193, 227, 245, 0.8);
+    background: rgba(193, 227, 245, 0.5);
     transform: translateY(-2px);
   }
 `;
 
 const PinkActionButton = styled(ActionButton)`
-  background: rgba(245, 193, 208, 0.4); /* Rosa acuarela semitransparente */
+  background: rgba(245, 193, 208, 0.2); /* Súper transparente */
   color: #b05c74;
-  border: 1px solid rgba(245, 193, 208, 0.7);
+  border: 1px solid rgba(245, 193, 208, 0.4);
   
   &:hover {
-    background: rgba(245, 193, 208, 0.7);
+    background: rgba(245, 193, 208, 0.4);
     transform: translateY(-2px);
   }
 `;
 
 const GiftButton = styled.button`
   background: transparent;
-  border: 1px solid rgba(166, 137, 116, 0.3);
+  border: 1px solid rgba(166, 137, 116, 0.15); /* Borde casi invisible */
   border-radius: 30px;
   color: #8c6a53;
   padding: 0.8rem 1.5rem;
@@ -343,7 +351,7 @@ const GiftButton = styled.button`
   transition: all 0.3s;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.3);
   }
 `;
 
