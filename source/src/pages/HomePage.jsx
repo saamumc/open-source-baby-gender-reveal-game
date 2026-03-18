@@ -15,11 +15,8 @@ const HomePage = () => {
   const [timeLeft, setTimeLeft] = useState({});
 
   const fotoRevelacion = "/Revelacion.jpg";
+  // Este número es de WhatsApp, lo usaré para la confirmación
   const whatsappNumber = "573196911965";
-
-  const message = encodeURIComponent(
-    "¡Hola Samuel y Sara! Confirmo mi asistencia a la revelación de sexo de Valentina y Janppier."
-  );
 
   useEffect(() => {
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
@@ -60,14 +57,16 @@ const HomePage = () => {
       <AnimatedBackground />
 
       <ContentCard>
-        <NamesTitle>Valentina & Janppier</NamesTitle>
+        <NamesTitle>
+          Valentina <span style={{ color: "rgba(166, 137, 116, 0.4)", margin: "0 10px" }}>&</span> Janppier
+        </NamesTitle>
 
         <Divider />
 
         <CountdownSection>
           {timeLeft.expired
             ? "¡Es hoy!"
-            : `Faltan ${timeLeft.days} días y ${timeLeft.hours} horas`}
+            : `Faltan ${timeLeft.days} días & ${timeLeft.hours} horas`}
         </CountdownSection>
 
         <MainContent>
@@ -75,45 +74,33 @@ const HomePage = () => {
             <img
               src={fotoRevelacion}
               alt="Valentina y Janppier"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
               onError={(e) => {
                 e.target.src =
-                  "https://via.placeholder.com/400?text=Cargando+Invitacion...";
+                  "https://via.placeholder.com/200?text=Cargando+Invitacion...";
               }}
             />
           </PhotoWrapper>
 
           <InvitationText>
-            Los <strong>abuelitos y tíos</strong> La familia crece y la felicidad se multiplica! Los abuelitos y tíos estamos felices de invitarte a la revelación de género de quien será nuestro primer nieto y sobrino. Ha sido una espera llena de ternura y queremos compartir contigo este momento inolvidable donde descubriremos si el mundo se pintará de azul o rosa para nosotros. ¡Tu presencia hará este día aún más especial!"
-
-
+            ¡La familia crece y la felicidad se multiplica! Los abuelitos y tíos estamos felices de invitarte a la revelación de género de quien será nuestro primer nieto y sobrino. Ha sido una espera llena de ternura y queremos compartir contigo este momento inolvidable donde descubriremos si el mundo se pintará de azul o rosa para nosotros.
+            ¡Tu presencia hará este día aún más especial!
           </InvitationText>
 
-          <DressCodeBox>
-            <p>
-              <strong>Prenda base:</strong> Trae tu{" "}
-              <strong>Para que el color de la revelación brille más que nunca, queremos pedirte que nos acompañes con una prenda base de color blanco. Puede ser tu chaqueta, camisa o camiseta favorita… lo importante es que vengas con toda la actitud a celebrar este momento tan especial con nosotros.
+          <DressCodeText>
+            <strong>Prenda base:</strong> Para que el color de la revelación brille más que nunca, queremos pedirte que nos acompañes con una prenda base de <strong>color blanco</strong>. Puede ser tu chaqueta, camisa o camiseta favorita... lo importante es que vengas con toda la actitud a celebrar este momento tan especial con nosotros.
 
 ¡Gracias por ser parte de este día y ayudarnos a que todo se vea simplemente perfecto!
-                 </strong>.
-            </p>
-          </DressCodeBox>
+          </DressCodeText>
 
           <DetailsBox>
             <FaMapMarkerAlt color="#8c6a53" />
             La Calera, Cundinamarca - 3:00 PM
           </DetailsBox>
 
-          <GiftButton onClick={() => navigate("/traer")}>
-            <FaBabyCarriage />
-            Sugerencia De Regalo
-          </GiftButton>
-
           <ConfirmButton
             onClick={() =>
               window.open(
-                `https://wa.me/3102021939?text=Tios y Abuelitos confirmo mi asistencia`
-,
+                `https://wa.me/3102021939?text=Tios y Abuelitos confirmo mi asistencia`,
                 "_blank"
               )
             }
@@ -124,177 +111,205 @@ const HomePage = () => {
         </MainContent>
 
         <ActionsGrid>
-          <ActionButton onClick={handleVoteClick} color="#4682B4">
+          <BlueActionButton onClick={handleVoteClick}>
             <FaVoteYea />
             VOTAR
-          </ActionButton>
+          </BlueActionButton>
 
-          <ActionButton onClick={() => navigate("/results")} color="#C08081">
+          <PinkActionButton onClick={() => navigate("/results")}>
             <FaChartBar />
             RESULTADOS
-          </ActionButton>
+          </PinkActionButton>
         </ActionsGrid>
+
+        <GiftButton onClick={() => navigate("/traer")}>
+            <FaBabyCarriage />
+            SUGERENCIA DE REGALO
+          </GiftButton>
       </ContentCard>
     </HomeContainer>
   );
 };
 
-// --- ESTILOS CON +45% DE TRANSPARENCIA EXTRA ---
+// --- ESTILOS TRANSFORMADOS PARA SER DEMASIADO HERMOSOS ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 1rem;
-  /* Reducido a 0.25 para que el fondo sea casi totalmente el del componente AnimatedBackground */
-  background: rgba(242, 232, 223, 0.25); 
+  padding: 4rem 2rem; /* Más espacio en los bordes de la pantalla */
+  background: rgba(248, 241, 235, 0.4); /* Un fondo más cremoso y claro */
   min-height: 100vh;
   position: relative;
   overflow: hidden;
 `;
 
 const ContentCard = styled.div`
-  /* Reducido a 0.04 para que sea una capa de cristal ultra delgada */
-  background: rgba(255, 255, 255, 0.04); 
+  background: rgba(255, 255, 255, 0.12); /* Más brillante, menos ultra-transparente */
+  backdrop-filter: blur(8px); /* Mayor desenfoque para suavizar el fondo animado */
+  -webkit-backdrop-filter: blur(8px);
   
-  /* El desenfoque se mantiene para que el texto sea legible sobre los osos */
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  
-  border-radius: 30px;
-  padding: 2.5rem;
+  border-radius: 40px; /* Bordes más suaves y redondeados */
+  padding: 4rem 3rem; /* Espaciado interno generoso para respirar */
   width: 100%;
-  max-width: 500px;
-  color: #8c6a53;
+  max-width: 600px; /* Ligeramente más ancho para que el texto no se vea apachurrado */
+  color: #a68974; /* Un marrón más suave y claro */
   text-align: center;
   
-  /* Borde muy tenue */
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  border: none; /* Eliminamos el borde rígido */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.02); /* Sombra muy sutil */
   z-index: 10;
   position: relative;
 `;
 
 const NamesTitle = styled.h1`
-  font-family: "Georgia", serif;
-  font-size: 2.4rem;
+  font-family: 'Cormorant Garamond', serif; /* Usamos una serif más elegante si está disponible, sino una serif básica */
+  font-size: 2.8rem; /* Más grande, para que sea el foco */
   margin: 0;
-  color: #8c6a53;
-  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+  color: #a68974; /* Un marrón más claro y suave */
+  letter-spacing: 1px;
+  font-weight: 300; /* Más delgada para elegancia */
+  text-shadow: none; /* Sin sombras exageradas */
 `;
 
 const Divider = styled.hr`
   border: 0;
   height: 1px;
-  background: rgba(140, 106, 83, 0.15);
-  margin: 1rem 0;
+  background: rgba(140, 106, 83, 0.25); /* Un divisor más tenue */
+  width: 80%; /* Más estrecho, más elegante */
+  margin: 2rem auto; /* Más espacio vertical */
 `;
 
 const CountdownSection = styled.div`
-  /* Transparencia aplicada también aquí para no tapar tanto el paso de los osos */
-  background: rgba(166, 137, 116, 0.7);
-  color: white;
-  padding: 0.8rem;
-  border-radius: 15px;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
+  background: none; /* Eliminamos el cuadro de fondo pesado */
+  color: #a68974; /* Usamos el color base más claro */
+  padding: 0;
+  border-radius: 0;
+  margin-bottom: 2.5rem; /* Más espacio */
+  font-weight: 300; /* Más delgada */
+  letter-spacing: 2px; /* Más espacio entre letras para legibilidad */
+  font-size: 0.9rem;
 `;
 
 const MainContent = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 `;
 
 const PhotoWrapper = styled.div`
-  width: 100%;
-  height: 320px;
-  border-radius: 20px;
+  width: 160px; /* Reducción drástica del tamaño para que sea un detalle elegante */
+  height: 160px;
+  border-radius: 50%; /* Foto circular para suavidad */
   overflow: hidden;
-  margin-bottom: 1.5rem;
-  border: 4px solid white;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin: 0 auto 3rem; /* Centrado y con muchísimo espacio abajo */
+  border: 8px solid rgba(255, 255, 255, 0.8); /* Borde más elegante y grueso */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); /* Sombra suave */
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const InvitationText = styled.p`
-  font-size: 1.1rem;
-  color: #4a382b; /* Oscurecido para compensar la transparencia extrema del fondo */
-  margin-bottom: 1.5rem;
-  line-height: 1.4;
-  font-weight: 600;
+  font-size: 1rem; /* Tamaño más estándar y legible */
+  color: #a68974; /* Usamos el marrón más claro */
+  margin-bottom: 2.5rem; /* Más espacio */
+  line-height: 1.8; /* ¡Muchísimo más espacio entre líneas! */
+  font-weight: 400; /* Peso normal */
+  letter-spacing: 0.5px; /* Ligeramente espaciado para evitar el efecto "apachurrado" */
 `;
 
-const DressCodeBox = styled.div`
-  /* Caja interna más ligera */
-  background: rgba(255, 255, 255, 0.25);
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-  border: 1px solid rgba(217, 199, 184, 0.3);
-  color: #8c6a53;
-  text-align: left;
+const DressCodeText = styled.p`
+  background: none; /* Eliminamos el cuadro de fondo pesado */
+  border: none; /* Eliminamos el borde */
+  padding: 0;
+  border-radius: 0;
+  margin-bottom: 2.5rem; /* Más espacio */
+  font-size: 0.9rem;
+  color: #a68974; /* Usamos el marrón más claro */
+  text-align: center; /* Centrado para flujo */
+  line-height: 1.8; /* Espaciado entre líneas para legibilidad */
+
+  strong {
+    color: #4c3e34; /* Un marrón oscuro sutil para énfasis */
+  }
+
+  strong:last-child {
+    color: #4682B4; /* Un toque de azul pastel para "color blanco", un guiño al género */
+  }
 `;
 
 const DetailsBox = styled.div`
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem; /* Más espacio */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-weight: bold;
+  gap: 6px;
+  font-weight: 300; /* Más delgada */
+  color: #a68974; /* Marrón claro */
 `;
 
-const GiftButton = styled.button`
-  background: rgba(255, 255, 255, 0.6);
-  color: #8c6a53;
-  border: 1px solid rgba(217, 199, 184, 0.6);
-  padding: 1.2rem;
-  border-radius: 15px;
-  width: 100%;
-  margin-top: 10px;
-  cursor: pointer;
+const ConfirmButton = styled.button`
+  background: rgba(37, 211, 102, 0.7); /* Un verde más suave y transparente */
+  color: white;
+  border: none;
+  padding: 1.2rem 2.5rem; /* Más acolchado lateral para aire */
+  border-radius: 50px; /* Botón tipo píldora muy suave */
+  width: auto; /* Ancho automático, no ocupa todo */
+  max-width: 350px; /* Límite para que sea elegante */
+  margin-top: 3rem; /* Muchísimo espacio arriba */
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-weight: bold;
-  transition: all 0.3s;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.1); /* Sombra más tenue */
+  transition: all 0.3s ease;
   &:hover {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(37, 211, 102, 0.9);
     transform: translateY(-2px);
   }
 `;
 
-const ConfirmButton = styled.button`
-  background: #25d366;
-  color: white;
-  border: none;
-  padding: 1.2rem;
-  border-radius: 15px;
-  width: 100%;
-  margin-top: 12px;
-  font-weight: bold;
+const GiftButton = styled.button`
+  background: none; /* Sin fondo sólido */
+  border: 1px solid rgba(140, 106, 83, 0.2); /* Borde tenue marrón */
+  border-radius: 50px; /* Píldora */
+  color: #a68974; /* Marrón claro */
+  padding: 1rem 2rem; /* Acolchado elegante */
+  width: auto; /* No ocupa todo */
+  max-width: 300px;
+  margin: 10px auto; /* Centrado */
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.15);
+  font-weight: 300; /* Más delgada */
+  transition: all 0.3s;
+  &:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(140, 106, 83, 0.4);
+    transform: translateY(-2px);
+  }
 `;
 
 const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-top: 2rem;
+  gap: 20px; /* Más espacio entre los botones principales */
+  margin-top: 3.5rem; /* Más espacio arriba */
 `;
 
 const ActionButton = styled.button`
-  background: ${(props) => props.color};
-  color: white;
   border: none;
-  padding: 1.2rem;
-  border-radius: 15px;
+  padding: 1.2rem 2rem; /* Más acolchado lateral */
+  border-radius: 50px; /* Píldora suave */
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -302,11 +317,26 @@ const ActionButton = styled.button`
   gap: 8px;
   font-weight: bold;
   transition: all 0.2s;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+`;
+
+const BlueActionButton = styled(ActionButton)`
+  background: #e1f1f8; /* Un azul pastel ultra suave */
+  color: #4682B4; /* Un azul más fuerte para el texto */
   &:hover {
-    opacity: 0.9;
+    background: #d4e8f1;
+    transform: scale(1.02);
+  }
+`;
+
+const PinkActionButton = styled(ActionButton)`
+  background: #fdf1f4; /* Un rosa pastel ultra suave */
+  color: #C08081; /* Un rosa más fuerte para el texto */
+  &:hover {
+    background: #fce8ee;
     transform: scale(1.02);
   }
 `;
 
 export default HomePage;
-
