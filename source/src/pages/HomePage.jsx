@@ -17,7 +17,6 @@ const HomePage = () => {
   const fotoRevelacion = "/Revelacion.jpg";
   const whatsappNumber = "573196911965"; 
 
-  // Mensaje predeterminado para WhatsApp codificado correctamente
   const whatsappMessage = encodeURIComponent(
     "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
   );
@@ -67,7 +66,7 @@ const HomePage = () => {
 
         <CountdownSection>
           {timeLeft.expired
-            ? "¡El gran día ha llegado!"
+            ? "¡Es hoy!"
             : `Faltan ${timeLeft.days} días y ${timeLeft.hours} horas`}
         </CountdownSection>
 
@@ -83,24 +82,22 @@ const HomePage = () => {
             />
           </PhotoWrapper>
 
-          {/* TEXTO REDUCIDO Y AL GRANO */}
           <InfoCard>
             <InvitationText>
               ¡La familia crece y queremos compartirlo contigo! <br/>
-              Acompáñanos a descubrir si nuestro mundo se pintará de <span style={{color: "#83b8d7", fontWeight: "bold"}}>azul</span> o <span style={{color: "#d78398", fontWeight: "bold"}}>rosa</span>.
+              Acompáñanos a descubrir si será <span style={{color: "#4a84a6", fontWeight: "bold"}}>azul</span> o <span style={{color: "#b05c74", fontWeight: "bold"}}>rosa</span>.
             </InvitationText>
           </InfoCard>
 
-          {/* DRESS CODE REDUCIDO */}
           <InfoCard>
             <DressCodeText>
-              ✨ <strong>Dress Code:</strong> Para que los colores de la revelación resalten, te pedimos venir con una <strong>prenda superior de color blanco</strong>. 🤍
+              ✨ <strong>Dress Code:</strong> Te pedimos venir con una <strong>prenda superior blanca</strong>. 🤍
             </DressCodeText>
           </InfoCard>
 
           <LocationBox>
-            <FaMapMarkerAlt size={20} color="#a68974" />
-            <p><strong>La Calera, Cundinamarca</strong><br/>3:00 PM</p>
+            <FaMapMarkerAlt size={18} color="#7a6352" />
+            <p><strong>La Calera, Cundinamarca</strong> - 3:00 PM</p>
           </LocationBox>
 
           <ConfirmButton
@@ -134,66 +131,57 @@ const HomePage = () => {
   );
 };
 
-// --- ESTILOS CON TRANSPARENCIA MÁXIMA ---
+// --- ESTILOS CON 98% DE TRANSPARENCIA ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3rem 1.5rem;
+  padding: 2rem 1rem;
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
-  
-  /* FONDO CON TOQUE ACUARELA SUTIL (Mantenido pero más pálido) */
-  background-color: #ffffff;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(193, 227, 245, 0.4) 0%, transparent 50%),
-    radial-gradient(circle at 90% 80%, rgba(245, 193, 208, 0.4) 0%, transparent 50%);
+  background: transparent; /* Fondo totalmente libre para los ositos */
 `;
 
 const ContentCard = styled.div`
-  /* --- TRANSPARENCIA EXTREMA --- */
-  /* Fondo blanco al 12% de opacidad. El desenfoque subió a 18px para legibilidad. */
-  background: rgba(255, 255, 255, 0.12); 
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  /* TRANSPARENCIA AL 98% (0.02 de opacidad) */
+  background: rgba(255, 255, 255, 0.02); 
+  
+  /* El desenfoque es vital aquí para que el texto sea legible sobre el fondo */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   
   border-radius: 40px;
   padding: 3rem 2rem;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   text-align: center;
   
-  /* Borde blanco ultra fino y casi transparente */
-  border: 1px solid rgba(255, 255, 255, 0.15); 
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.02); /* Sombra muy tenue */
+  /* Un borde de "hilo de luz" muy sutil */
+  border: 1px solid rgba(255, 255, 255, 0.1); 
   z-index: 10;
   position: relative;
 `;
 
 const NamesTitle = styled.h1`
   font-family: 'Georgia', serif; 
-  font-size: 2.6rem;
+  font-size: 2.4rem;
   margin: 0;
-  color: #7a6352; 
+  color: #5d4a3e; /* Color más oscuro para resaltar sobre la transparencia */
   font-weight: 400;
 
   span {
-    font-family: 'Arial', sans-serif;
-    color: rgba(122, 99, 82, 0.4);
-    font-size: 2rem;
-    margin: 0 10px;
-    font-weight: 300;
+    color: rgba(93, 74, 62, 0.3);
+    font-size: 1.8rem;
   }
 `;
 
 const CountdownSection = styled.div`
-  color: #a68974;
-  margin: 1rem 0 2rem 0;
-  font-weight: 400;
-  letter-spacing: 2px;
-  font-size: 0.9rem;
+  color: #7a6352;
+  margin: 0.5rem 0 2rem 0;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  font-size: 0.85rem;
   text-transform: uppercase;
 `;
 
@@ -201,18 +189,17 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2rem; 
+  gap: 1rem; 
 `;
 
 const PhotoWrapper = styled.div`
-  width: 140px; 
-  height: 140px;
+  width: 130px; 
+  height: 130px;
   border-radius: 50%; 
   overflow: hidden;
   margin-bottom: 1rem;
-  /* Borde de la foto con más transparencia */
-  border: 6px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 
   img {
     width: 100%;
@@ -221,72 +208,56 @@ const PhotoWrapper = styled.div`
   }
 `;
 
-/* "CUADRITOS" INTERNOS ULTRA TRANSPARENTES */
+/* TARJETAS INTERNAS TOTALMENTE TRANSPARENTES */
 const InfoCard = styled.div`
-  /* Casi invisible, solo el efecto blur separa el texto */
-  background: rgba(255, 255, 255, 0.03); 
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 1.5rem;
+  background: transparent; 
+  border: none;
+  padding: 0.5rem;
   width: 100%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01);
 `;
 
 const InvitationText = styled.p`
-  font-size: 1.05rem;
-  color: #6d5849;
+  font-size: 1rem;
+  color: #4a3b30;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
+  font-weight: 500;
 `;
 
 const DressCodeText = styled.p`
-  font-size: 0.95rem;
-  color: #6d5849;
+  font-size: 0.9rem;
+  color: #4a3b30;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
 `;
 
 const LocationBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 8px;
   margin: 1rem 0;
-  color: #6d5849;
+  color: #4a3b30;
+  font-size: 0.9rem;
   
-  p {
-    margin: 0;
-    font-size: 0.95rem;
-    text-align: left;
-    line-height: 1.4;
-  }
+  p { margin: 0; }
 `;
 
 const ConfirmButton = styled.button`
-  /* Botón con ligera transparencia para no romper la estética */
-  background: linear-gradient(135deg, rgba(37, 211, 102, 0.9) 0%, rgba(32, 184, 88, 0.9) 100%);
+  background: rgba(37, 211, 102, 0.85); /* Verde con un toque de transparencia */
   color: white;
   border: none;
   padding: 1rem 2rem;
-  border-radius: 30px;
+  border-radius: 50px;
   font-weight: 600;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.1);
-  transition: all 0.3s ease;
   width: 100%;
-  max-width: 300px;
+  max-width: 280px;
+  transition: all 0.3s ease;
   
   &:hover {
-    background: linear-gradient(135deg, #25d366 0%, #20b858 100%);
-    transform: translateY(-3px);
+    background: #25d366;
+    transform: translateY(-2px);
   }
 `;
 
@@ -300,59 +271,52 @@ const ActionsGrid = styled.div`
 
 const ActionButton = styled.button`
   border: none;
-  padding: 1.2rem 1rem;
-  border-radius: 25px;
+  padding: 1rem;
+  border-radius: 20px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   font-weight: 600;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
 `;
 
 const BlueActionButton = styled(ActionButton)`
-  background: rgba(193, 227, 245, 0.2); /* Súper transparente */
-  color: #4a84a6;
-  border: 1px solid rgba(193, 227, 245, 0.5);
+  background: rgba(193, 227, 245, 0.3); /* Transparencia acuarela azul */
+  color: #2c5d7a;
+  border: 1px solid rgba(193, 227, 245, 0.2);
   
   &:hover {
     background: rgba(193, 227, 245, 0.5);
-    transform: translateY(-2px);
   }
 `;
 
 const PinkActionButton = styled(ActionButton)`
-  background: rgba(245, 193, 208, 0.2); /* Súper transparente */
-  color: #b05c74;
-  border: 1px solid rgba(245, 193, 208, 0.4);
+  background: rgba(245, 193, 208, 0.3); /* Transparencia acuarela rosa */
+  color: #8a3d53;
+  border: 1px solid rgba(245, 193, 208, 0.2);
   
   &:hover {
-    background: rgba(245, 193, 208, 0.4);
-    transform: translateY(-2px);
+    background: rgba(245, 193, 208, 0.5);
   }
 `;
 
 const GiftButton = styled.button`
   background: transparent;
-  border: 1px solid rgba(166, 137, 116, 0.15); /* Borde casi invisible */
-  border-radius: 30px;
-  color: #8c6a53;
-  padding: 0.8rem 1.5rem;
+  border: none;
+  color: #7a6352;
+  text-decoration: underline;
   margin-top: 1.5rem;
   cursor: pointer;
-  display: inline-flex;
+  font-size: 0.85rem;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  transition: all 0.3s;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
+  gap: 5px;
+  opacity: 0.7;
 `;
 
 export default HomePage;
+
