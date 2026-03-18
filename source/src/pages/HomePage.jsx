@@ -112,7 +112,8 @@ const HomePage = () => {
           <ConfirmButton
             onClick={() =>
               window.open(
-                `https://wa.me/${3102021939}?text=${Tios y Abuelitos confirmo mi asistencia}`,
+                `https://wa.me/3102021939?text=Tios y Abuelitos confirmo mi asistencia`
+,
                 "_blank"
               )
             }
