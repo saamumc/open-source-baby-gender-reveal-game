@@ -84,14 +84,18 @@ const HomePage = () => {
           </PhotoWrapper>
 
           <InvitationText>
-            Los <strong>abuelitos y tíos</strong> queremos invitarte a la
-            revelación de genero del bebé.
+            Los <strong>abuelitos y tíos</strong> La familia crece y la felicidad se multiplica! Los abuelitos y tíos estamos felices de invitarte a la revelación de género de quien será nuestro primer nieto y sobrino. Ha sido una espera llena de ternura y queremos compartir contigo este momento inolvidable donde descubriremos si el mundo se pintará de azul o rosa para nosotros. ¡Tu presencia hará este día aún más especial!"
+
+
           </InvitationText>
 
           <DressCodeBox>
             <p>
               <strong>Prenda base:</strong> Trae tu{" "}
-              <strong>chaqueta, bufanda o camisa en color blanco</strong>.
+              <strong>Para que el color de la revelación brille más que nunca, queremos pedirte que nos acompañes con una prenda base de color blanco. Puede ser tu chaqueta, camisa o camiseta favorita… lo importante es que vengas con toda la actitud a celebrar este momento tan especial con nosotros.
+
+¡Gracias por ser parte de este día y ayudarnos a que todo se vea simplemente perfecto!
+                 </strong>.
             </p>
           </DressCodeBox>
 
@@ -102,13 +106,13 @@ const HomePage = () => {
 
           <GiftButton onClick={() => navigate("/traer")}>
             <FaBabyCarriage />
-            ¿QUÉ TRAER?
+            Sugerencia De Regalo
           </GiftButton>
 
           <ConfirmButton
             onClick={() =>
               window.open(
-                `https://wa.me/${whatsappNumber}?text=${message}`,
+                `https://wa.me/${3102021939}?text=${Tios y Abuelitos confirmo mi asistencia}`,
                 "_blank"
               )
             }
