@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaBabyCarriage, FaWhatsapp } from "react-icons/fa";
+import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaBabyCarriage, FaWhatsapp, FaCalendarAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
@@ -16,7 +16,6 @@ const HomePage = () => {
 
   const fotoRevelacion = "/Revelacion.jpg";
   const whatsappNumber = "573196911965"; 
-  // NUEVO ENLACE DE UBICACIÓN
   const googleMapsUrl = "https://maps.app.goo.gl/LrzpVsM6h4xb8QLv5?g_st=ic";
 
   const whatsappMessage = encodeURIComponent(
@@ -65,6 +64,12 @@ const HomePage = () => {
         <NamesTitle>
           Valentina <span>&</span> Janppier
         </NamesTitle>
+
+        {/* SECCIÓN DE FECHA DESTACADA */}
+        <DateHighlight>
+          <FaCalendarAlt size={16} />
+          SÁBADO, 18 DE ABRIL
+        </DateHighlight>
 
         <CountdownSection>
           {timeLeft.expired
@@ -134,10 +139,15 @@ const HomePage = () => {
           </PinkActionButton>
         </ActionsGrid>
 
-        <GiftButton onClick={() => navigate("/traer")}>
-            <FaBabyCarriage size={18} />
-            Sugerencia de Regalo
-        </GiftButton>
+        {/* BOTÓN DE REGALO MÁS GRANDE Y ESTILIZADO */}
+        <GiftButtonContainer
+           onClick={() => navigate("/traer")}
+           whileHover={{ scale: 1.05 }}
+           whileTap={{ scale: 0.95 }}
+        >
+            <FaBabyCarriage size={24} />
+            <span>Sugerencia de Regalo</span>
+        </GiftButtonContainer>
       </ContentCard>
     </HomeContainer>
   );
@@ -181,13 +191,27 @@ const NamesTitle = styled.h1`
   }
 `;
 
+// Nuevo estilo para la fecha
+const DateHighlight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #5d4a3e;
+  letter-spacing: 1px;
+`;
+
 const CountdownSection = styled.div`
   color: #7a6352;
-  margin: 0.5rem 0 2.5rem 0;
+  margin: 0.2rem 0 2.5rem 0;
   font-weight: 500;
   letter-spacing: 2px;
   font-size: 0.8rem;
   text-transform: uppercase;
+  opacity: 0.8;
 `;
 
 const MainContent = styled.div`
@@ -316,15 +340,28 @@ const PinkActionButton = styled(ActionButton)`
   &:hover { background: rgba(245, 193, 208, 0.5); }
 `;
 
-const GiftButton = styled.button`
-  background: transparent;
-  border: none;
+// Estilo mejorado para el botón de regalo
+const GiftButtonContainer = styled(motion.button)`
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(122, 99, 82, 0.2);
   color: #7a6352;
-  text-decoration: underline;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 25px;
   cursor: pointer;
-  font-size: 0.85rem;
-  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  
+  span {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
 `;
 
 export default HomePage;
