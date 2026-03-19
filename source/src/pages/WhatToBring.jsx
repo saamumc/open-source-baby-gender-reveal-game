@@ -2,10 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion"; 
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaBabyCarriage, FaCloudShowersHeavy, FaCheck } from "react-icons/fa";
+import { FaArrowLeft, FaBabyCarriage, FaCloudShowersHeavy, FaCheck, FaSearch } from "react-icons/fa";
 
 const WhatToBring = () => {
   const navigate = useNavigate();
+
+  // ENLACE DE BÚSQUEDA PROPORCIONADO
+  const searchUrl = "https://www.google.com/search?q=pa%C3%B1ales+dermacare&ie=UTF-8&oe=UTF-8&hl=en-us&client=safari";
 
   return (
     <Container
@@ -14,9 +17,11 @@ const WhatToBring = () => {
       exit={{ opacity: 0 }}
     >
       <ContentCard>
-        <BackButton onClick={() => navigate("/")}>
-          <FaArrowLeft /> Volver
-        </BackButton>
+        <HeaderRow>
+          <BackButton onClick={() => navigate("/")}>
+            <FaArrowLeft /> Volver
+          </BackButton>
+        </HeaderRow>
 
         <Title>Sugerencia de Regalo</Title>
         
@@ -36,13 +41,24 @@ const WhatToBring = () => {
             <FaCheck color="#25d366" /> Pañales Huggies Dermacare
           </ItemName>
           <StagesInfo>Etapas: 1, 2, 3 o 4</StagesInfo>
+          
+          <SearchButton 
+            href={searchUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <FaSearch size={14} />
+            Ver opciones y ejemplos
+          </SearchButton>
         </GiftBox>
 
         <AclaracionSection>
           <p>
             <strong>Nota importante:</strong> Hemos elegido esta línea para proteger la delicada piel del bebé. 
             <br/><br/>
-            Si deseas apoyarnos con un paquete, <strong>te agradecemos considerar diferentes etapas (1, 2, 3 o 4)</strong>. Esto nos ayudará a estar prevenidos para su crecimiento y asegurar que tenga pañales adecuados en cada fase de sus primeros meses. ✨
+            Si deseas apoyarnos con un paquete, <strong>te agradecemos considerar diferentes etapas (1, 2, 3 o 4)</strong>. Esto nos ayudará a estar prevenidos para su crecimiento y asegurar que tenga pañales adecuados en cada fase. ✨
           </p>
         </AclaracionSection>
 
@@ -58,7 +74,7 @@ const Container = styled(motion.div)`
   justify-content: center; 
   align-items: center; 
   min-height: 100vh; 
-  padding: 2rem 1.5rem; 
+  padding: 2.5rem 1.5rem; 
   background-color: #ffffff;
   background-image: 
     radial-gradient(circle at 10% 10%, rgba(193, 227, 245, 0.8) 0%, transparent 45%),
@@ -80,6 +96,12 @@ const ContentCard = styled.div`
   z-index: 10;
 `;
 
+const HeaderRow = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+`;
+
 const BackButton = styled.button`
   background: white; 
   color: #8c6a53; 
@@ -92,8 +114,9 @@ const BackButton = styled.button`
   padding: 8px 18px;
   border-radius: 20px;
   font-weight: 600;
+  font-size: 0.85rem;
   transition: all 0.3s;
-  &:hover { transform: translateX(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+  &:hover { transform: translateX(-3px); background: #fafafa; }
 `;
 
 const Title = styled.h1` 
@@ -101,6 +124,7 @@ const Title = styled.h1`
   font-family: 'Georgia', serif; 
   font-size: 2.2rem; 
   margin-bottom: 0.5rem;
+  font-weight: 400;
 `;
 
 const MainIconWrapper = styled.div`
@@ -119,9 +143,12 @@ const HighlightText = styled.p`
 const GiftBox = styled.div`
   background: linear-gradient(135deg, rgba(193, 227, 245, 0.3) 0%, rgba(245, 193, 208, 0.3) 100%);
   border: 1px solid white;
-  padding: 2rem;
+  padding: 2rem 1.5rem;
   border-radius: 30px;
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const GiftTitle = styled.div`
@@ -139,7 +166,7 @@ const GiftTitle = styled.div`
 
 const ItemName = styled.h2`
   color: #4a84a6; 
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   margin: 0;
   display: flex;
   align-items: center;
@@ -151,9 +178,27 @@ const ItemName = styled.h2`
 const StagesInfo = styled.p`
   color: #5d4637;
   font-size: 0.95rem;
-  margin-top: 10px;
+  margin-top: 8px;
+  margin-bottom: 1.5rem;
   font-weight: 500;
   opacity: 0.8;
+`;
+
+const SearchButton = styled(motion.a)`
+  background: rgba(255, 255, 255, 0.5);
+  color: #5d4637;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  transition: background 0.3s;
+  &:hover { background: rgba(255, 255, 255, 0.8); }
 `;
 
 const AclaracionSection = styled.div`
@@ -170,10 +215,9 @@ const AclaracionSection = styled.div`
     text-align: left;
   }
 
-  strong {
-    color: #5d4637;
-  }
+  strong { color: #5d4637; }
 `;
 
 export default WhatToBring;
+
 
