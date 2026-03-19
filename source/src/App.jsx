@@ -9,8 +9,7 @@ import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
 import WhatToBring from "./pages/WhatToBring";
 import ControlPanel from "./pages/ControlPanel";
-import ValJan from "./pages/ValJan"; // Importado correctamente
-
+import ValJan from "./pages/ValJan";
 
 import { db } from "./firebase/config"; 
 import { ref, onValue } from "firebase/database";
@@ -21,56 +20,47 @@ const AppContent = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   
+  const [firebaseData, setFirebaseData] = useState(null);
   const isInitialLoad = useRef(true);
-  const [hasAutoRedirected, setHasAutoRedirected] = useState(false);
-  
+
+  // --- EFECTO 1: SOLO ESCUCHA DATOS (Se ejecuta UNA vez) ---
   useEffect(() => {
     const resultsRef = ref(db, "results");
-    
     const unsubscribe = onValue(resultsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        dispatch(updateResults(data));
-
-        if (isInitialLoad.current) {
-          isInitialLoad.current = false;
-          if (data.showResultPage === true) {
-            setHasAutoRedirected(true);
-          }
-          return;
-        }
-
-        // Agregamos /val-jan a las excepciones para que no te saque de la página de mensajes
-        if (
-          location.pathname === "/control-panel" || 
-          location.pathname === "/traer" || 
-          location.pathname === "/vote" ||
-          location.pathname === "/val-jan"
-        ) {
-          return;
-        }
-
-        if (data.showResultPage === true && !hasAutoRedirected) {
-            setHasAutoRedirected(true); 
-            if (location.pathname !== "/results") {
-              navigate("/results");
-            }
-        }
-
-        if (data.showResultPage === false) {
-            setHasAutoRedirected(false);
-        }
-
-        if (data.showVotingScreen === false && location.pathname === "/vote") {
-            navigate("/");
-        }
+        dispatch(updateResults(data)); // Actualiza Redux
+        setFirebaseData(data); // Guarda local para la lógica de navegación abajo
       }
-    }, (error) => {
-      console.error("Error conectando con Firebase:", error);
     });
-
     return () => unsubscribe();
-  }, [location.pathname, navigate, dispatch, hasAutoRedirected]);
+  }, [dispatch]); // Solo depende de dispatch, no de la ruta.
+
+  // --- EFECTO 2: LÓGICA DE NAVEGACIÓN (Depende de los datos y la ruta) ---
+  useEffect(() => {
+    if (!firebaseData) return;
+
+    const { showResultPage, showVotingScreen } = firebaseData;
+
+    // Excepciones de navegación
+    const isExceptionPage = [
+      "/control-panel", 
+      "/traer", 
+      "/vote", 
+      "/val-jan"
+    ].includes(location.pathname);
+
+    // Redirección automática a resultados si está activado globalmente
+    if (showResultPage && !isExceptionPage && location.pathname !== "/results") {
+      navigate("/results");
+    }
+
+    // Sacar de votación si se cerró el proceso
+    if (showVotingScreen === false && location.pathname === "/vote") {
+      navigate("/");
+    }
+
+  }, [firebaseData, location.pathname, navigate]);
 
   return (
     <AppContainer>
@@ -86,7 +76,6 @@ const AppContent = () => {
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/control-panel" element={<ControlPanel />} />
           <Route path="/traer" element={<WhatToBring />} />
-          {/* AQUÍ ESTÁ LA NUEVA RUTA */}
           <Route path="/val-jan" element={<ValJan />} />
         </Routes>
       </MainContent>
@@ -100,7 +89,7 @@ const App = () => (
   </Router>
 );
 
-// --- ESTILOS ---
+// --- ESTILOS (Sin cambios) ---
 const AppContainer = styled.div`
   min-height: 100vh; display: flex; justify-content: center; align-items: center;
   padding: 1rem; position: relative; overflow: hidden; background: #F9F6F1; color: #333;
@@ -115,3 +104,4 @@ const FloatingIconsWrapper = styled.div`
 `;
 
 export default App;
+
