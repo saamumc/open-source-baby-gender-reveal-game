@@ -4,6 +4,7 @@ const AppContent = () => {
   const dispatch = useDispatch();
   
   const [firebaseData, setFirebaseData] = useState(null);
+  const [loading, setLoading] = useState(true); // Nuevo estado de carga
 
   // --- EFECTO 1: ESCUCHA DE DATOS ESTABLE ---
   useEffect(() => {
@@ -14,6 +15,10 @@ const AppContent = () => {
         dispatch(updateResults(data)); 
         setFirebaseData(data); 
       }
+      setLoading(false); // Ya tenemos respuesta (exista o no la rama)
+    }, (error) => {
+      console.error("Error en Firebase:", error);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, [dispatch]);
@@ -25,24 +30,30 @@ const AppContent = () => {
     const { showResultPage, showVotingScreen } = firebaseData;
     const path = location.pathname;
 
-    // 1. Si los resultados están ACTIVOS, mandamos a Results (a menos que sea panel de control o mensajes)
-    const isControlOrAdmin = path === "/control-panel" || path === "/val-jan";
+    const isControlOrAdmin = path === "/control-panel" || path === "/val-jan" || path === "/traer";
     
     if (showResultPage && !isControlOrAdmin && path !== "/results") {
       navigate("/results");
       return;
     }
 
-    // 2. Si alguien intenta entrar a /vote pero la votación está CERRADA, lo mandamos al Home
     if (showVotingScreen === false && path === "/vote") {
       navigate("/");
       return;
     }
-
-    // Nota: Eliminamos la lógica que obligaba a ir a votación. 
-    // Ahora el usuario puede estar en "/" (Home) y decidir si entrar a votar o no.
-
   }, [firebaseData, location.pathname, navigate]);
+
+  // PANTALLA DE CARGA (Evita que el resto del código falle)
+  if (loading) {
+    return (
+      <AppContainer>
+        <AnimatedBackground />
+        <div style={{ zIndex: 100, color: "#8c6a53", fontFamily: "serif" }}>
+          <h3>Cargando celebración...</h3>
+        </div>
+      </AppContainer>
+    );
+  }
 
   return (
     <AppContainer>
@@ -64,5 +75,5 @@ const AppContent = () => {
     </AppContainer>
   );
 };
-export default App;
 
+export default App;
