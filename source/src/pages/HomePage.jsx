@@ -15,7 +15,7 @@ const HomePage = () => {
   const [timeLeft, setTimeLeft] = useState({});
 
   const fotoRevelacion = "/Revelacion.jpg";
-  const whatsappNumber = "573196911965"; 
+  const whatsappNumber = "573102021939"; 
   const googleMapsUrl = "https://maps.app.goo.gl/vL7T6E6ZJv7qYvY99"; 
 
   const whatsappMessage = encodeURIComponent(
