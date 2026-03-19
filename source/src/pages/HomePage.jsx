@@ -16,7 +16,7 @@ const HomePage = () => {
 
   const fotoRevelacion = "/Revelacion.jpg";
   const whatsappNumber = "573196911965"; 
-  const googleMapsUrl = "https://maps.app.goo.gl/vL7T6E6ZJv7qYvY99"; // Cambia esto por tu link real de La Calera
+  const googleMapsUrl = "https://maps.app.goo.gl/vL7T6E6ZJv7qYvY99"; 
 
   const whatsappMessage = encodeURIComponent(
     "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
@@ -91,7 +91,7 @@ const HomePage = () => {
           <TextBlock>
             <InvitationHeader>¡La familia crece!</InvitationHeader>
             <InvitationBody>
-              Los abuelitos y tíos te invitamos a descubrir si el mundo se pintará de azul o rosa para nuestro primer niet@ y sobrin@. 
+              Los abuelitos y tíos te invitamos a descubrir si el mundo se pintará de azul o rosa.
               <br/>
               <strong>¡Tu presencia hará este momento inolvidable!</strong>
             </InvitationBody>
@@ -100,7 +100,7 @@ const HomePage = () => {
           <TextBlock>
             <DressCodeHeader>✨ Dress Code:</DressCodeHeader>
             <DressCodeBody>
-              Acompáñanos con una <strong>prenda base de color blanco</strong> para que los colores de la revelación brillen más que nunca. 🤍
+              Usa una <strong>prenda base blanca</strong> para que los colores brillen. 🤍
             </DressCodeBody>
           </TextBlock>
 
@@ -126,16 +126,15 @@ const HomePage = () => {
           </ConfirmButton>
         </MainContent>
 
-        {/* --- SECCIÓN DE REGALO CON PALPITACIÓN --- */}
         <GiftButtonContainer
            onClick={() => navigate("/traer")}
            initial={{ scale: 1 }}
            animate={{ 
              scale: [1, 1.03, 1],
              boxShadow: [
-               "0 4px 15px rgba(0,0,0,0.05)",
-               "0 8px 25px rgba(212, 175, 55, 0.2)",
-               "0 4px 15px rgba(0,0,0,0.05)"
+               "0 4px 15px rgba(0,0,0,0.02)",
+               "0 8px 25px rgba(212, 175, 55, 0.15)",
+               "0 4px 15px rgba(0,0,0,0.02)"
              ]
            }}
            transition={{ 
@@ -145,20 +144,20 @@ const HomePage = () => {
            }}
         >
             <IconBadge>
-              <FaGift size={14} color="white" />
+              <FaGift size={12} color="white" />
             </IconBadge>
-            <FaBabyCarriage size={24} />
+            <FaBabyCarriage size={22} />
             <span>Sugerencia de Regalo</span>
         </GiftButtonContainer>
 
         <ActionsGrid>
           <BlueActionButton onClick={handleVoteClick}>
-            <FaVoteYea size={22} />
+            <FaVoteYea size={20} />
             VOTAR
           </BlueActionButton>
 
           <PinkActionButton onClick={() => navigate("/results")}>
-            <FaChartBar size={22} />
+            <FaChartBar size={20} />
             RESULTADOS
           </PinkActionButton>
         </ActionsGrid>
@@ -168,26 +167,27 @@ const HomePage = () => {
   );
 };
 
-// --- ESTILOS ---
+// --- ESTILOS OPTIMIZADOS ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2.5rem 1.5rem;
+  padding: 1rem;
   min-height: 100vh;
   position: relative;
   background: transparent; 
 `;
 
 const ContentCard = styled.div`
-  background: rgba(255, 255, 255, 0.03); 
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  /* Fondo casi invisible para que se vean los osos */
+  background: rgba(255, 255, 255, 0.01); 
+  backdrop-filter: blur(4px); /* Desenfoque mínimo */
+  -webkit-backdrop-filter: blur(4px);
   border-radius: 40px;
-  padding: 3.5rem 2rem;
-  width: 100%;
-  max-width: 480px;
+  padding: 1.5rem; /* Padding reducido para que la tarjeta sea más pequeña */
+  width: 92%;
+  max-width: 380px; /* Reducido de 480px a 380px */
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1); 
   z-index: 10;
@@ -196,13 +196,13 @@ const ContentCard = styled.div`
 
 const NamesTitle = styled.h1`
   font-family: 'Georgia', serif; 
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   margin: 0;
   color: #5d4a3e;
   font-weight: 400;
   span {
     color: rgba(93, 74, 62, 0.3);
-    font-size: 1.8rem;
+    font-size: 1.4rem;
   }
 `;
 
@@ -211,180 +211,156 @@ const DateHighlight = styled.div`
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #5d4a3e;
   letter-spacing: 1px;
 `;
 
 const CountdownSection = styled.div`
   color: #7a6352;
-  margin: 0.2rem 0 2.5rem 0;
+  margin: 0.2rem 0 1.5rem 0;
   font-weight: 500;
-  letter-spacing: 2px;
-  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  opacity: 0.8;
+  opacity: 0.7;
 `;
 
 const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
 `;
 
 const PhotoWrapper = styled.div`
   width: 100%;
-  max-width: 280px; 
-  border-radius: 20px; 
+  max-width: 220px; /* Foto más pequeña */
+  border-radius: 15px; 
   overflow: hidden;
-  margin-bottom: 1.5rem;
-  border: 4px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+  border: 3px solid rgba(255, 255, 255, 0.3);
   img { width: 100%; height: auto; display: block; }
 `;
 
 const TextBlock = styled.div` width: 100%; text-align: center; `;
 
 const InvitationHeader = styled.h2`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #5d4a3e;
-  margin: 0 0 0.5rem 0;
-  font-weight: 600;
+  margin-bottom: 0.3rem;
 `;
 
 const InvitationBody = styled.p`
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #4a3b30;
-  margin: 0;
-  line-height: 1.6;
-  font-weight: 400;
+  line-height: 1.4;
 `;
 
 const DressCodeHeader = styled.h3`
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #5d4a3e;
-  margin: 0 0 0.5rem 0;
-  font-weight: 600;
+  margin-bottom: 0.2rem;
 `;
 
 const DressCodeBody = styled.p`
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #4a3b30;
-  margin: 0;
-  line-height: 1.6;
 `;
 
 const LocationBox = styled(motion.a)`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  margin: 1rem 0;
-  color: #4a3b30;
+  padding: 8px 15px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 12px 20px;
-  border-radius: 20px;
-  border: 1px solid rgba(122, 99, 82, 0.1);
-  p { margin: 0; font-size: 0.9rem; }
+  p { margin: 0; font-size: 0.8rem; color: #4a3b30; }
 `;
 
 const LocationTip = styled.span`
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   color: #7a6352;
-  text-transform: uppercase;
-  letter-spacing: 1px;
   font-weight: 700;
-  opacity: 0.7;
 `;
 
 const ConfirmButton = styled.button`
-  background: rgba(37, 211, 102, 0.85);
+  background: rgba(37, 211, 102, 0.8);
   color: white;
   border: none;
-  padding: 1rem 2.5rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 50px;
   font-weight: 600;
-  cursor: pointer;
   width: 100%;
-  max-width: 280px;
-  transition: all 0.3s ease;
-  &:hover { background: #25d366; }
+  max-width: 240px;
+  cursor: pointer;
 `;
 
 const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-top: 1.5rem;
+  gap: 10px;
+  margin-top: 1rem;
   width: 100%;
 `;
 
 const ActionButton = styled.button`
   border: none;
-  padding: 1rem;
-  border-radius: 20px;
+  padding: 0.7rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  font-weight: 600;
-  font-size: 0.8rem;
+  gap: 4px;
 `;
 
 const BlueActionButton = styled(ActionButton)`
-  background: rgba(193, 227, 245, 0.3);
+  background: rgba(193, 227, 245, 0.4);
   color: #2c5d7a;
-  border: 1px solid rgba(193, 227, 245, 0.2);
 `;
 
 const PinkActionButton = styled(ActionButton)`
-  background: rgba(245, 193, 208, 0.3);
+  background: rgba(245, 193, 208, 0.4);
   color: #8a3d53;
-  border: 1px solid rgba(245, 193, 208, 0.2);
 `;
 
 const GiftButtonContainer = styled(motion.button)`
-  background: rgba(255, 255, 255, 0.5);
-  border: 2px solid rgba(212, 175, 55, 0.3); /* Un toque dorado sutil */
+  background: rgba(255, 255, 255, 0.3);
+  border: 1.5px solid rgba(212, 175, 55, 0.2);
   color: #7a6352;
-  margin-top: 2.5rem;
-  padding: 1.2rem 1.5rem;
-  border-radius: 25px;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   position: relative;
-  overflow: visible;
   
   span {
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
   }
 `;
 
 const IconBadge = styled.div`
   position: absolute;
-  top: -10px;
-  right: 15px;
+  top: -8px;
+  right: 12px;
   background: #d4af37;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 `;
 
 export default HomePage;
