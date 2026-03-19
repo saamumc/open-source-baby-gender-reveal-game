@@ -8,6 +8,10 @@ import { selectGender, submitVote, resetVote } from "../store/voteSlice";
 import { useNavigate } from "react-router-dom";
 import AnimatedBackground from "../components/AnimatedBackground"; 
 
+// --- IMPORTACIONES DE FIREBASE ---
+import { db } from "../firebase/config";
+import { ref, push, set, increment, update } from "firebase/database";
+
 const VotePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,19 +57,40 @@ const VotePage = () => {
       });
 
       try {
-        await dispatch(submitVote({ 
+        // 1. GUARDAR EN FIREBASE (Aquí es donde se graban el nombre y mensaje)
+        const votesRef = ref(db, "userVotes");
+        const newVoteRef = push(votesRef);
+        
+        await set(newVoteRef, {
+          name: name,
+          gender: selectedGender,
+          message: message,
+          timestamp: Date.now(),
+          uuid: localStorage.getItem("device_uuid") || "anonymous"
+        });
+
+        // 2. ACTUALIZAR CONTADOR GLOBAL (Para las gráficas)
+        const updates = {};
+        updates[`results/voteCounts/${selectedGender}`] = increment(1);
+        await update(ref(db), updates);
+
+        // 3. AVISAR A REDUX Y LOCALSTORAGE
+        dispatch(submitVote({ 
           name: name,
           gender: selectedGender, 
           message: message 
         }));
+        
         localStorage.setItem("baby_shower_voted", "true");
       } catch (error) {
         console.error("Error al votar:", error);
+        alert("Hubo un error al guardar tu apuesta. Intenta de nuevo.");
         setIsProcessing(false);
       }
     }
   };
 
+  // ... (Resto de tu JSX de retorno se mantiene igual)
   if (showVotingScreen === false) return null;
 
   return (
@@ -153,8 +178,7 @@ const VotePage = () => {
   );
 };
 
-// --- ESTILOS 98% TRANSPARENTES (Estilo HomePage) ---
-
+// --- ESTILOS SE MANTIENEN IGUAL ---
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
@@ -167,11 +191,9 @@ const PageWrapper = styled.div`
 `;
 
 const GlassCard = styled(motion.div)`
-  /* TRANSPARENCIA AL 98% (0.02) */
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  
   padding: 3.5rem 2.5rem;
   border-radius: 40px;
   width: 100%;
@@ -210,14 +232,12 @@ const StyledInput = styled.input`
   width: 100%;
   padding: 14px 18px;
   border-radius: 20px;
-  /* Fondo muy sutil para el input */
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(140, 106, 83, 0.15);
   font-size: 1rem;
   color: #4a3b30;
   font-family: inherit;
   backdrop-filter: blur(5px);
-  
   &::placeholder { color: rgba(122, 99, 82, 0.5); }
   &:focus { outline: none; border-color: rgba(140, 106, 83, 0.4); background: rgba(255, 255, 255, 0.4); }
 `;
@@ -255,7 +275,6 @@ const StyledTextArea = styled.textarea`
   height: 90px; 
   font-family: inherit;
   backdrop-filter: blur(5px);
-
   &::placeholder { color: rgba(122, 99, 82, 0.5); }
   &:focus { outline: none; border-color: rgba(140, 106, 83, 0.4); background: rgba(255, 255, 255, 0.4); }
 `;
@@ -265,7 +284,6 @@ const SubmitButton = styled(motion.button)`
   padding: 18px;
   border-radius: 50px;
   border: none;
-  /* Botón con opacidad para que no rompa la transparencia extrema */
   background: ${props => props.$active ? 'rgba(122, 99, 82, 0.9)' : 'rgba(122, 99, 82, 0.2)'};
   color: ${props => props.$active ? 'white' : 'rgba(122, 99, 82, 0.5)'};
   font-weight: 700;
@@ -274,7 +292,6 @@ const SubmitButton = styled(motion.button)`
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(0,0,0,0.05);
   transition: all 0.3s ease;
-  
   &:disabled { cursor: not-allowed; }
   &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 `;
