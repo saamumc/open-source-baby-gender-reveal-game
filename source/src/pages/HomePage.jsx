@@ -16,7 +16,8 @@ const HomePage = () => {
 
   const fotoRevelacion = "/Revelacion.jpg";
   const whatsappNumber = "573196911965"; 
-  const googleMapsUrl = "https://share.google/bIoXT9732xlRH19Gf";
+  // NUEVO ENLACE DE UBICACIÓN
+  const googleMapsUrl = "https://maps.app.goo.gl/LrzpVsM6h4xb8QLv5?g_st=ic";
 
   const whatsappMessage = encodeURIComponent(
     "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
@@ -99,7 +100,6 @@ const HomePage = () => {
             </DressCodeBody>
           </TextBlock>
 
-          {/* SECCIÓN DE UBICACIÓN CON LINK */}
           <LocationBox 
             href={googleMapsUrl} 
             target="_blank" 
@@ -109,7 +109,7 @@ const HomePage = () => {
           >
             <FaMapMarkerAlt size={18} color="#7a6352" />
             <p><strong>La Calera, Cundinamarca</strong> - 3:00 PM</p>
-            <LocationTip>Ver ubicación en mapa</LocationTip>
+            <LocationTip>Toca para ver la ubicación 📍</LocationTip>
           </LocationBox>
 
           <ConfirmButton
@@ -239,7 +239,6 @@ const DressCodeBody = styled.p`
   line-height: 1.6;
 `;
 
-/* ESTILO DE UBICACIÓN ACTUALIZADO */
 const LocationBox = styled(motion.a)`
   display: flex;
   flex-direction: column;
@@ -253,12 +252,8 @@ const LocationBox = styled(motion.a)`
   padding: 12px 20px;
   border-radius: 20px;
   border: 1px solid rgba(122, 99, 82, 0.1);
-  transition: background 0.3s ease;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-  
+  transition: all 0.3s ease;
+  &:hover { background: rgba(255, 255, 255, 0.3); }
   p { margin: 0; font-size: 0.9rem; }
 `;
 
