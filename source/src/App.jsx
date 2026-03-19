@@ -15,44 +15,47 @@ const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Extraemos el estado de Redux
+  // Extraemos el estado de Redux (alimentado por Firebase en main.jsx)
   const { showResultPage, showVotingScreen, loading } = useSelector((state) => state.results);
 
   useEffect(() => {
-    // CLAVE: Si todavía está cargando datos de Firebase, no redirigimos a nadie.
+    // Si todavía está cargando datos de Firebase, no redirigimos a nadie
     if (loading) return;
 
     const path = location.pathname;
 
-    // 1. ZONAS LIBRES: Aquí nadie es redirigido automáticamente.
+    // 1. ZONAS LIBRES: Aquí la app NUNCA te sacará automáticamente a otra página.
+    // Incluimos /vote para que no te mande a resultados mientras estás votando.
     const isExcluded = [
       "/control-panel", 
       "/val-jan", 
       "/traer",
+      "/vote", 
       "/" 
     ].includes(path);
 
     // 2. FLUJO DE REVELACIÓN (Results)
+    // Si la revelación está activa y el usuario NO está en una zona libre ni en resultados, lo llevamos allá.
     if (showResultPage && !isExcluded && path !== "/results") {
       navigate("/results");
       return;
     }
 
-    // Si se apaga la revelación y están en /results, los mandamos al Home
+    // Si apagas la revelación en el Panel de Control y el usuario estaba en /results, lo devolvemos al Home.
     if (!showResultPage && path === "/results") {
       navigate("/");
       return;
     }
 
     // 3. FLUJO DE VOTACIÓN (Protección)
-    // Solo expulsamos si loading es false Y showVotingScreen es explícitamente false.
+    // Solo sacamos al usuario de /vote si la votación está apagada (false) en el panel.
     if (showVotingScreen === false && path === "/vote") {
       navigate("/");
     }
 
   }, [showResultPage, showVotingScreen, loading, location.pathname, navigate]);
 
-  // Pantalla de carga para evitar el parpadeo y errores de redirección inicial
+  // Pantalla de carga para evitar saltos de redirección mientras llegan datos de Firebase
   if (loading) {
     return (
       <AppContainer>
@@ -83,6 +86,7 @@ const AppContent = () => {
   );
 };
 
+// Componente principal con el Router
 const App = () => (
   <Router>
     <AppContent />
