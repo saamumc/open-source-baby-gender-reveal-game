@@ -64,3 +64,5 @@ const AppContent = () => {
     </AppContainer>
   );
 };
+export default App;
+
