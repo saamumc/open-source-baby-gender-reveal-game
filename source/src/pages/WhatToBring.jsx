@@ -31,7 +31,7 @@ const WhatToBring = () => {
         <Title>Sugerencia de Regalo</Title>
         
         <MainIconWrapper>
-           <FaCloudShowersHeavy size={45} color="#a68974" />
+           <FaCloudShowersHeavy size={40} color="#a68974" />
         </MainIconWrapper>
 
         <HighlightText>
@@ -47,14 +47,14 @@ const WhatToBring = () => {
             <FaBabyCarriage /> Nuestra sugerencia:
           </GiftTitle>
           <ItemName>
-            <FaCheck color="#25d366" /> Pañales Huggies Dermacare
+            <FaCheck color="#25d366" /> Huggies Dermacare
           </ItemName>
           
           <StageBadgeContainer>
-            <StageBadge>Etapa 1</StageBadge>
-            <StageBadge>Etapa 2</StageBadge>
-            <StageBadge>Etapa 3</StageBadge>
-            <StageBadge>Etapa 4</StageBadge>
+            <StageBadge>E1</StageBadge>
+            <StageBadge>E2</StageBadge>
+            <StageBadge>E3</StageBadge>
+            <StageBadge>E4</StageBadge>
           </StageBadgeContainer>
           
           <SearchButton 
@@ -64,8 +64,8 @@ const WhatToBring = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <FaSearch size={14} />
-            Ver opciones y ejemplos
+            <FaSearch size={12} />
+            Ver opciones
           </SearchButton>
         </GiftBox>
 
@@ -74,9 +74,8 @@ const WhatToBring = () => {
             <FaInfoCircle /> Nota importante
           </NoteHeader>
           <p>
-            Hemos elegido esta línea para proteger la delicada piel del bebé. 
-            <br/><br/>
-            Si deseas apoyarnos, <strong>te agradecemos considerar diferentes etapas</strong>. Esto nos ayudará a estar prevenidos para su crecimiento y asegurar que tenga pañales adecuados en cada fase. ✨
+            Elegimos esta línea para proteger su piel. 
+            Si deseas apoyarnos, <strong>agradecemos considerar diferentes etapas</strong>. ✨
           </p>
         </AclaracionSection>
 
@@ -85,32 +84,28 @@ const WhatToBring = () => {
   );
 };
 
-// --- ESTILOS ---
+// --- ESTILOS COMPACTOS ---
 
 const Container = styled(motion.div)`
   display: flex; 
   justify-content: center; 
   align-items: center; 
   min-height: 100vh; 
-  padding: 2.5rem 1.5rem; 
-  background-color: #ffffff;
-  background-image: 
-    radial-gradient(circle at 10% 10%, rgba(193, 227, 245, 0.6) 0%, transparent 45%),
-    radial-gradient(circle at 90% 90%, rgba(245, 193, 208, 0.6) 0%, transparent 45%);
+  padding: 1rem; 
+  background: transparent;
   position: relative;
 `;
 
 const ContentCard = styled.div`
-  background: rgba(255, 255, 255, 0.5); 
-  backdrop-filter: blur(15px); 
-  -webkit-backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.01); /* Casi invisible */
+  backdrop-filter: blur(5px); 
+  -webkit-backdrop-filter: blur(5px);
   border-radius: 40px; 
-  padding: 3rem 2rem; 
-  width: 100%; 
-  max-width: 450px; 
+  padding: 2rem 1.5rem; 
+  width: 92%; 
+  max-width: 380px; /* Tamaño reducido igual que la HomePage */
   text-align: center; 
-  border: 1px solid rgba(255, 255, 255, 0.8); 
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1); 
   z-index: 10;
 `;
 
@@ -121,121 +116,116 @@ const HeaderRow = styled.div`
 `;
 
 const BackButton = styled.button`
-  background: white; 
+  background: rgba(255, 255, 255, 0.2); 
   color: #8c6a53; 
   border: 1px solid rgba(140, 106, 83, 0.1); 
   display: flex; 
   align-items: center; 
-  gap: 8px; 
+  gap: 6px; 
   cursor: pointer; 
-  margin-bottom: 2rem; 
-  padding: 8px 18px;
+  margin-bottom: 1.5rem; 
+  padding: 6px 14px;
   border-radius: 20px;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   transition: all 0.3s;
-  &:hover { background: #fafafa; transform: translateX(-3px); }
+  &:hover { background: white; }
 `;
 
 const Title = styled.h1` 
   color: #5d4a3e; 
   font-family: 'Georgia', serif; 
-  font-size: 2.2rem; 
+  font-size: 1.8rem; 
   margin-bottom: 0.5rem;
   font-weight: 400;
 `;
 
 const MainIconWrapper = styled.div`
-  margin: 1rem 0;
+  margin: 0.5rem 0;
   animation: ${rainAnimation} 3s ease-in-out infinite;
 `;
 
 const HighlightText = styled.p`
   color: #8c6a53;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin-bottom: 2rem;
-  line-height: 1.4;
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
 `;
 
 const GiftBox = styled(motion.div)`
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.4) 100%);
-  border: 2px solid white;
-  padding: 2rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 1.5rem 1rem;
   border-radius: 30px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.03);
 `;
 
 const GiftTitle = styled.div`
   color: #8c6a53;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.8rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 6px;
   font-weight: 800;
 `;
 
 const ItemName = styled.h2`
   color: #4a84a6; 
-  font-size: 1.3rem;
-  margin: 0 0 1.2rem 0;
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  gap: 8px;
   font-weight: 800;
 `;
 
 const StageBadgeContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 1.5rem;
+  gap: 6px;
+  margin-bottom: 1.2rem;
 `;
 
 const StageBadge = styled.span`
-  background: rgba(140, 106, 83, 0.1);
+  background: white;
   color: #8c6a53;
-  padding: 5px 12px;
-  border-radius: 12px;
-  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
   font-weight: 700;
-  border: 1px solid rgba(140, 106, 83, 0.05);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 `;
 
 const SearchButton = styled(motion.a)`
   background: #8c6a53;
   color: white;
   text-decoration: none;
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 50px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 15px rgba(140, 106, 83, 0.2);
+  gap: 6px;
 `;
 
 const AclaracionSection = styled.div`
-  background: rgba(255, 255, 255, 0.4);
-  padding: 1.5rem;
-  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.2rem;
+  border-radius: 20px;
   border: 1px dashed rgba(140, 106, 83, 0.2);
   
   p {
     color: #6d5849;
-    font-size: 0.9rem;
-    line-height: 1.6;
+    font-size: 0.8rem;
+    line-height: 1.5;
     margin: 0;
     text-align: left;
   }
@@ -244,14 +234,13 @@ const AclaracionSection = styled.div`
 const NoteHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   color: #5d4a3e;
   font-weight: 800;
-  font-size: 0.9rem;
-  margin-bottom: 8px;
+  font-size: 0.75rem;
+  margin-bottom: 5px;
   text-transform: uppercase;
 `;
 
 export default WhatToBring;
-
 
