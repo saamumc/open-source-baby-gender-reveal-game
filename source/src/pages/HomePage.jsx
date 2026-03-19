@@ -19,7 +19,7 @@ const HomePage = () => {
   const googleMapsUrl = "https://maps.app.goo.gl/stUaX2dsSYYjrAhL6?g_st=ic"; 
 
   const whatsappMessage = encodeURIComponent(
-    "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
+    "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉 (agrega tu nombre y los confirmados)"
   );
 
   useEffect(() => {
