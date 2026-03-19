@@ -16,7 +16,9 @@ const HomePage = () => {
 
   const fotoRevelacion = "/Revelacion.jpg";
   const whatsappNumber = "573102021939"; 
-  const googleMapsUrl = https:"//maps.app.goo.gl/HpMowNtNYcgv7u8L9?g_st=ic"; 
+  // Corrected Version
+const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Your+Location"; 
+
 
   const whatsappMessage = encodeURIComponent(
     "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
