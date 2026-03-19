@@ -88,19 +88,38 @@ const HomePage = () => {
             />
           </PhotoWrapper>
 
+          <GiftButtonContainer
+            onClick={() => navigate("/traer")}
+            initial={{ scale: 1 }}
+            animate={{ 
+              scale: [1, 1.03, 1],
+              boxShadow: [
+                "0 4px 15px rgba(0,0,0,0.02)",
+                "0 8px 25px rgba(212, 175, 55, 0.15)",
+                "0 4px 15px rgba(0,0,0,0.02)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <IconBadge>
+              <FaGift size={10} color="white" />
+            </IconBadge>
+            <FaBabyCarriage size={18} />
+            <span>Sugerencia de Regalo</span>
+          </GiftButtonContainer>
+
           <TextBlock>
             <InvitationHeader>¡La familia crece!</InvitationHeader>
             <InvitationBody>
-              Los abuelitos y tíos te invitamos a descubrir si el mundo se pintará de azul o rosa.
-              <br/>
-              <strong>¡Tu presencia hará este momento inolvidable!</strong>
+              Te invitamos a descubrir si el mundo se pintará de azul o rosa. 
+              <strong> ¡Tu presencia lo hará inolvidable!</strong>
             </InvitationBody>
           </TextBlock>
 
           <TextBlock>
             <DressCodeHeader>✨ Dress Code:</DressCodeHeader>
             <DressCodeBody>
-              Usa una <strong>prenda base blanca</strong> para que los colores brillen. 🤍
+              Acompáñanos con una <strong>prenda base blanca</strong> 🤍
             </DressCodeBody>
           </TextBlock>
 
@@ -111,9 +130,9 @@ const HomePage = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <FaMapMarkerAlt size={18} color="#7a6352" />
-            <p><strong>La Calera, Cundinamarca</strong> - 3:00 PM</p>
-            <LocationTip>Toca para ver la ubicación 📍</LocationTip>
+            <FaMapMarkerAlt size={16} color="#7a6352" />
+            <p><strong>La Calera</strong> - 3:00 PM</p>
+            <LocationTip>Toca para ver el mapa 📍</LocationTip>
           </LocationBox>
 
           <ConfirmButton
@@ -121,53 +140,32 @@ const HomePage = () => {
               window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, "_blank")
             }
           >
-            <FaWhatsapp size={20} />
+            <FaWhatsapp size={18} />
             CONFIRMAR ASISTENCIA
           </ConfirmButton>
         </MainContent>
-
-        <GiftButtonContainer
-           onClick={() => navigate("/traer")}
-           initial={{ scale: 1 }}
-           animate={{ 
-             scale: [1, 1.03, 1],
-             boxShadow: [
-               "0 4px 15px rgba(0,0,0,0.02)",
-               "0 8px 25px rgba(212, 175, 55, 0.15)",
-               "0 4px 15px rgba(0,0,0,0.02)"
-             ]
-           }}
-           transition={{ 
-             duration: 2, 
-             repeat: Infinity, 
-             ease: "easeInOut" 
-           }}
-        >
-            <IconBadge>
-              <FaGift size={12} color="white" />
-            </IconBadge>
-            <FaBabyCarriage size={22} />
-            <span>Sugerencia de Regalo</span>
-        </GiftButtonContainer>
-
-        <ActionsGrid>
-          <BlueActionButton onClick={handleVoteClick}>
-            <FaVoteYea size={20} />
-            VOTAR
-          </BlueActionButton>
-
-          <PinkActionButton onClick={() => navigate("/results")}>
-            <FaChartBar size={20} />
-            RESULTADOS
-          </PinkActionButton>
-        </ActionsGrid>
-
       </ContentCard>
+
+      {/* --- BARRA FIJA DE VOTACIÓN (Garantiza que no olviden votar) --- */}
+      <StickyActions>
+        <FloatingVote 
+          onClick={handleVoteClick}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <FaVoteYea size={22} />
+          ¿NIÑO O NIÑA? ¡VOTA AQUÍ!
+        </FloatingVote>
+        <ResultsSmall onClick={() => navigate("/results")}>
+          Ver resultados actuales <FaChartBar />
+        </ResultsSmall>
+      </StickyActions>
+
     </HomeContainer>
   );
 };
 
-// --- ESTILOS OPTIMIZADOS ---
+// --- ESTILOS ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
@@ -180,18 +178,18 @@ const HomeContainer = styled(motion.div)`
 `;
 
 const ContentCard = styled.div`
-  /* Fondo casi invisible para que se vean los osos */
   background: rgba(255, 255, 255, 0.01); 
-  backdrop-filter: blur(4px); /* Desenfoque mínimo */
+  backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 40px;
-  padding: 1.5rem; /* Padding reducido para que la tarjeta sea más pequeña */
+  padding: 1.5rem;
   width: 92%;
-  max-width: 380px; /* Reducido de 480px a 380px */
+  max-width: 380px;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1); 
   z-index: 10;
   position: relative;
+  margin-bottom: 120px; /* Espacio para que el Sticky no tape el final */
 `;
 
 const NamesTitle = styled.h1`
@@ -221,7 +219,7 @@ const DateHighlight = styled.div`
 const CountdownSection = styled.div`
   color: #7a6352;
   margin: 0.2rem 0 1.5rem 0;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 1.5px;
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -232,15 +230,16 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
 `;
 
 const PhotoWrapper = styled.div`
   width: 100%;
-  max-width: 220px; /* Foto más pequeña */
+  max-width: 200px; 
   border-radius: 15px; 
   overflow: hidden;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  margin-bottom: 0.5rem;
   img { width: 100%; height: auto; display: block; }
 `;
 
@@ -249,19 +248,22 @@ const TextBlock = styled.div` width: 100%; text-align: center; `;
 const InvitationHeader = styled.h2`
   font-size: 1.1rem;
   color: #5d4a3e;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.2rem;
+  font-weight: 700;
 `;
 
 const InvitationBody = styled.p`
   font-size: 0.85rem;
   color: #4a3b30;
   line-height: 1.4;
+  margin: 0;
 `;
 
 const DressCodeHeader = styled.h3`
   font-size: 0.9rem;
   color: #5d4a3e;
-  margin-bottom: 0.2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.1rem;
 `;
 
 const DressCodeBody = styled.p`
@@ -276,13 +278,15 @@ const LocationBox = styled(motion.a)`
   border-radius: 15px;
   background: rgba(255, 255, 255, 0.1);
   text-decoration: none;
-  p { margin: 0; font-size: 0.8rem; color: #4a3b30; }
+  margin: 0.5rem 0;
+  p { margin: 0; font-size: 0.85rem; color: #4a3b30; }
 `;
 
 const LocationTip = styled.span`
   font-size: 0.6rem;
   color: #7a6352;
-  font-weight: 700;
+  font-weight: 800;
+  text-transform: uppercase;
 `;
 
 const ConfirmButton = styled.button`
@@ -291,76 +295,96 @@ const ConfirmButton = styled.button`
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 50px;
-  font-weight: 600;
+  font-weight: 700;
   width: 100%;
-  max-width: 240px;
+  max-width: 220px;
   cursor: pointer;
-`;
-
-const ActionsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 1rem;
-  width: 100%;
-`;
-
-const ActionButton = styled.button`
-  border: none;
-  padding: 0.7rem;
-  border-radius: 15px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-`;
-
-const BlueActionButton = styled(ActionButton)`
-  background: rgba(193, 227, 245, 0.4);
-  color: #2c5d7a;
-`;
-
-const PinkActionButton = styled(ActionButton)`
-  background: rgba(245, 193, 208, 0.4);
-  color: #8a3d53;
+  font-size: 0.8rem;
+  transition: background 0.3s;
+  &:hover { background: #25d366; }
 `;
 
 const GiftButtonContainer = styled(motion.button)`
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.4);
   border: 1.5px solid rgba(212, 175, 55, 0.2);
   color: #7a6352;
-  margin-top: 1.5rem;
-  padding: 1rem;
-  border-radius: 20px;
+  padding: 0.8rem;
+  border-radius: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
+  max-width: 240px;
   position: relative;
-  
   span {
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 800;
     text-transform: uppercase;
   }
 `;
 
 const IconBadge = styled.div`
   position: absolute;
-  top: -8px;
-  right: 12px;
+  top: -6px;
+  right: 10px;
   background: #d4af37;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const StickyActions = styled.div`
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+`;
+
+const FloatingVote = styled(motion.button)`
+  background: linear-gradient(90deg, #c1e3f5 0%, #f5c1d0 100%);
+  color: #5d4a3e;
+  border: none;
+  padding: 1.1rem;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  cursor: pointer;
+  border: 2px solid white;
+`;
+
+const ResultsSmall = styled.button`
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: none;
+  color: #7a6352;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 6px 15px;
+  cursor: pointer;
+  align-self: center;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 `;
 
 export default HomePage;
