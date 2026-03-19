@@ -15,47 +15,49 @@ const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Leemos el estado global de Redux (alimentado por el listener de Firebase en main.jsx)
+  // Extraemos el estado de Redux
   const { showResultPage, showVotingScreen, loading } = useSelector((state) => state.results);
 
   useEffect(() => {
+    // CLAVE: Si todavía está cargando datos de Firebase, no redirigimos a nadie.
+    if (loading) return;
+
     const path = location.pathname;
 
-    // 1. ZONAS LIBRES: En estas rutas la app NO redirigirá automáticamente a nadie.
+    // 1. ZONAS LIBRES: Aquí nadie es redirigido automáticamente.
     const isExcluded = [
       "/control-panel", 
       "/val-jan", 
       "/traer",
-      "/" // Permitimos estar en el Home libremente
+      "/" 
     ].includes(path);
 
     // 2. FLUJO DE REVELACIÓN (Results)
-    // Si la revelación está activa y el usuario NO está en una zona libre ni en resultados, lo llevamos allá.
     if (showResultPage && !isExcluded && path !== "/results") {
       navigate("/results");
       return;
     }
 
-    // Si apagas la revelación en el Panel de Control y el usuario estaba en /results, lo devolvemos al Home.
+    // Si se apaga la revelación y están en /results, los mandamos al Home
     if (!showResultPage && path === "/results") {
       navigate("/");
       return;
     }
 
     // 3. FLUJO DE VOTACIÓN (Protección)
-    // Si cierras las votaciones y alguien intenta entrar a /vote, lo sacamos al Home.
+    // Solo expulsamos si loading es false Y showVotingScreen es explícitamente false.
     if (showVotingScreen === false && path === "/vote") {
       navigate("/");
     }
 
-  }, [showResultPage, showVotingScreen, location.pathname, navigate]);
+  }, [showResultPage, showVotingScreen, loading, location.pathname, navigate]);
 
-  // Pantalla de carga mientras conectamos con Firebase por primera vez
+  // Pantalla de carga para evitar el parpadeo y errores de redirección inicial
   if (loading) {
     return (
       <AppContainer>
         <AnimatedBackground />
-        <LoadingText>Cargando celebración...</LoadingText>
+        <LoadingText>Preparando la fiesta...</LoadingText>
       </AppContainer>
     );
   }
@@ -81,7 +83,6 @@ const AppContent = () => {
   );
 };
 
-// Componente principal con el Router
 const App = () => (
   <Router>
     <AppContent />
@@ -112,10 +113,7 @@ const MainContent = styled.div`
 
 const FloatingIconsWrapper = styled.div` 
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   z-index: 5;
   pointer-events: none; 
 `;
