@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaBabyCarriage, FaCheckCircle } from "react-icons/fa";
+import { FaArrowLeft, FaBabyCarriage, FaCheckCircle, FaCloudShowersHeavy } from "react-icons/fa";
 
 const WhatToBring = () => {
   const navigate = useNavigate();
@@ -15,154 +15,169 @@ const WhatToBring = () => {
     >
       <ContentCard>
         <BackButton onClick={() => navigate("/")}>
-          <FaArrowLeft /> Volver al Inicio
+          <FaArrowLeft /> Volver
         </BackButton>
 
-        <Title>¿Qué traer?</Title>
-        <Subtitle>Tu detalle es muy especial para nosotros</Subtitle>
+        <Title>Sugerencia de Regalo</Title>
+        <HighlightText>
+          <FaCloudShowersHeavy /> ¡Ayúdanos a preparar su llegada con una dulce "Lluvia de Pañales"!
+        </HighlightText>
 
         <Section>
           <p>
             Para nosotros lo más importante es el bienestar del bebé. Por eso, 
-            si deseas traer un detalle, te agradecemos tener en cuenta que hemos 
-            elegido la línea <strong>Huggies Dermacare</strong>, ya que está 
-            diseñada para que el bebé no tenga ningún problema en su piel.
+            si deseas tener un detalle, te agradecemos de corazón tener en cuenta la línea 
+            <strong> Huggies Dermacare</strong>. Está diseñada especialmente para proteger su piel desde el primer día.
           </p>
         </Section>
 
         <Grid>
-          <GiftCard color="#C08081">
-            <IconHeader color="#C08081">
+          <GiftCard color="#d78398" bg="rgba(245, 193, 208, 0.4)">
+            <IconHeader color="#b05c74">
               <FaBabyCarriage size={24} />
               <h3>Si crees que es NIÑA</h3>
             </IconHeader>
             <ul>
-              <li><FaCheckCircle color="#C08081" /> Pañitos Huggies Dermacare</li>
+              <li><FaCheckCircle color="#b05c74" /> Pañitos Huggies Dermacare</li>
             </ul>
           </GiftCard>
 
-          <GiftCard color="#4682B4">
-            <IconHeader color="#4682B4">
+          <GiftCard color="#83b8d7" bg="rgba(193, 227, 245, 0.4)">
+            <IconHeader color="#4a84a6">
               <FaBabyCarriage size={24} />
               <h3>Si crees que es NIÑO</h3>
             </IconHeader>
             <ul>
-              <li><FaCheckCircle color="#4682B4" /> Pañales Huggies Dermacare</li>
+              <li><FaCheckCircle color="#4a84a6" /> Pañales Huggies Dermacare</li>
             </ul>
           </GiftCard>
         </Grid>
 
         <Note>
-          * El uso de esta línea específica asegura que la piel del recién nacido 
-          se mantenga protegida y sin irritaciones.
+          * Esta línea asegura que la piel del recién nacido se mantenga protegida y sin irritaciones. ¡Gracias por tu cariño!
         </Note>
       </ContentCard>
     </Container>
   );
 };
 
-// --- ESTILOS ULTRA TRANSPARENTES (Sincronizados con HomePage) ---
+// --- ESTILOS CON DIFUMINADO ACUARELA (MENOS TRANSPARENTE) ---
 
 const Container = styled(motion.div)`
   display: flex; 
   justify-content: center; 
   align-items: center; 
   min-height: 100vh; 
-  padding: 2rem 1rem; 
-  /* Fondo muy ligero para que resalte el AnimatedBackground */
-  background: rgba(242, 232, 223, 0.25); 
+  padding: 2rem 1.5rem; 
+  
+  /* EFECTO ACUARELA MÁS PRESENTE */
+  background-color: #ffffff;
+  background-image: 
+    radial-gradient(circle at 5% 10%, rgba(193, 227, 245, 0.7) 0%, transparent 40%),
+    radial-gradient(circle at 95% 90%, rgba(245, 193, 208, 0.7) 0%, transparent 40%);
+  
   position: relative;
   overflow: hidden;
 `;
 
 const ContentCard = styled.div`
-  /* Transparencia extrema (4%) */
-  background: rgba(255, 255, 255, 0.04); 
+  /* Menos transparente (60%) para que los colores acuarela resalten la tarjeta */
+  background: rgba(255, 255, 255, 0.6); 
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px);
   
-  /* El desenfoque es clave para la legibilidad */
-  backdrop-filter: blur(6px); 
-  -webkit-backdrop-filter: blur(6px);
-  
-  border-radius: 30px; 
-  padding: 2.5rem; 
+  border-radius: 40px; 
+  padding: 3rem 2rem; 
   width: 100%; 
   max-width: 500px; 
-  color: #5d4637; /* Color un poco más oscuro para que resalte */
+  color: #5d4637; 
   text-align: center; 
   
-  /* Bordes casi invisibles */
-  border: 1px solid rgba(255, 255, 255, 0.15); 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  border: 1px solid rgba(255, 255, 255, 0.8); 
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
   z-index: 10;
 `;
 
 const BackButton = styled.button`
-  background: transparent; 
+  background: rgba(255, 255, 255, 0.5); 
   color: #8c6a53; 
-  border: none; 
+  border: 1px solid rgba(140, 106, 83, 0.2); 
   display: flex; 
   align-items: center; 
   gap: 8px; 
   cursor: pointer; 
-  margin-bottom: 1.5rem; 
-  font-size: 0.95rem;
-  font-weight: 700; /* Más grueso para leerlo mejor sobre transparencia */
-  transition: transform 0.2s;
-  &:hover { transform: translateX(-3px); }
+  margin-bottom: 2rem; 
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  &:hover { 
+    background: white;
+    transform: translateX(-3px); 
+  }
 `;
 
 const Title = styled.h1` 
-  color: #8c6a53; 
+  color: #7a6352; 
   font-family: 'Georgia', serif; 
-  font-size: 2.4rem; 
-  margin-bottom: 0.5rem;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+  font-size: 2.2rem; 
+  margin-bottom: 1rem;
 `;
 
-const Subtitle = styled.p` 
-  color: #a68974; 
-  margin-bottom: 2rem; 
+const HighlightText = styled.div`
+  background: rgba(255, 255, 255, 0.4);
+  padding: 1.2rem;
+  border-radius: 20px;
+  color: #8c6a53;
+  font-size: 1.1rem;
   font-weight: 600;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+  margin-bottom: 2rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px dashed rgba(140, 106, 83, 0.3);
 `;
 
 const Section = styled.div`
-  /* Fondo interno muy suave */
-  background: rgba(255, 255, 255, 0.2); 
-  padding: 1.5rem; 
-  border-radius: 20px; 
-  color: #4a382b; 
-  line-height: 1.5; 
+  color: #6d5849; 
+  line-height: 1.7; 
   font-size: 1rem; 
   margin-bottom: 2rem; 
-  border: 1px solid rgba(217, 199, 184, 0.3);
-  text-align: left;
-  font-weight: 500;
-  strong { color: #5d4637; }
+  text-align: center;
+  padding: 0 10px;
+
+  strong { color: #5d4637; font-weight: 700; }
 `;
 
 const Grid = styled.div` 
   display: flex; 
   flex-direction: column; 
-  gap: 15px; 
+  gap: 20px; 
 `;
 
 const GiftCard = styled.div`
-  /* Tarjetas individuales también transparentes */
-  background: rgba(255, 255, 255, 0.35); 
-  border: 1px solid rgba(217, 199, 184, 0.4); 
-  border-radius: 20px; 
+  /* Colores de fondo basados en el género con transparencia suave */
+  background: ${props => props.bg}; 
+  border: 1px solid rgba(255, 255, 255, 0.5); 
+  border-radius: 25px; 
   padding: 1.5rem; 
   text-align: left;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
   
   ul { list-style: none; padding: 0; margin: 0; }
   li { 
-    color: #4a382b; 
-    font-size: 1rem; 
+    color: #5d4637; 
+    font-size: 1.05rem; 
     display: flex; 
     align-items: center; 
-    gap: 10px; 
+    gap: 12px; 
     font-weight: 600;
   }
 `;
@@ -175,19 +190,17 @@ const IconHeader = styled.div`
   color: ${props => props.color};
   h3 { 
     margin: 0; 
-    font-size: 1.15rem; 
+    font-size: 1.2rem; 
     font-family: 'Georgia', serif;
-    text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
   }
 `;
 
 const Note = styled.p` 
-  color: #5d4637; 
-  font-size: 0.9rem; 
-  margin-top: 2rem; 
+  color: #a68974; 
+  font-size: 0.85rem; 
+  margin-top: 2.5rem; 
   font-style: italic; 
   line-height: 1.4;
-  font-weight: 500;
 `;
 
 export default WhatToBring;
