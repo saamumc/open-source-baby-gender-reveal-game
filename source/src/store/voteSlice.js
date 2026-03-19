@@ -1,24 +1,33 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../firebase/config"; 
-import { ref, push, set, increment, update } from "firebase/database";
+import { ref, set, increment, update, get } from "firebase/database";
 
-// Thunk para guardar en Firebase (Nombre, Género y Mensaje)
 export const submitVote = createAsyncThunk(
   "vote/submitVote",
   async ({ name, gender, message }, { rejectWithValue }) => {
     try {
-      // 1. Guardar el detalle del voto
-      const votesRef = ref(db, "userVotes");
-      const newVoteRef = push(votesRef);
-      await set(newVoteRef, {
+      const uuid = localStorage.getItem("device_uuid");
+      
+      // 1. Referencia única basada en el UUID del dispositivo
+      const voteRef = ref(db, `userVotes/${uuid}`);
+      
+      // 2. Verificamos si ya existe para no duplicar el contador global
+      const snapshot = await get(voteRef);
+      
+      if (snapshot.exists()) {
+        return rejectWithValue("Ya has registrado un voto desde este dispositivo.");
+      }
+
+      // 3. Guardar el detalle del voto usando SET (no push)
+      await set(voteRef, {
         name,
         gender,
         message,
         timestamp: Date.now(),
-        uuid: localStorage.getItem("device_uuid")
+        uuid: uuid
       });
 
-      // 2. Incrementar contador global para las gráficas
+      // 4. Incrementar contador global
       await update(ref(db, 'results/voteCounts'), {
         [gender]: increment(1)
       });
@@ -38,13 +47,12 @@ const voteSlice = createSlice({
     message: "",
     hasVoted: false,
     loading: false,
-    firebaseDeleteStatus: "idle" // Necesario para ResetConfirmation
+    firebaseDeleteStatus: "idle" 
   },
   reducers: {
     selectGender: (state, action) => {
       state.selectedGender = action.payload;
     },
-    // Esta es la función que Vercel no encontraba:
     setFirebaseDeleteStatus: (state, action) => {
       state.firebaseDeleteStatus = action.payload;
     },
@@ -74,7 +82,6 @@ const voteSlice = createSlice({
   },
 });
 
-// Exportamos todas las acciones que los componentes necesitan
 export const { 
   selectGender, 
   resetVote, 
