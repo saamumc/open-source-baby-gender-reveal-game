@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import { db } from "../firebase/config";
 import { ref, onValue } from "firebase/database";
 import { updateResults } from "../store/resultsSlice";
-// 1. IMPORTAMOS EL FONDO ANIMADO
 import AnimatedBackground from "../components/AnimatedBackground";
 
 import {
@@ -61,46 +60,60 @@ const ResultsPage = () => {
     labels: ["Niño", "Niña"],
     datasets: [{
       data: [boyVotes, girlVotes],
-      backgroundColor: ["rgba(137, 207, 240, 0.7)", "rgba(255, 182, 193, 0.7)"],
+      backgroundColor: [
+        "rgba(137, 207, 240, 0.6)", // Azul difuminado
+        "rgba(255, 182, 193, 0.6)"  // Rosa difuminado
+      ],
       borderColor: ["#89CFF0", "#FFB6C1"],
       borderWidth: 2,
-      borderRadius: 12,
-      barThickness: 50,
+      borderRadius: 20,
+      barThickness: 45,
     }],
   };
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
+    plugins: { 
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        titleColor: '#5d4a3e',
+        bodyColor: '#5d4a3e',
+        cornerRadius: 12,
+        padding: 12
+      }
+    },
     scales: {
       y: { display: false },
-      x: { grid: { display: false }, ticks: { font: { size: 14, weight: "bold" } } },
+      x: { 
+        grid: { display: false }, 
+        ticks: { color: "#7a6352", font: { size: 14, weight: "600" } } 
+      },
     },
   };
 
   return (
     <PageBackground>
-      {/* 2. AGREGAMOS EL FONDO ANIMADO DETRÁS */}
       <AnimatedBackground />
 
       <ResultsContainer 
-        initial={{ opacity: 0, y: 20 }} 
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.95 }} 
+        animate={{ opacity: 1, scale: 1 }}
       >
         {!showResultPage ? (
           <HeaderSection>
-            <MainTitle>Esperando resultados...</MainTitle>
+            <MainTitle>Esperando...</MainTitle>
             <SubTitle>Valentina & Janppier</SubTitle>
             <LoaderMargin>
-               <p>Los resultados se revelarán pronto. ¡Mantente conectado!</p>
+               <p>Los resultados se revelarán pronto. <br/> ¡Mantente conectado!</p>
             </LoaderMargin>
-            <NavigationButton to="/">🏠 VOLVER AL INICIO</NavigationButton>
+            <NavigationButton to="/">VOLVER AL INICIO</NavigationButton>
           </HeaderSection>
         ) : (
           <ContentWrapper>
             <HeaderSection>
-              <MainTitle>Resultados Actuales</MainTitle>
+              <MainTitle>Resultados</MainTitle>
               <SubTitle>Valentina & Janppier</SubTitle>
             </HeaderSection>
 
@@ -110,7 +123,7 @@ const ResultsPage = () => {
                 <StatInfo>
                   <StatLabel>Tendencia</StatLabel>
                   <StatValue $highlight>
-                    {boyVotes === girlVotes ? "¡Empate!" : (boyVotes > girlVotes ? "Niño 👶" : "Niña 👧")}
+                    {boyVotes === girlVotes ? "¡Empate!" : (boyVotes > girlVotes ? "Niño" : "Niña")}
                   </StatValue>
                 </StatInfo>
               </StatCard>
@@ -118,7 +131,7 @@ const ResultsPage = () => {
               <StatCard>
                 <StatIconWrapper>👥</StatIconWrapper>
                 <StatInfo>
-                  <StatLabel>Votos Totales</StatLabel>
+                  <StatLabel>Votos</StatLabel>
                   <StatValue>{totalVotes}</StatValue>
                 </StatInfo>
               </StatCard>
@@ -126,11 +139,11 @@ const ResultsPage = () => {
 
             <ChartSection>
               <ChartWrapper>
-                <Bar data={data} options={options} height={220} />
+                <Bar data={data} options={options} height={200} />
               </ChartWrapper>
 
               <DetailedStats>
-                <GenderStatCard>
+                <GenderStatCard $boy>
                   <GenderIcon $boy><BabyBoyIcon /></GenderIcon>
                   <StatDetails>
                     <StatTitle>{boyVotes} Votos</StatTitle>
@@ -149,7 +162,7 @@ const ResultsPage = () => {
             </ChartSection>
 
             <NavigationButton to="/">
-              🏠 VOLVER AL INICIO
+              VOLVER AL INICIO
             </NavigationButton>
           </ContentWrapper>
         )}
@@ -158,64 +171,140 @@ const ResultsPage = () => {
   );
 };
 
-// --- ESTILOS ACTUALIZADOS ---
-const LoaderMargin = styled.div` margin: 2rem 0; color: #a68974; font-weight: 500; `;
+// --- ESTILOS UNIFICADOS (98% TRANSPARENCIA) ---
 
 const PageBackground = styled.div` 
   min-height: 100vh; 
-  background: transparent; /* 3. TRANSPARENTE PARA VER LOS OSITOS */
+  background: transparent; 
   display: flex; 
   align-items: center; 
   justify-content: center; 
-  padding: 20px; 
+  padding: 2rem 1.5rem; 
   position: relative;
   overflow: hidden;
 `;
 
 const ResultsContainer = styled(motion.div)` 
-  /* 4. TARJETA TRASLÚCIDA */
-  background: rgba(255, 255, 255, 0.8); 
-  border-radius: 30px; 
-  padding: 2.5rem; 
+  /* TRANSPARENCIA AL 98% */
+  background: rgba(255, 255, 255, 0.02); 
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+
+  border-radius: 40px; 
+  padding: 3.5rem 2rem; 
   width: 100%; 
-  max-width: 600px; 
-  backdrop-filter: blur(10px); 
-  border: 1px solid rgba(217, 199, 184, 0.5); 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
-  z-index: 1;
+  max-width: 500px; 
+  border: 1px solid rgba(255, 255, 255, 0.1); 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
+  z-index: 10;
+  position: relative;
 `;
 
 const ContentWrapper = styled.div` display: flex; flex-direction: column; gap: 1.5rem; `;
-const HeaderSection = styled.div` text-align: center; `;
-const MainTitle = styled.h1` color: #8c6a53; font-family: 'Georgia', serif; font-size: 1.8rem; margin: 0; `;
-const SubTitle = styled.p` color: #a68974; font-size: 1.1rem; `;
+
+const HeaderSection = styled.div` text-align: center; margin-bottom: 1rem; `;
+
+const MainTitle = styled.h1` 
+  color: #5d4a3e; 
+  font-family: 'Georgia', serif; 
+  font-size: 2.2rem; 
+  margin: 0; 
+  font-weight: 400;
+`;
+
+const SubTitle = styled.p` 
+  color: #7a6352; 
+  font-size: 0.9rem; 
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 0.5rem;
+`;
 
 const ChartWrapper = styled.div` 
-  background: rgba(255, 255, 255, 0.9); 
+  background: rgba(255, 255, 255, 0.2); 
   border-radius: 25px; 
   padding: 1.5rem; 
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
 `;
 
 const StatsGrid = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; `;
-const StatCard = styled.div` background: white; border-radius: 20px; padding: 1rem; display: flex; align-items: center; gap: 0.8rem; `;
-const StatIconWrapper = styled.div` width: 40px; height: 40px; border-radius: 50%; background: #f8f1eb; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; `;
-const StatInfo = styled.div` display: flex; flex-direction: column; `;
-const StatLabel = styled.div` font-size: 0.7rem; color: #a68974; text-transform: uppercase; font-weight: bold; `;
-const StatValue = styled.div` font-size: 1rem; font-weight: bold; color: ${props => props.$highlight ? "#8c6a53" : "#555"}; `;
-const ChartSection = styled.div` display: flex; flex-direction: column; gap: 1.2rem; `;
-const DetailedStats = styled.div` display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; @media (max-width: 480px) { grid-template-columns: 1fr; } `;
-const GenderStatCard = styled.div` background: white; border-radius: 20px; padding: 1.2rem; display: flex; align-items: center; gap: 1rem; `;
 
-const GenderIcon = styled.div` 
-  width: 50px; 
-  height: 50px; 
-  svg { width: 100%; height: 100%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); } 
+const StatCard = styled.div` 
+  background: rgba(255, 255, 255, 0.3); 
+  border-radius: 20px; 
+  padding: 1rem; 
+  display: flex; 
+  align-items: center; 
+  gap: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 `;
 
-const StatDetails = styled.div` display: flex; flex-direction: column; `;
-const StatTitle = styled.div` font-size: 0.8rem; color: #888; font-weight: 600; `;
-const Percentage = styled.div` font-size: 1.6rem; font-weight: 900; color: ${props => props.$boy ? "#89CFF0" : "#FFB6C1"}; `;
-const NavigationButton = styled(Link)` background: #8c6a53; color: white; text-decoration: none; padding: 1.1rem; border-radius: 20px; text-align: center; font-weight: bold; display: block; transition: all 0.3s ease; &:hover { background: #765945; transform: translateY(-2px); } `;
+const StatIconWrapper = styled.div` 
+  width: 35px; 
+  height: 35px; 
+  border-radius: 50%; 
+  background: rgba(255, 255, 255, 0.5); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 1rem; 
+`;
+
+const StatInfo = styled.div` display: flex; flex-direction: column; text-align: left; `;
+const StatLabel = styled.div` font-size: 0.65rem; color: #7a6352; text-transform: uppercase; font-weight: 700; `;
+const StatValue = styled.div` font-size: 1rem; font-weight: bold; color: #5d4a3e; `;
+
+const ChartSection = styled.div` display: flex; flex-direction: column; gap: 1.2rem; `;
+
+const DetailedStats = styled.div` 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 1rem; 
+`;
+
+const GenderStatCard = styled.div` 
+  background: ${props => props.$boy ? 'rgba(193, 227, 245, 0.25)' : 'rgba(245, 193, 208, 0.25)'};
+  border-radius: 25px; 
+  padding: 1.2rem; 
+  display: flex; 
+  align-items: center; 
+  gap: 0.8rem; 
+  border: 1px solid rgba(255, 255, 255, 0.2);
+`;
+
+const GenderIcon = styled.div` 
+  width: 40px; 
+  height: 40px; 
+  svg { width: 100%; height: 100%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); } 
+`;
+
+const StatDetails = styled.div` display: flex; flex-direction: column; text-align: left; `;
+const StatTitle = styled.div` font-size: 0.75rem; color: #7a6352; font-weight: 600; `;
+const Percentage = styled.div` font-size: 1.5rem; font-weight: 900; color: ${props => props.$boy ? "#4a84a6" : "#b05c74"}; `;
+
+const NavigationButton = styled(Link)` 
+  background: rgba(122, 99, 82, 0.9); 
+  color: white; 
+  text-decoration: none; 
+  padding: 1.1rem; 
+  border-radius: 50px; 
+  text-align: center; 
+  font-weight: 700; 
+  font-size: 0.9rem;
+  display: block; 
+  transition: all 0.3s ease; 
+  margin-top: 1rem;
+  &:hover { background: #5d4a3e; transform: translateY(-2px); } 
+`;
+
+const LoaderMargin = styled.div` 
+  margin: 2.5rem 0; 
+  color: #7a6352; 
+  font-weight: 500; 
+  line-height: 1.6;
+  font-size: 0.95rem;
+`;
 
 export default ResultsPage;
+
