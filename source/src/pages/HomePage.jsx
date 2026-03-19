@@ -16,6 +16,7 @@ const HomePage = () => {
 
   const fotoRevelacion = "/Revelacion.jpg";
   const whatsappNumber = "573196911965"; 
+  const googleMapsUrl = "https://share.google/bIoXT9732xlRH19Gf";
 
   const whatsappMessage = encodeURIComponent(
     "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
@@ -82,7 +83,6 @@ const HomePage = () => {
             />
           </PhotoWrapper>
 
-          {/* TEXTO RESUMIDO: MÁS IMPACTO, MENOS PALABRAS */}
           <TextBlock>
             <InvitationHeader>¡La familia crece!</InvitationHeader>
             <InvitationBody>
@@ -99,9 +99,17 @@ const HomePage = () => {
             </DressCodeBody>
           </TextBlock>
 
-          <LocationBox>
+          {/* SECCIÓN DE UBICACIÓN CON LINK */}
+          <LocationBox 
+            href={googleMapsUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
             <FaMapMarkerAlt size={18} color="#7a6352" />
             <p><strong>La Calera, Cundinamarca</strong> - 3:00 PM</p>
+            <LocationTip>Ver ubicación en mapa</LocationTip>
           </LocationBox>
 
           <ConfirmButton
@@ -135,7 +143,7 @@ const HomePage = () => {
   );
 };
 
-// --- ESTILOS 98% TRANSPARENTES ---
+// --- ESTILOS ---
 
 const HomeContainer = styled(motion.div)`
   display: flex;
@@ -148,17 +156,14 @@ const HomeContainer = styled(motion.div)`
 `;
 
 const ContentCard = styled.div`
-  /* TRANSPARENCIA EXTREMA 98% */
   background: rgba(255, 255, 255, 0.02); 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  
   border-radius: 40px;
   padding: 3.5rem 2rem;
   width: 100%;
   max-width: 480px;
   text-align: center;
-  
   border: 1px solid rgba(255, 255, 255, 0.1); 
   z-index: 10;
   position: relative;
@@ -170,7 +175,6 @@ const NamesTitle = styled.h1`
   margin: 0;
   color: #5d4a3e;
   font-weight: 400;
-
   span {
     color: rgba(93, 74, 62, 0.3);
     font-size: 1.8rem;
@@ -201,18 +205,10 @@ const PhotoWrapper = styled.div`
   margin-bottom: 1.5rem;
   border: 4px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
-
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
+  img { width: 100%; height: auto; display: block; }
 `;
 
-const TextBlock = styled.div`
-  width: 100%;
-  text-align: center;
-`;
+const TextBlock = styled.div` width: 100%; text-align: center; `;
 
 const InvitationHeader = styled.h2`
   font-size: 1.2rem;
@@ -243,16 +239,36 @@ const DressCodeBody = styled.p`
   line-height: 1.6;
 `;
 
-const LocationBox = styled.div`
+/* ESTILO DE UBICACIÓN ACTUALIZADO */
+const LocationBox = styled(motion.a)`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
   margin: 1rem 0;
   color: #4a3b30;
-  font-size: 0.9rem;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(122, 99, 82, 0.1);
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
   
-  p { margin: 0; }
+  p { margin: 0; font-size: 0.9rem; }
+`;
+
+const LocationTip = styled.span`
+  font-size: 0.7rem;
+  color: #7a6352;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  opacity: 0.7;
 `;
 
 const ConfirmButton = styled.button`
@@ -266,11 +282,7 @@ const ConfirmButton = styled.button`
   width: 100%;
   max-width: 280px;
   transition: all 0.3s ease;
-  
-  &:hover {
-    background: #25d366;
-    transform: translateY(-2px);
-  }
+  &:hover { background: #25d366; transform: translateY(-2px); }
 `;
 
 const ActionsGrid = styled.div`
