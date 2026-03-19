@@ -12,15 +12,13 @@ const VotePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
-  // ESTADOS LOCALES
-  const [name, setName] = useState(""); // Nuevo: Estado para el nombre
+  const [name, setName] = useState(""); 
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   
   const { selectedGender, hasVoted } = useSelector((state) => state.vote);
   const { showVotingScreen } = useSelector((state) => state.results);
 
-  // Redirección si ya existe la marca en LocalStorage
   useEffect(() => {
     const alreadyVoted = localStorage.getItem("baby_shower_voted");
     if (alreadyVoted) {
@@ -43,7 +41,6 @@ const VotePage = () => {
   };
 
   const handleSubmit = async () => {
-    // Validamos que tenga género seleccionado y nombre escrito
     if (selectedGender && name.trim() !== "" && !isProcessing) {
       setIsProcessing(true); 
       
@@ -56,14 +53,11 @@ const VotePage = () => {
       });
 
       try {
-        // Enviamos nombre, género y mensaje al backend/store
         await dispatch(submitVote({ 
-          name: name, // Se agrega el nombre
+          name: name,
           gender: selectedGender, 
           message: message 
         }));
-        
-        // Bloqueo definitivo en el navegador
         localStorage.setItem("baby_shower_voted", "true");
       } catch (error) {
         console.error("Error al votar:", error);
@@ -79,14 +73,14 @@ const VotePage = () => {
       <AnimatedBackground />
 
       <GlassCard
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
       >
         {(hasVoted || localStorage.getItem("baby_shower_voted")) ? (
           <>
             <SuccessIcon>✨</SuccessIcon>
             <MainTitle>¡Voto Registrado!</MainTitle>
-            <SubTitle style={{ marginBottom: '20px' }}>
+            <SubTitle style={{ marginBottom: '30px' }}>
               ¡Gracias por participar! Solo se permite un voto por persona.
             </SubTitle>
             
@@ -100,11 +94,10 @@ const VotePage = () => {
         ) : (
           <>
             <TitleSection>
-              <MainTitle>Valentina & Janppier</MainTitle>
-              <SubTitle>¿Qué crees que será el bebé?</SubTitle>
+              <MainTitle>Tu Apuesta</MainTitle>
+              <SubTitle>Valentina & Janppier</SubTitle>
             </TitleSection>
 
-            {/* CAMPO DE NOMBRE */}
             <InputSection>
               <MessageLabel>Tu Nombre:</MessageLabel>
               <StyledInput
@@ -151,7 +144,7 @@ const VotePage = () => {
               whileTap={selectedGender && name.trim() ? { scale: 0.98 } : {}}
               $active={!!selectedGender && !!name.trim()}
             >
-              {isProcessing ? "Enviando apuesta..." : (selectedGender && name.trim()) ? "¡Confirmar mi apuesta!" : "Escribe tu nombre y elige"}
+              {isProcessing ? "ENVIANDO..." : (selectedGender && name.trim()) ? "CONFIRMAR APUESTA" : "ESCRIBE TU NOMBRE Y ELIGE"}
             </SubmitButton>
           </>
         )}
@@ -160,7 +153,7 @@ const VotePage = () => {
   );
 };
 
-// --- ESTILOS ---
+// --- ESTILOS 98% TRANSPARENTES (Estilo HomePage) ---
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -168,72 +161,124 @@ const PageWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background: transparent; 
-  padding: 20px;
+  padding: 2rem 1.5rem;
   position: relative;
   overflow: hidden;
 `;
 
 const GlassCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  padding: 2.5rem;
-  border-radius: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  /* TRANSPARENCIA AL 98% (0.02) */
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  padding: 3.5rem 2.5rem;
+  border-radius: 40px;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   text-align: center;
-  border: 1px solid rgba(217, 199, 184, 0.5);
-  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+  position: relative;
+`;
+
+const TitleSection = styled.div` margin-bottom: 2.5rem; `;
+
+const MainTitle = styled.h1` 
+  color: #5d4a3e; 
+  font-family: 'Georgia', serif; 
+  font-size: 2.4rem; 
+  margin: 0;
+  font-weight: 400;
+`;
+
+const SubTitle = styled.p` 
+  color: #7a6352; 
+  font-size: 0.9rem; 
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 0.5rem;
+  font-weight: 500;
 `;
 
 const InputSection = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   text-align: left;
 `;
 
 const StyledInput = styled.input`
   width: 100%;
-  padding: 12px 15px;
-  border-radius: 12px;
-  border: 1px solid #d9c7b8;
+  padding: 14px 18px;
+  border-radius: 20px;
+  /* Fondo muy sutil para el input */
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(140, 106, 83, 0.15);
   font-size: 1rem;
-  color: #8c6a53;
-  &:focus { outline: none; border-color: #a68974; }
+  color: #4a3b30;
+  font-family: inherit;
+  backdrop-filter: blur(5px);
+  
+  &::placeholder { color: rgba(122, 99, 82, 0.5); }
+  &:focus { outline: none; border-color: rgba(140, 106, 83, 0.4); background: rgba(255, 255, 255, 0.4); }
 `;
 
-const SuccessIcon = styled.div` font-size: 3.5rem; margin-bottom: 1rem; `;
-const TitleSection = styled.div` margin-bottom: 1.5rem; `;
-const MainTitle = styled.h1` color: #8c6a53; font-family: 'Georgia', serif; font-size: 2.2rem; margin-bottom: 0.5rem; `;
-const SubTitle = styled.p` color: #a68974; font-size: 1.1rem; line-height: 1.4; `;
+const MessageLabel = styled.label` 
+  display: block; 
+  color: #5d4a3e; 
+  margin-bottom: 0.6rem; 
+  font-size: 0.9rem; 
+  font-weight: 600; 
+  margin-left: 5px;
+`;
 
-const OptionsContainer = styled.div` display: flex; gap: 20px; justify-content: center; margin-bottom: 1.5rem; `;
-const MessageSection = styled(motion.div)` margin-bottom: 1.5rem; overflow: hidden; text-align: left; `;
-const MessageLabel = styled.label` display: block; color: #8c6a53; margin-bottom: 0.5rem; font-size: 0.95rem; font-weight: 600; `;
+const OptionsContainer = styled.div` 
+  display: flex; 
+  gap: 15px; 
+  justify-content: center; 
+  margin-bottom: 2rem; 
+`;
+
+const MessageSection = styled(motion.div)` 
+  margin-bottom: 2rem; 
+  overflow: hidden; 
+  text-align: left; 
+`;
 
 const StyledTextArea = styled.textarea` 
-  width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #d9c7b8; 
-  background: white; color: #8c6a53; resize: none; height: 80px; font-family: inherit;
-  &:focus { outline: none; border-color: #a68974; }
+  width: 100%; 
+  padding: 16px; 
+  border-radius: 20px; 
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(140, 106, 83, 0.15);
+  color: #4a3b30; 
+  resize: none; 
+  height: 90px; 
+  font-family: inherit;
+  backdrop-filter: blur(5px);
+
+  &::placeholder { color: rgba(122, 99, 82, 0.5); }
+  &:focus { outline: none; border-color: rgba(140, 106, 83, 0.4); background: rgba(255, 255, 255, 0.4); }
 `;
 
 const SubmitButton = styled(motion.button)`
   width: 100%;
-  padding: 16px;
-  border-radius: 20px;
+  padding: 18px;
+  border-radius: 50px;
   border: none;
-  background: ${props => props.$active ? '#8c6a53' : '#d9c7b8'};
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
+  /* Botón con opacidad para que no rompa la transparencia extrema */
+  background: ${props => props.$active ? 'rgba(122, 99, 82, 0.9)' : 'rgba(122, 99, 82, 0.2)'};
+  color: ${props => props.$active ? 'white' : 'rgba(122, 99, 82, 0.5)'};
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
   transition: all 0.3s ease;
   
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
+  &:disabled { cursor: not-allowed; }
+  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 `;
 
-export default VotePage;
+const SuccessIcon = styled.div` font-size: 3.5rem; margin-bottom: 1.5rem; `;
 
+export default VotePage;
