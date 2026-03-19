@@ -16,9 +16,7 @@ const HomePage = () => {
 
   const fotoRevelacion = "/Revelacion.jpg";
   const whatsappNumber = "573102021939"; 
-  // Corrected Version
-const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Your+Location"; 
-
+  const googleMapsUrl = "https://maps.app.goo.gl/stUaX2dsSYYjrAhL6?g_st=ic"; 
 
   const whatsappMessage = encodeURIComponent(
     "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
@@ -148,7 +146,6 @@ const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Your+Loca
         </MainContent>
       </ContentCard>
 
-      {/* --- BARRA FIJA DE VOTACIÓN (Garantiza que no olviden votar) --- */}
       <StickyActions>
         <FloatingVote 
           onClick={handleVoteClick}
@@ -191,7 +188,7 @@ const ContentCard = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.1); 
   z-index: 10;
   position: relative;
-  margin-bottom: 120px; /* Espacio para que el Sticky no tape el final */
+  margin-bottom: 120px; 
 `;
 
 const NamesTitle = styled.h1`
