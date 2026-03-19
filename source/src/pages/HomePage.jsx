@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  FaVoteYea, 
-  FaChartBar, 
-  FaMapMarkerAlt, 
-  FaBabyCarriage, 
-  FaWhatsapp,
-  FaGift 
-} from "react-icons/fa";
+import { FaVoteYea, FaChartBar, FaMapMarkerAlt, FaBabyCarriage, FaWhatsapp, FaCalendarAlt, FaGift } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { resetVote } from "../store/voteSlice";
 import { resetUi } from "../store/uiSlice";
 import { setShowVotingScreen } from "../store/resultsSlice";
-import AnimatedBackground from "../components/AnimatedBackground"; 
+import AnimatedBackground from "../components/AnimatedBackground";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -22,13 +15,16 @@ const HomePage = () => {
   const [timeLeft, setTimeLeft] = useState({});
 
   const fotoRevelacion = "/Revelacion.jpg";
-  const whatsappNumber = "573196911965";
-  const message = encodeURIComponent(
-    "¡Hola Samuel y Sara! Confirmo mi asistencia a la revelación de sexo de Valentina y Janppier."
+  const whatsappNumber = "573196911965"; 
+  const googleMapsUrl = "https://maps.app.goo.gl/vL7T6E6ZJv7qYvY99"; // Cambia esto por tu link real de La Calera
+
+  const whatsappMessage = encodeURIComponent(
+    "¡Hola! Confirmo mi asistencia a la revelación de género de Valentina y Janppier. 👶🎉"
   );
 
   useEffect(() => {
     const eventDate = new Date("April 18, 2026 15:00:00").getTime();
+
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = eventDate - now;
@@ -39,10 +35,13 @@ const HomePage = () => {
       } else {
         setTimeLeft({
           days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          hours: Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          )
         });
       }
     }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
@@ -51,7 +50,10 @@ const HomePage = () => {
     dispatch(resetVote());
     dispatch(resetUi());
     dispatch(setShowVotingScreen(true));
-    setTimeout(() => navigate("/vote"), 200);
+
+    setTimeout(() => {
+      navigate("/vote");
+    }, 200);
   };
 
   return (
@@ -59,11 +61,19 @@ const HomePage = () => {
       <AnimatedBackground />
 
       <ContentCard>
-        <NamesTitle>Valentina & Janppier</NamesTitle>
-        <Divider />
+        <NamesTitle>
+          Valentina <span>&</span> Janppier
+        </NamesTitle>
+
+        <DateHighlight>
+          <FaCalendarAlt size={16} />
+          SÁBADO, 18 DE ABRIL
+        </DateHighlight>
 
         <CountdownSection>
-          {timeLeft.expired ? "¡Es hoy!" : `Faltan ${timeLeft.days} días y ${timeLeft.hours} horas`}
+          {timeLeft.expired
+            ? "¡Llegó el gran día!"
+            : `Faltan ${timeLeft.days} días y ${timeLeft.hours} horas`}
         </CountdownSection>
 
         <MainContent>
@@ -71,63 +81,88 @@ const HomePage = () => {
             <img
               src={fotoRevelacion}
               alt="Valentina y Janppier"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
               onError={(e) => {
-                e.target.src = "https://via.placeholder.com/400?text=Cargando+Invitacion...";
+                e.target.src =
+                  "https://via.placeholder.com/300?text=Cargando+Invitacion...";
               }}
             />
           </PhotoWrapper>
 
-          <InvitationText>
-            Los <strong>abuelitos y tíos</strong> queremos invitarte a la revelación de género del bebé.
-          </InvitationText>
+          <TextBlock>
+            <InvitationHeader>¡La familia crece!</InvitationHeader>
+            <InvitationBody>
+              Los abuelitos y tíos te invitamos a descubrir si el mundo se pintará de azul o rosa para nuestro primer niet@ y sobrin@. 
+              <br/>
+              <strong>¡Tu presencia hará este momento inolvidable!</strong>
+            </InvitationBody>
+          </TextBlock>
 
-          {/* --- SECCIÓN DE REGALO ULTRA RESALTADA --- */}
-          <GiftHighlightCard
-            initial={{ scale: 0.95 }}
-            animate={{ scale: [0.98, 1.02, 0.98] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          <TextBlock>
+            <DressCodeHeader>✨ Dress Code:</DressCodeHeader>
+            <DressCodeBody>
+              Acompáñanos con una <strong>prenda base de color blanco</strong> para que los colores de la revelación brillen más que nunca. 🤍
+            </DressCodeBody>
+          </TextBlock>
+
+          <LocationBox 
+            href={googleMapsUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <Badge>¡Sugerencia Importante!</Badge>
-            <GiftIconWrapper>
-               <FaGift size={28} color="#d4af37" />
-            </GiftIconWrapper>
-            <GiftText>
-              Para facilitarte la elección, hemos preparado una lista de <strong>Sugerencias de Regalo</strong>.
-            </GiftText>
-            <PulseButton
-              onClick={() => navigate("/traer")}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <FaBabyCarriage size={22} /> 
-              VER QUÉ TRAER
-            </PulseButton>
-          </GiftHighlightCard>
+            <FaMapMarkerAlt size={18} color="#7a6352" />
+            <p><strong>La Calera, Cundinamarca</strong> - 3:00 PM</p>
+            <LocationTip>Toca para ver la ubicación 📍</LocationTip>
+          </LocationBox>
 
-          <DressCodeBox>
-            <p>
-              <strong>Prenda base:</strong> Trae tu <strong>chaqueta, bufanda o camisa en color blanco</strong>.
-            </p>
-          </DressCodeBox>
-
-          <DetailsBox>
-            <FaMapMarkerAlt color="#8c6a53" /> La Calera, Cundinamarca - 3:00 PM
-          </DetailsBox>
-
-          <ConfirmButton onClick={() => window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank")}>
-            <FaWhatsapp /> CONFIRMAR ASISTENCIA
+          <ConfirmButton
+            onClick={() =>
+              window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, "_blank")
+            }
+          >
+            <FaWhatsapp size={20} />
+            CONFIRMAR ASISTENCIA
           </ConfirmButton>
         </MainContent>
 
+        {/* --- SECCIÓN DE REGALO CON PALPITACIÓN --- */}
+        <GiftButtonContainer
+           onClick={() => navigate("/traer")}
+           initial={{ scale: 1 }}
+           animate={{ 
+             scale: [1, 1.03, 1],
+             boxShadow: [
+               "0 4px 15px rgba(0,0,0,0.05)",
+               "0 8px 25px rgba(212, 175, 55, 0.2)",
+               "0 4px 15px rgba(0,0,0,0.05)"
+             ]
+           }}
+           transition={{ 
+             duration: 2, 
+             repeat: Infinity, 
+             ease: "easeInOut" 
+           }}
+        >
+            <IconBadge>
+              <FaGift size={14} color="white" />
+            </IconBadge>
+            <FaBabyCarriage size={24} />
+            <span>Sugerencia de Regalo</span>
+        </GiftButtonContainer>
+
         <ActionsGrid>
-          <ActionButton onClick={handleVoteClick} color="#4682B4">
-            <FaVoteYea /> VOTAR
-          </ActionButton>
-          <ActionButton onClick={() => navigate("/results")} color="#C08081">
-            <FaChartBar /> RESULTADOS
-          </ActionButton>
+          <BlueActionButton onClick={handleVoteClick}>
+            <FaVoteYea size={22} />
+            VOTAR
+          </BlueActionButton>
+
+          <PinkActionButton onClick={() => navigate("/results")}>
+            <FaChartBar size={22} />
+            RESULTADOS
+          </PinkActionButton>
         </ActionsGrid>
+
       </ContentCard>
     </HomeContainer>
   );
@@ -139,188 +174,217 @@ const HomeContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 1rem;
-  background: transparent; 
+  padding: 2.5rem 1.5rem;
   min-height: 100vh;
   position: relative;
+  background: transparent; 
 `;
 
 const ContentCard = styled.div`
-  background: rgba(255, 255, 255, 0.4); 
-  backdrop-filter: blur(10px); 
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 30px;
-  padding: 2.5rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03); 
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 40px;
+  padding: 3.5rem 2rem;
   width: 100%;
   max-width: 480px;
-  color: #8c6a53;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.1); 
+  z-index: 10;
   position: relative;
 `;
 
 const NamesTitle = styled.h1`
-  font-family: 'Georgia', serif;
-  font-size: 2.2rem;
+  font-family: 'Georgia', serif; 
+  font-size: 2.5rem;
+  margin: 0;
   color: #5d4a3e;
-  margin-bottom: 0.5rem;
-`;
-
-const Divider = styled.div`
-  width: 50px;
-  height: 2px;
-  background: #d9c7b8;
-  margin: 1rem auto;
-`;
-
-const CountdownSection = styled.div`
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #a68974;
-  margin-bottom: 1.5rem;
-  letter-spacing: 1px;
-`;
-
-const MainContent = styled.div` margin-top: 1rem; `;
-
-const PhotoWrapper = styled.div`
-  width: 100%;
-  height: 200px;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-`;
-
-const InvitationText = styled.p`
-  font-size: 1.1rem;
-  line-height: 1.4;
-  margin-bottom: 1.5rem;
-  color: #5d4a3e;
-`;
-
-/* --- ESTILOS DE LA TARJETA DE REGALO (LA QUE NO PUEDEN IGNORAR) --- */
-
-const GiftHighlightCard = styled(motion.div)`
-  background: linear-gradient(135deg, rgba(253, 242, 245, 0.9) 0%, rgba(240, 247, 250, 0.9) 100%);
-  border: 2px solid #d4af37;
-  border-radius: 25px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-  position: relative;
-  box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15);
-`;
-
-const Badge = styled.div`
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #d4af37;
-  color: white;
-  padding: 4px 15px;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  white-space: nowrap;
-`;
-
-const GiftIconWrapper = styled.div`
-  margin-bottom: 10px;
-  animation: bounce 2s infinite;
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+  font-weight: 400;
+  span {
+    color: rgba(93, 74, 62, 0.3);
+    font-size: 1.8rem;
   }
 `;
 
-const GiftText = styled.p`
-  font-size: 0.95rem;
+const DateHighlight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 1.1rem;
   color: #5d4a3e;
-  margin-bottom: 1rem;
-  line-height: 1.4;
-  strong { color: #8c6a53; }
+  letter-spacing: 1px;
 `;
 
-const PulseButton = styled(motion.button)`
-  background: #8c6a53;
-  color: white;
-  border: none;
-  padding: 14px 25px;
-  border-radius: 50px;
-  font-weight: 800;
-  font-size: 1rem;
+const CountdownSection = styled.div`
+  color: #7a6352;
+  margin: 0.2rem 0 2.5rem 0;
+  font-weight: 500;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+`;
+
+const MainContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+`;
+
+const PhotoWrapper = styled.div`
   width: 100%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  box-shadow: 0 4px 15px rgba(140, 106, 83, 0.4);
-`;
-
-/* --- OTROS COMPONENTES --- */
-
-const DressCodeBox = styled.div`
-  background: rgba(255, 255, 255, 0.3);
-  padding: 1rem;
-  border-radius: 15px;
+  max-width: 280px; 
+  border-radius: 20px; 
+  overflow: hidden;
   margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-  border: 1px dashed #d9c7b8;
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+  img { width: 100%; height: auto; display: block; }
 `;
 
-const DetailsBox = styled.div`
+const TextBlock = styled.div` width: 100%; text-align: center; `;
+
+const InvitationHeader = styled.h2`
+  font-size: 1.2rem;
+  color: #5d4a3e;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+`;
+
+const InvitationBody = styled.p`
+  font-size: 0.95rem;
+  color: #4a3b30;
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 400;
+`;
+
+const DressCodeHeader = styled.h3`
+  font-size: 1rem;
+  color: #5d4a3e;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+`;
+
+const DressCodeBody = styled.p`
+  font-size: 0.9rem;
+  color: #4a3b30;
+  margin: 0;
+  line-height: 1.6;
+`;
+
+const LocationBox = styled(motion.a)`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  color: #5d4a3e;
+  gap: 4px;
+  margin: 1rem 0;
+  color: #4a3b30;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(122, 99, 82, 0.1);
+  p { margin: 0; font-size: 0.9rem; }
+`;
+
+const LocationTip = styled.span`
+  font-size: 0.7rem;
+  color: #7a6352;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  opacity: 0.7;
 `;
 
 const ConfirmButton = styled.button`
-  width: 100%;
-  padding: 16px;
-  border-radius: 50px;
-  border: none;
-  background: #25D366;
+  background: rgba(37, 211, 102, 0.85);
   color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
-  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 280px;
+  transition: all 0.3s ease;
+  &:hover { background: #25d366; }
 `;
 
 const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
+  margin-top: 1.5rem;
+  width: 100%;
 `;
 
 const ActionButton = styled.button`
-  padding: 12px;
-  border-radius: 15px;
-  border: 1.5px solid ${props => props.color};
-  background: transparent;
-  color: ${props => props.color};
-  font-weight: bold;
+  border: none;
+  padding: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  font-size: 0.8rem;
+`;
+
+const BlueActionButton = styled(ActionButton)`
+  background: rgba(193, 227, 245, 0.3);
+  color: #2c5d7a;
+  border: 1px solid rgba(193, 227, 245, 0.2);
+`;
+
+const PinkActionButton = styled(ActionButton)`
+  background: rgba(245, 193, 208, 0.3);
+  color: #8a3d53;
+  border: 1px solid rgba(245, 193, 208, 0.2);
+`;
+
+const GiftButtonContainer = styled(motion.button)`
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(212, 175, 55, 0.3); /* Un toque dorado sutil */
+  color: #7a6352;
+  margin-top: 2.5rem;
+  padding: 1.2rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  &:hover { background: ${props => props.color}; color: white; }
+  gap: 12px;
+  width: 100%;
+  position: relative;
+  overflow: visible;
+  
+  span {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+`;
+
+const IconBadge = styled.div`
+  position: absolute;
+  top: -10px;
+  right: 15px;
+  background: #d4af37;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 `;
 
 export default HomePage;
