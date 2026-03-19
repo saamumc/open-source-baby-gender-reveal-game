@@ -10,7 +10,7 @@ import AnimatedBackground from "../components/AnimatedBackground";
 
 // --- IMPORTACIONES DE FIREBASE ---
 import { db } from "../firebase/config";
-import { ref, push, set, increment, update } from "firebase/database";
+import { ref, set, increment, update, get } from "firebase/database";
 
 const VotePage = () => {
   const dispatch = useDispatch();
@@ -45,52 +45,66 @@ const VotePage = () => {
   };
 
   const handleSubmit = async () => {
-    if (selectedGender && name.trim() !== "" && !isProcessing) {
-      setIsProcessing(true); 
-      
-      const color = selectedGender === "girl" ? "#FFB6C1" : "#89CFF0";
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: [color, "#FFFFFF", "#F9F6F1"]
-      });
+    // BLOQUEO CRÍTICO: Si ya se está procesando o faltan datos, salir inmediatamente
+    if (isProcessing || !selectedGender || name.trim() === "") return;
 
-      try {
-        // 1. GUARDAR EN FIREBASE (Aquí es donde se graban el nombre y mensaje)
-        const votesRef = ref(db, "userVotes");
-        const newVoteRef = push(votesRef);
-        
-        await set(newVoteRef, {
-          name: name,
+    setIsProcessing(true); 
+    
+    const deviceUUID = localStorage.getItem("device_uuid") || crypto.randomUUID();
+    if (!localStorage.getItem("device_uuid")) {
+      localStorage.setItem("device_uuid", deviceUUID);
+    }
+
+    const color = selectedGender === "girl" ? "#FFB6C1" : "#89CFF0";
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: [color, "#FFFFFF", "#F9F6F1"]
+    });
+
+    try {
+      // 1. VERIFICAR SI YA EXISTE ESTE UUID (Doble capa de seguridad)
+      const voteCheckRef = ref(db, `userVotes/${deviceUUID}`);
+      const snapshot = await get(voteCheckRef);
+      
+      if (snapshot.exists()) {
+        console.warn("Este dispositivo ya registró un voto.");
+      } else {
+        // 2. GUARDAR EN FIREBASE usando el UUID como ID (Evita duplicados por push automático)
+        await set(ref(db, `userVotes/${deviceUUID}`), {
+          name: name.trim(),
           gender: selectedGender,
-          message: message,
+          message: message.trim(),
           timestamp: Date.now(),
-          uuid: localStorage.getItem("device_uuid") || "anonymous"
+          uuid: deviceUUID
         });
 
-        // 2. ACTUALIZAR CONTADOR GLOBAL (Para las gráficas)
+        // 3. ACTUALIZAR CONTADOR GLOBAL
         const updates = {};
         updates[`results/voteCounts/${selectedGender}`] = increment(1);
         await update(ref(db), updates);
-
-        // 3. AVISAR A REDUX Y LOCALSTORAGE
-        dispatch(submitVote({ 
-          name: name,
-          gender: selectedGender, 
-          message: message 
-        }));
-        
-        localStorage.setItem("baby_shower_voted", "true");
-      } catch (error) {
-        console.error("Error al votar:", error);
-        alert("Hubo un error al guardar tu apuesta. Intenta de nuevo.");
-        setIsProcessing(false);
       }
+
+      // 4. AVISAR A REDUX Y LOCALSTORAGE
+      dispatch(submitVote({ 
+        name: name,
+        gender: selectedGender, 
+        message: message 
+      }));
+      
+      localStorage.setItem("baby_shower_voted", "true");
+      
+      // Pequeño delay para asegurar que el estado de Redux se propague antes de navegar
+      setTimeout(() => navigate("/results"), 1500);
+
+    } catch (error) {
+      console.error("Error al votar:", error);
+      alert("Hubo un error al guardar tu apuesta. Intenta de nuevo.");
+      setIsProcessing(false);
     }
   };
 
-  // ... (Resto de tu JSX de retorno se mantiene igual)
   if (showVotingScreen === false) return null;
 
   return (
@@ -130,6 +144,7 @@ const VotePage = () => {
                 placeholder="Escribe tu nombre aquí..."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                disabled={isProcessing}
               />
             </InputSection>
 
@@ -137,12 +152,12 @@ const VotePage = () => {
               <GenderOption
                 type="girl"
                 selected={selectedGender === "girl"}
-                onSelect={() => handleSelect("girl")}
+                onSelect={() => !isProcessing && handleSelect("girl")}
               />
               <GenderOption
                 type="boy"
                 selected={selectedGender === "boy"}
-                onSelect={() => handleSelect("boy")}
+                onSelect={() => !isProcessing && handleSelect("boy")}
               />
             </OptionsContainer>
 
@@ -158,6 +173,7 @@ const VotePage = () => {
                     placeholder="Ej: ¡Presiento que será una princesa!..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    disabled={isProcessing}
                   />
                 </MessageSection>
               )}
@@ -166,8 +182,8 @@ const VotePage = () => {
             <SubmitButton
               disabled={!selectedGender || !name.trim() || isProcessing}
               onClick={handleSubmit}
-              whileTap={selectedGender && name.trim() ? { scale: 0.98 } : {}}
-              $active={!!selectedGender && !!name.trim()}
+              whileTap={selectedGender && name.trim() && !isProcessing ? { scale: 0.98 } : {}}
+              $active={!!selectedGender && !!name.trim() && !isProcessing}
             >
               {isProcessing ? "ENVIANDO..." : (selectedGender && name.trim()) ? "CONFIRMAR APUESTA" : "ESCRIBE TU NOMBRE Y ELIGE"}
             </SubmitButton>
@@ -178,7 +194,7 @@ const VotePage = () => {
   );
 };
 
-// --- ESTILOS SE MANTIENEN IGUAL ---
+// --- ESTILOS ---
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
@@ -238,8 +254,8 @@ const StyledInput = styled.input`
   color: #4a3b30;
   font-family: inherit;
   backdrop-filter: blur(5px);
-  &::placeholder { color: rgba(122, 99, 82, 0.5); }
   &:focus { outline: none; border-color: rgba(140, 106, 83, 0.4); background: rgba(255, 255, 255, 0.4); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 `;
 
 const MessageLabel = styled.label` 
@@ -275,8 +291,8 @@ const StyledTextArea = styled.textarea`
   height: 90px; 
   font-family: inherit;
   backdrop-filter: blur(5px);
-  &::placeholder { color: rgba(122, 99, 82, 0.5); }
   &:focus { outline: none; border-color: rgba(140, 106, 83, 0.4); background: rgba(255, 255, 255, 0.4); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 `;
 
 const SubmitButton = styled(motion.button)`
@@ -293,7 +309,6 @@ const SubmitButton = styled(motion.button)`
   box-shadow: 0 8px 20px rgba(0,0,0,0.05);
   transition: all 0.3s ease;
   &:disabled { cursor: not-allowed; }
-  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 `;
 
 const SuccessIcon = styled.div` font-size: 3.5rem; margin-bottom: 1.5rem; `;
