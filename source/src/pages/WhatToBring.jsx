@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { motion } from "motion/react";
+import { motion } from "framer-motion"; // Corregido: framer-motion en lugar de motion/react
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaBabyCarriage, FaCloudShowersHeavy, FaCheck } from "react-icons/fa";
 
@@ -48,7 +48,7 @@ const WhatToBring = () => {
   );
 };
 
-// --- ESTILOS ACUARELA CON TEXTO SIMPLIFICADO ---
+// --- ESTILOS ACUARELA ---
 
 const Container = styled(motion.div)`
   display: flex; 
@@ -57,7 +57,6 @@ const Container = styled(motion.div)`
   min-height: 100vh; 
   padding: 2rem 1.5rem; 
   
-  /* FONDO ACUARELA AZUL Y ROSADO */
   background-color: #ffffff;
   background-image: 
     radial-gradient(circle at 10% 10%, rgba(193, 227, 245, 0.8) 0%, transparent 45%),
@@ -140,7 +139,7 @@ const GiftTitle = styled.div`
 `;
 
 const ItemName = styled.h2`
-  color: #4a84a6; /* Color azul suave que resalta la marca */
+  color: #4a84a6; 
   font-size: 1.3rem;
   margin: 0;
   display: flex;
@@ -170,4 +169,3 @@ const AclaracionSection = styled.div`
 `;
 
 export default WhatToBring;
-
