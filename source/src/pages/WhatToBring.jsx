@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion"; // Corregido: framer-motion en lugar de motion/react
+import { motion } from "framer-motion"; 
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaBabyCarriage, FaCloudShowersHeavy, FaCheck } from "react-icons/fa";
 
@@ -30,16 +30,19 @@ const WhatToBring = () => {
 
         <GiftBox>
           <GiftTitle>
-            <FaBabyCarriage /> Única opción:
+            <FaBabyCarriage /> Nuestra sugerencia:
           </GiftTitle>
           <ItemName>
             <FaCheck color="#25d366" /> Pañales Huggies Dermacare
           </ItemName>
+          <StagesInfo>Etapas: 1, 2, 3 o 4</StagesInfo>
         </GiftBox>
 
         <AclaracionSection>
           <p>
-            <strong>Aclaración:</strong> Hemos elegido esta línea específica ya que está diseñada para proteger la piel del recién nacido, evitando alergias o irritaciones. Queremos asegurarnos de que su primer contacto con el mundo sea lo más suave y seguro posible.
+            <strong>Nota importante:</strong> Hemos elegido esta línea para proteger la delicada piel del bebé. 
+            <br/><br/>
+            Si deseas apoyarnos con un paquete, <strong>te agradecemos considerar diferentes etapas (1, 2, 3 o 4)</strong>. Esto nos ayudará a estar prevenidos para su crecimiento y asegurar que tenga pañales adecuados en cada fase de sus primeros meses. ✨
           </p>
         </AclaracionSection>
 
@@ -48,7 +51,7 @@ const WhatToBring = () => {
   );
 };
 
-// --- ESTILOS ACUARELA ---
+// --- ESTILOS ---
 
 const Container = styled(motion.div)`
   display: flex; 
@@ -56,12 +59,10 @@ const Container = styled(motion.div)`
   align-items: center; 
   min-height: 100vh; 
   padding: 2rem 1.5rem; 
-  
   background-color: #ffffff;
   background-image: 
     radial-gradient(circle at 10% 10%, rgba(193, 227, 245, 0.8) 0%, transparent 45%),
     radial-gradient(circle at 90% 90%, rgba(245, 193, 208, 0.8) 0%, transparent 45%);
-  
   position: relative;
 `;
 
@@ -69,13 +70,11 @@ const ContentCard = styled.div`
   background: rgba(255, 255, 255, 0.7); 
   backdrop-filter: blur(12px); 
   -webkit-backdrop-filter: blur(12px);
-  
   border-radius: 40px; 
   padding: 3.5rem 2rem; 
   width: 100%; 
   max-width: 450px; 
   text-align: center; 
-  
   border: 1px solid rgba(255, 255, 255, 0.9); 
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
   z-index: 10;
@@ -105,15 +104,15 @@ const Title = styled.h1`
 `;
 
 const MainIconWrapper = styled.div`
-  margin: 1.5rem 0;
+  margin: 1rem 0;
   opacity: 0.8;
 `;
 
 const HighlightText = styled.p`
   color: #8c6a53;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   line-height: 1.4;
 `;
 
@@ -122,12 +121,12 @@ const GiftBox = styled.div`
   border: 1px solid white;
   padding: 2rem;
   border-radius: 30px;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 `;
 
 const GiftTitle = styled.div`
   color: #5d4637;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 0.8rem;
@@ -147,6 +146,14 @@ const ItemName = styled.h2`
   justify-content: center;
   gap: 10px;
   font-weight: 700;
+`;
+
+const StagesInfo = styled.p`
+  color: #5d4637;
+  font-size: 0.95rem;
+  margin-top: 10px;
+  font-weight: 500;
+  opacity: 0.8;
 `;
 
 const AclaracionSection = styled.div`
@@ -169,3 +176,4 @@ const AclaracionSection = styled.div`
 `;
 
 export default WhatToBring;
+
