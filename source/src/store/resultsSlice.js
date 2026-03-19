@@ -1,4 +1,4 @@
-import { createSlice, createAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   voteCounts: {
@@ -19,19 +19,16 @@ const resultsSlice = createSlice({
     updateResults: (state, action) => {
       const data = action.payload;
       if (data) {
-        // Actualizamos switches de la interfaz
         state.showResultPage = data.showResultPage ?? state.showResultPage;
         state.showVotingScreen = data.showVotingScreen ?? state.showVotingScreen;
         state.showGameStarted = data.showGameStarted ?? state.showGameStarted;
         
-        // Sincronización de votos DIRECTA desde Firebase
         if (data.voteCounts) {
           state.voteCounts.boy = data.voteCounts.boy || 0;
           state.voteCounts.girl = data.voteCounts.girl || 0;
         }
       }
     },
-    // Este reducer se usa cuando queremos forzar un número manual
     updateVoteCounts: (state, action) => {
       state.voteCounts.boy = action.payload.boy ?? 0;
       state.voteCounts.girl = action.payload.girl ?? 0;
@@ -51,12 +48,11 @@ const resultsSlice = createSlice({
     setShowGameStarted: (state, action) => {
       state.showGameStarted = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(resetResults, (state) => {
+    // Movimos resetResults aquí adentro para mayor consistencia
+    resetResults: (state) => {
       state.voteCounts = { boy: 0, girl: 0 };
-    });
-  },
+    }
+  }
 });
 
 export const {
@@ -67,7 +63,8 @@ export const {
   setError,
   setShowVotingScreen,
   setShowGameStarted,
+  resetResults // Ahora se exporta desde aquí
 } = resultsSlice.actions;
 
-export const resetResults = createAction("results/resetResults");
 export default resultsSlice.reducer;
+
