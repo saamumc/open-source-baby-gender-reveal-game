@@ -87,7 +87,7 @@ const HomePage = () => {
           <TextBlock>
             <InvitationHeader>¡La familia crece!</InvitationHeader>
             <InvitationBody>
-              Los abuelitos y tíos te invitamos a descubrir si el mundo se pintará de azul o rosa para nuestro primer nieto y sobrino. 
+              Los abuelitos y tíos te invitamos a descubrir si el mundo se pintará de azul o rosa para nuestro primer niet@ y sobrin@. 
               <br/>
               <strong>¡Tu presencia hará este momento inolvidable!</strong>
             </InvitationBody>
